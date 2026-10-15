@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Fourth Seat — Rules Kernel</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="module" src="./assets/playground.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div><div class="eyebrow">THE FOURTH SEAT · ENGINE LAB</div><h1>Rules Kernel</h1></div>
+    <span class="version">v0.1 · experimental</span>
+  </header>
+  <main>
+    <div class="notice"><strong>What works:</strong> turn steps, priority passing, a LIFO stack, land plays, simple mana costs, casting and two example spell effects. <strong>What doesn't:</strong> combat, Commander-specific rules, triggered abilities, state-based actions, choice handling and most Magic card text. This is a local test harness, not a live multiplayer game.</div>
+    <section class="status">
+      <div><span>Current step</span><strong id="turn">—</strong></div>
+      <div><span>Active player</span><strong id="active">—</strong></div>
+      <div><span>Has priority</span><strong id="priority">—</strong></div>
+      <div><span>Consecutive passes</span><strong id="passes">—</strong></div>
+    </section>
+    <div class="toolbar">
+      <button id="pass" class="primary">Pass priority</button>
+      <button id="pass-round">Pass to next resolution / step</button>
+      <button id="reset">Restart demo</button>
+    </div>
+    <p id="error" class="error" aria-live="polite"></p>
+    <div class="layout">
+      <div class="main-column">
+        <section class="panel"><h2>Players</h2><div id="players" class="players"></div></section>
+        <section class="panel"><h2>Current priority holder's hand <small>(debug only)</small></h2><div class="field"><label for="target">Target for damage spells</label><select id="target"></select></div><div id="hand"></div></section>
+        <section class="panel"><h2>Mana-producing permanents</h2><div id="battlefield"></div></section>
+      </div>
+      <aside class="side-column">
+        <section class="panel"><h2>Stack <small>(top first)</small></h2><div id="stack"></div></section>
+        <section class="panel"><h2>Event log</h2><ol id="log" class="log"></ol></section>
+      </aside>
+    </div>
+    <footer>Unofficial tabletop rules prototype. Not affiliated with or endorsed by Wizards of the Coast. This playground exposes all demo hands locally and must not be used as an authoritative multiplayer client.</footer>
+  </main>
+</body>
+</html>
