@@ -83,7 +83,31 @@ async function setupConnection() {
 async function uiAction(label, locator, expectedAction, value) {
   const at = sent.length;
   const oldPrompt = prompt?.seq ?? -1;
-  await locator.click({ timeout: 10000 });
+  if (await locator.getAttribute('data-card-id')) {
+    // Cards overlap in the hand and identical-permanent piles. Find a point
+    // a person can actually hit, hover to expand the fan, then click its new
+    // position. Never force clicks or invoke DOM/game handlers directly.
+    const exposedPoint = () => locator.evaluate(el => {
+      const r = el.getBoundingClientRect();
+      for (const fx of [0.5, 0.08, 0.92, 0.2, 0.8, 0.02, 0.98]) {
+        for (const fy of [0.5, 0.15, 0.85, 0.05, 0.95]) {
+          const x = r.left + r.width * fx, y = r.top + r.height * fy;
+          if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) continue;
+          const hit = document.elementFromPoint(x, y);
+          if (hit && (hit === el || el.contains(hit))) return { x, y };
+        }
+      }
+      return null;
+    });
+    await locator.scrollIntoViewIfNeeded();
+    let point = await waitFor(exposedPoint, `exposed card: ${label}`, 8000);
+    await page.mouse.move(point.x, point.y);
+    await delay(300);
+    point = await waitFor(exposedPoint, `expanded card: ${label}`, 8000);
+    await page.mouse.click(point.x, point.y);
+  } else {
+    await locator.click({ timeout: 10000 });
+  }
   const outgoing = await waitFor(() => sent.slice(at).find(m =>
     m.action === expectedAction && (value === undefined || String(m.args?.value) === String(value))),
   `browser dispatch: ${label}`, 5000);
