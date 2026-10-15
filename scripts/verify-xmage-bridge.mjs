@@ -85,6 +85,13 @@ try {
   const startup = await a.wait(m => m.method === 'START_GAME');
   const gameId = startup.objectId ?? startup.data?.gameId;
   check('real game ID received', Boolean(gameId));
+  // START_GAME announces the game; each player must attach its game panel.
+  // Attach both seats before awaiting GAME_INIT so neither can block startup.
+  for (const c of [a, b]) {
+    await c.wait(m => m.method === 'START_GAME');
+    const attached = await c.call('joinGame', { gameId });
+    check(`${c.username}: game panel attachment submitted`, attached.ok, attached.error);
+  }
   for (const c of [a, b]) {
     const init = await c.wait(m => m.method === 'GAME_INIT');
     check(`${c.username}: seat-specific initial view`, viewOf(init)?.players?.length === 2);
