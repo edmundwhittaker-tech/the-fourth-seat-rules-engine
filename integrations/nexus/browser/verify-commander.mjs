@@ -100,7 +100,8 @@ async function uiAction(label, locator, expectedAction, value) {
       }
       return null;
     });
-    await locator.scrollIntoViewIfNeeded();
+    // Target highlights pulse continuously. Hit testing already proves that
+    // the surface is visible; a stability wait would never finish here.
     let point = await waitFor(exposedPoint, `exposed card: ${label}`, 8000);
     await page.mouse.move(point.x, point.y);
     await delay(300);
