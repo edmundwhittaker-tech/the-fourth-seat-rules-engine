@@ -37,7 +37,9 @@ async function waitFor(fn, label, ms = 45000) {
     if (value) return value;
     await delay(100);
   }
-  throw new Error(`Timeout: ${label}; stage=${stage}; prompt=${JSON.stringify(prompt)}`);
+  throw new Error(`Timeout: ${label}; stage=${stage}; prompt=${JSON.stringify({
+    seq: prompt?.seq, method: prompt?.method, message: prompt?.data?.message,
+    step: prompt?.data?.gameView?.step, turn: prompt?.data?.gameView?.turn })}`);
 }
 async function state() {
   return page.evaluate(() => {
@@ -139,7 +141,7 @@ try {
   await page.getByLabel(/Username/i).fill('Stage3Human');
   const password = page.getByLabel(/Password/i);
   if (await password.isEnabled()) await password.fill('x');
-  await page.getByRole('button', { name: /^Connect$/i }).click();
+  await page.locator('.login-submit-btn').click();
   await page.getByRole('heading', { name: /Lobby|XMage Nexus/i }).waitFor();
   check('human logs in through browser to our private server', true);
   // Configure the real client's preferences only; never inject game state.
@@ -194,6 +196,7 @@ try {
   check('real Commander game starts', started.ok, started.error);
   await waitFor(async () => (await state())?.game?.players?.length === 4, 'four-seat browser game');
   await page.getByTestId('pod-board').waitFor();
+  await waitFor(async () => commanderOf((await state())?.game), 'initial command zone');
   let s = await state();
   check('browser displays four players at 40 life', s.game.players.every(p => p.life === 40)
     && await page.locator('.player-info-bar').count() === 4);
