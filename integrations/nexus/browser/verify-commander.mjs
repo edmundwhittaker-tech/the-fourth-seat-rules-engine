@@ -307,7 +307,8 @@ try {
     if (s.feedback && s.feedback.mode !== 'combat') {
       throw new Error(`Unexpected rendered feedback ${JSON.stringify(s.feedback)}`);
     }
-    if (s.combat?.mode === 'attack' && me.isActive) {
+    const isMyTurn = g.activePlayerId === me.playerId;
+    if (s.combat?.mode === 'attack' && isMyTurn) {
       if (!combatStarted && k && !k[1].summoningSickness && s.combat.selectable?.includes(k[0])) {
         combatStarted = true;
         await uiAction('declare Krenko as attacker', card(k[0]), 'sendPlayerUUID', k[0]);
@@ -316,8 +317,11 @@ try {
       }
       continue;
     }
-    const myMain = me.isActive && (g.phase === 'PRECOMBAT_MAIN' || g.phase === 'POSTCOMBAT_MAIN');
+    const myMain = isMyTurn && (g.phase === 'PRECOMBAT_MAIN' || g.phase === 'POSTCOMBAT_MAIN');
     const playable = s.playableIds ?? [];
+    if (myMain) console.log(`MAIN ${JSON.stringify({ turn: g.turn, step: g.step,
+      hand: values(g.myHand).map(nameOf), playable: playable.length,
+      lands: landsOf(me).length, stage })}`);
     if (myMain && values(g.stack).length === 0) {
       const land = Object.entries(g.myHand ?? {}).find(([id, c]) => nameOf(c) === 'Mountain' && playable.includes(id));
       if (land) {

@@ -73,7 +73,7 @@ try {
     { cardName, cardNumber, setCode: 'LEA', amount: 60 }], sideboard: [] });
   const table = await a.call('createTable', { name: 'Private bridge check', gameType: 'Two Player Duel',
     deckType: 'Constructed - Freeform', winsNeeded: 1, playerTypes: ['HUMAN', 'HUMAN'],
-    skipInitShuffling: true, skipStartingPlayerChoice: true });
+    skipInitShuffling: true, skipStartingPlayerChoice: false });
   const tableId = table.data?.tableId ?? table.data?.table?.tableId;
   check('create private test table', table.ok && tableId, table.error);
   for (const [c, deck] of [[a, makeDeck('Mountain', '292')], [b, makeDeck('Island', '288')]]) {
@@ -95,11 +95,38 @@ try {
   for (const c of [a, b]) {
     const init = await c.wait(m => m.method === 'GAME_INIT');
     check(`${c.username}: seat-specific initial view`, viewOf(init)?.players?.length === 2);
-    const prompt = await c.wait(m => m.method === 'GAME_ASK' && /mulligan/i.test(String(m.data?.message ?? m.data?.question ?? '')));
-    check(`${c.username}: mulligan prompt received`, Boolean(prompt));
-    const answered = await c.call('sendPlayerBoolean', { gameId, value: false });
-    check(`${c.username}: mulligan answer accepted`, answered.ok, answered.error);
   }
+  // The server asks players sequentially, in engine order. Answer whichever
+  // seat is asked next rather than waiting for Red before allowing Blue to act.
+  // Choose Red through the real starting-player prompt: the skip flag's first
+  // map entry is not guaranteed to be table-seat order.
+  const kept = new Set();
+  const answeredPrompts = new Set();
+  const redPlayerId = startup.data?.playerId;
+  check('red seat identity received from server', Boolean(redPlayerId));
+  const openingDeadline = Date.now()+90000;
+  while (kept.size < 2 && Date.now()<openingDeadline) {
+    for (const c of [a, b]) {
+      for (const m of [...c.frames]) {
+        const key = `${c.username}:${m.seq ?? m.messageId}`;
+        if (answeredPrompts.has(key)) continue;
+        const question = String(m.data?.message ?? m.data?.question ?? '');
+        if (m.method === 'GAME_TARGET' && /starting player/i.test(question)) {
+          answeredPrompts.add(key);
+          const answer = await c.call('sendPlayerUUID', { gameId, value: redPlayerId });
+          check('red selected through real starting-player prompt', answer.ok);
+        } else if (m.method === 'GAME_ASK' && /mulligan/i.test(question)) {
+          answeredPrompts.add(key);
+          check(`${c.username}: mulligan prompt received`, true);
+          const answered = await c.call('sendPlayerBoolean', { gameId, value: false });
+          check(`${c.username}: mulligan answer submitted`, answered.ok, answered.error);
+          kept.add(c.username);
+        }
+      }
+    }
+    await sleep(75);
+  }
+  check('both players kept their opening hands', kept.size === 2);
   const priority = await a.wait(m => m.method === 'GAME_SELECT' && controlled(viewOf(m))?.hasPriority);
   const state = viewOf(priority);
   const hand = Object.values(state.myHand ?? {});
