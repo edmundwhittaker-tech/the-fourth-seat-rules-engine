@@ -85,6 +85,14 @@ try:
     subprocess.run(['node', str(root / 'scripts/verify-xmage-bridge.mjs')],
                    cwd=root, check=True, timeout=240)
     result['passed'] = True
+except BaseException as error:
+    result['failure'] = str(error)
+    for name in ('server', 'proxy'):
+        path = out / f'{name}.log'
+        if path.exists():
+            print(f'{name} log tail:', flush=True)
+            print('\n'.join(path.read_text(errors='replace').splitlines()[-35:]), flush=True)
+    raise
 finally:
     (out / 'runtime-result.json').write_text(json.dumps(result, indent=2)+'\n')
     for child in reversed(processes):

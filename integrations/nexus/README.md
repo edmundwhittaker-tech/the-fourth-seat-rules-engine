@@ -49,6 +49,11 @@ Always read the workflow conclusion and JSON `passed` fields; a diagnostic
 artifact also uploads after failures and by itself does not mean success.
 
 The checks cover a two-human-seat fixture match and native AI seat staging.
+XMage's `SessionImpl.joinGame` acknowledges sending a void remote call; its
+boolean does not establish seat authorization. The server's `GameController.join`
+checks its user-to-player map. The negative check therefore inspects actual
+private views and prompts after an unseated account attempts to join, including
+through a subsequent legitimate game update.
 They test representative private views and an unauthorized join, not all
 possible hidden-information leaks or every game callback. Rejoining uses a
 second window attached to the same live session; it does not simulate a

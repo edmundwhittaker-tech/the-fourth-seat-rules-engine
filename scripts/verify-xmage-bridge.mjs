@@ -102,8 +102,14 @@ try {
   check('blue receives its own hand', Boolean(blueView) && Object.values(blueView.myHand).every(card => (card.name ?? card.displayName) === 'Island'));
   check('red hand faces absent from blue view', Boolean(blueView) && !JSON.stringify(blueView).includes('Mountain'));
   const outsider = await client('Stage2Guest');
-  const denied = await outsider.call('joinGame', { gameId });
-  check('unseated account cannot join a player game', denied.ok === false, denied);
+  const guestCursor = outsider.frames.length;
+  const acknowledged = await outsider.call('joinGame', { gameId });
+  check('unseated join request receives transport response', typeof acknowledged.ok === 'boolean');
+  await sleep(3000);
+  const guestHasPlayerAccess = () => outsider.frames.slice(guestCursor).some(m =>
+    ['GAME_INIT', 'GAME_UPDATE', 'GAME_UPDATE_AND_INFORM', 'GAME_SELECT', 'GAME_ASK'].includes(m.method)
+    && m.objectId === gameId);
+  check('unseated account receives no player state or prompts', !guestHasPlayerAccess());
   let current = priority;
   let landId;
   for (let step = 0; step<8; step++) {
@@ -126,6 +132,7 @@ try {
   await b.wait(m => ['GAME_UPDATE', 'GAME_UPDATE_AND_INFORM'].includes(m.method)
     && JSON.stringify(viewOf(m)).includes('Mountain'), Math.max(0, observerCursor-5));
   check('other seat receives public battlefield update', true);
+  check('unseated account stays isolated through a real game update', !guestHasPlayerAccess());
   const attached = await client('Stage2Red');
   const ownInfo = await attached.call('getServerInfo');
   check('same-account window reuses its session', ownInfo.ok && ownInfo.data?.sessionId === info.data?.sessionId);

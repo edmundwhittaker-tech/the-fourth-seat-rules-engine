@@ -82,6 +82,8 @@ jobs:
           name: xmage-bridge-evidence-${{ github.run_id }}
           path: |
             build/nexus/
+            !build/nexus/runtime/**
+            !build/nexus/proxy-runtime/**
             .upstream/nexus/Mage.Proxy/target/surefire-reports/
           if-no-files-found: error
           retention-days: 14
