@@ -28,5 +28,5 @@ mvn --batch-mode --no-transfer-progress -f "$source_root/pom.xml" \
 
 assembly_version="$(python3 -c 'import json; print(json.load(open("integrations/xmage/upstream.json"))["assemblyPluginVersion"])')"
 mvn --batch-mode --no-transfer-progress -f "$source_root/pom.xml" \
-  -pl Mage.Server "org.apache.maven.plugins:maven-assembly-plugin:${assembly_version}:single" \
+  -pl Mage.Server package "org.apache.maven.plugins:maven-assembly-plugin:${assembly_version}:single" \
   -Dmaven.test.skip=true 2>&1 | tee "$logs_root/package.log"
