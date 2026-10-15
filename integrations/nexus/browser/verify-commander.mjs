@@ -10,6 +10,7 @@ const { chromium } = await import(pathToFileURL(path.join(root,
   '.upstream/nexus/web/node_modules/playwright/index.mjs')).href);
 const checks = [], journal = [], pageErrors = [], sent = [];
 const snapshots = {};
+const landPlayedTurns = new Set();
 const prompts = new Set(['GAME_SELECT', 'GAME_ASK', 'GAME_TARGET', 'GAME_PLAY_MANA',
   'GAME_PLAY_XMANA', 'GAME_CHOOSE_ABILITY', 'GAME_CHOOSE_CHOICE', 'GAME_GET_AMOUNT']);
 let prompt = null, eventSeq = 0, gameId, tableId, browser, context, page, admin;
@@ -130,7 +131,9 @@ try {
   browser = await chromium.launch({ headless: true });
   context = await browser.newContext({ viewport: { width: 1920, height: 1080 },
     locale: 'en-GB', recordVideo: { dir: out, size: { width: 1920, height: 1080 } } });
-  await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
+  // Checkpoint PNGs and video carry visual evidence; avoid recording a second
+  // full-rate screenshot stream inside the trace.
+  await context.tracing.start({ screenshots: false, snapshots: true, sources: false });
   page = await context.newPage();
   page.setDefaultTimeout(15000);
   page.on('pageerror', e => pageErrors.push(String(e)));
@@ -348,8 +351,13 @@ try {
       lands: landsOf(me).length, stage })}`);
     if (myMain && values(g.stack).length === 0) {
       const land = Object.entries(g.myHand ?? {}).find(([id, c]) => nameOf(c) === 'Mountain' && playable.includes(id));
-      if (land) {
+      if (land && !landPlayedTurns.has(g.turn)) {
+        const before = landsOf(me).length;
         await uiAction('play Mountain from hand', card(land[0]), 'sendPlayerUUID', land[0]);
+        await waitFor(async () => landsOf(meOf((await state())?.game)).length === before + 1,
+          'engine confirms land entered battlefield');
+        landPlayedTurns.add(g.turn);
+        check(`human land play confirmed on turn ${g.turn}`, true, { lands: before + 1 });
         continue;
       }
       const available = landsOf(me).filter(([, c]) => !c.tapped).length;

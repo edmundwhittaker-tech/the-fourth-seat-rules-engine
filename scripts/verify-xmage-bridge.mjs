@@ -196,3 +196,4 @@ try {
     scope: 'Private server/bridge protocol; no browser UI or four-seat Commander match' }, null, 2)+'\n');
 }
 process.exit(failure ? 1 : 0);
+

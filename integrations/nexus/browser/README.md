@@ -3,6 +3,9 @@
 The isolated `integration/xmage` branch runs Chromium, the pinned Nexus web
 client, its bridge and our own XMage compatibility server in GitHub Actions.
 Nothing runs on the contributor's computer and no public XMage server is used.
+It can reuse the immutable Stage 2 build recorded in `reusable-build.json`,
+after checking the source/toolchain pins, build-script hash and binary
+checksums. If that artifact expires or no longer matches, it builds fresh.
 
 The test uses a real `Commander Free For All` table, the official Commander deck
 validator, one human seat and three `COMPUTER_MAD` seats. Bridge SIM is disabled.
@@ -10,6 +13,9 @@ The human is driven by Playwright through visible browser controls. A second
 connection to the same human session only creates/seats the table and resolves
 card printings; it does not answer gameplay prompts. Assertions use server
 events and resulting game state, not transport acknowledgements alone.
+For overlapping hand cards and permanent piles the test finds an exposed
+surface, hovers to expand the fan and uses real pointer input. It confirms
+each land has entered the battlefield and plays at most one per human turn.
 
 Decks are deliberately small in variety: the human has 97 Mountains, Lightning
 Bolt, Shock and Krenko, Mob Boss as commander; each AI has 99 Mountains and
