@@ -19,7 +19,7 @@ export function reduceEngineFrame(state: EngineState, frame: EngineFrame): Engin
   if (state.gameId && frame.objectId && /^GAME_/.test(method) && state.gameId !== frame.objectId) return state;
   const embedded = record(data.gameView ?? (Array.isArray(data.players) ? data : null));
   const game = Array.isArray(embedded.players) ? embedded as unknown as GameView : state.game;
-  let next = { ...state, game, seq: frame.seq ?? state.seq, gameId: frame.objectId ?? state.gameId };
+  let next = { ...state, game, seq: frame.seq ?? state.seq, gameId: /^GAME_/.test(method) ? frame.objectId ?? state.gameId : state.gameId };
   if (method === 'GAME_OVER' || method === 'END_GAME_INFO') return { ...next, prompt: null, selectable: [], ended: clean(data.message ?? data.gameInfo ?? 'Game finished') };
   if (method === 'GAME_ERROR') return { ...next, error: clean(data.message ?? frame.data) };
   if (method === 'GAME_INFORM' || method === 'GAME_UPDATE_AND_INFORM' || method === 'CHATMESSAGE') {

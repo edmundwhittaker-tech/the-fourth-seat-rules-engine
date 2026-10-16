@@ -46,3 +46,15 @@ test('acknowledgements never optimistically move cards or change life',()=>{
   const s=reduceEngineFrame(emptyEngineState(),frame('GAME_INIT',{gameView:game}));
   assert.equal(reduceEngineFrame(s,{type:'result',ok:true,data:true}),s);
 });
+
+test('game chat channel IDs never replace the active game identity',()=>{
+  const active=reduceEngineFrame(emptyEngineState(),frame('GAME_INIT',{gameView:game},1));
+  const chat=reduceEngineFrame(active,{...frame('CHATMESSAGE',{message:'Player played a land'},2),objectId:'chat-channel'});
+  assert.equal(chat.gameId,'game');
+  assert.deepEqual(chat.log,['Player played a land']);
+  const updated=reduceEngineFrame(chat,frame('GAME_UPDATE',{gameView:{...game,turn:2}},3));
+  assert.equal(updated.game.turn,2);
+  const priorChat=reduceEngineFrame(emptyEngineState(),{...frame('CHATMESSAGE',{message:'Welcome'},1),objectId:'chat-channel'});
+  assert.equal(priorChat.gameId,null);
+  assert.equal(reduceEngineFrame(priorChat,frame('GAME_INIT',{gameView:game},2)).gameId,'game');
+});
