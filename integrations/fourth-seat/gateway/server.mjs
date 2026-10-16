@@ -5,7 +5,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import WebSocket, { WebSocketServer } from 'ws';
 import { validateCommanderDeck } from './deck-validation.mjs';
-import { chooseAIDecks } from './ai-decks.mjs';
+import { chooseAIDecks, aiDeckPool } from './ai-decks.mjs';
 import { Problem, equal, identity, signTicket, readTicket, authorizeAction, publicRoom } from './policy.mjs';
 
 export async function startGateway(options = {}) {
@@ -99,13 +99,40 @@ export async function startGateway(options = {}) {
     const json = JSON.stringify(message);
     for (const socket of client.browsers) if (socket.readyState === WebSocket.OPEN) socket.send(json);
   }
+  async function makeAI(client, code, seat, players, deckId, previousId) {
+    const used = new Set(players.filter(p => p.kind === 'ai').map(p => p.aiDeckId));
+    const humans = new Set(players.filter(p => p.kind === 'human').map(p => p.commander));
+    const eligible = aiDeckPool.filter(entry => !used.has(entry.id) && !humans.has(entry.deck.commanders[0].cardName));
+    let entry;
+    if (deckId && deckId !== 'random') {
+      entry = eligible.find(entry => entry.id === deckId);
+      if (!entry) throw new Problem('Choose an available bot deck with a different commander from the human players.', 409);
+    } else {
+      const choices = eligible.filter(entry => entry.id !== previousId);
+      const available = choices.length ? choices : eligible;
+      if (!available.length) throw new Problem('No distinct bot deck is available.', 409);
+      entry = available[randomBytes(4).readUInt32BE() % available.length];
+    }
+    const deck = await validatedAI(client, entry);
+    return { user: 'AI' + code + (seat + 1), name: 'AI ' + (seat + 1), kind: 'ai', seat,
+      commander: deck.commanders[0].cardName, deckName: deck.name, aiDeckId: entry.id, deck };
+  }
+  async function avoidHumanCopies(client, players) {
+    const humans = new Set(players.filter(p => p.kind === 'human').map(p => p.commander));
+    for (let i = 0; i < players.length; i++) {
+      if (players[i].kind === 'ai' && humans.has(players[i].commander)) {
+        const old = players[i];
+        players[i] = { ...await makeAI(client, '', old.seat, players.filter((_, index) => index !== i)), user: old.user };
+      }
+    }
+  }
   async function operate(body) {
     const user = identity(secret, body.browserKey);
     if (body.operation === 'session') {
       return { ticket: signTicket(secret, user), user, websocketPath: '/play', room: roomFor(user) ? publicRoom(roomFor(user), user) : null };
     }
     const client = await connection(user);
-    return locked(body.code ?? user, async () => {
+    return locked('user:' + user, () => locked('room:' + String(body.code ?? user).toUpperCase(), async () => {
       const name = String(body.displayName ?? 'Player').trim().slice(0, 24) || 'Player';
       if (body.operation === 'create') {
         if (roomFor(user)) throw new Problem('Return to your current engine table or leave it first.', 409);
@@ -119,25 +146,15 @@ export async function startGateway(options = {}) {
         for (const entry of selectedAI) aiDecks.push(await validatedAI(client, entry));
         let code;
         do { code = randomBytes(8).toString('hex').slice(0, 5).toUpperCase(); } while (rooms.has(code));
-        const password = randomBytes(24).toString('hex');
-        const created = await client.call('createTable', { name: 'Fourth Seat ' + code, password,
-          gameType: 'Commander Free For All', deckType: 'Variant Magic - Commander', winsNeeded: 1,
-          playerTypes: [...Array(humanSeats).fill('HUMAN'), ...Array(4 - humanSeats).fill('COMPUTER_MAD')],
-          attackOption: 'MULTIPLE', range: 'ALL', skipInitShuffling: false, skipStartingPlayerChoice: false });
-        const room = { code, host: user, tableId: created.tableId, password, status: 'lobby', humanSeats, createdAt: Date.now(), players: [] };
-        if (!room.tableId) throw new Problem('The engine did not create a table.', 502);
-        try {
-          await client.call('joinTable', { tableId: room.tableId, playerName: user, playerType: 'HUMAN', skill: 1, deck, password });
-          room.players.push({ user, name, kind: 'human', commander: deck.commanders[0].cardName, deckName: deck.name });
-          for (let i = humanSeats; i < 4; i++) {
-            const aiName = 'AI' + code + (i + 1);
-            const aiDeck = aiDecks[i - humanSeats];
-            const entry = selectedAI[i - humanSeats];
-            await client.call('joinTable', { tableId: room.tableId, playerName: aiName, playerType: 'COMPUTER_MAD', skill: 1, deck: aiDeck, password });
-            room.players.push({ user: aiName, name: 'AI ' + (i + 1), kind: 'ai', commander: aiDeck.commanders[0].cardName, deckName: aiDeck.name, aiDeckId: entry.id });
-          }
-          rooms.set(code, room); await persist();
-        } catch (error) { await client.call('removeTable', { tableId: room.tableId }).catch(() => {}); throw error; }
+        const room = { code, host: user, password: randomBytes(24).toString('hex'), status: 'lobby', humanSeats, createdAt: Date.now(), players: [
+          { user, name, kind: 'human', seat: 0, commander: deck.commanders[0].cardName, deckName: deck.name, deck }
+        ] };
+        for (let i = humanSeats; i < 4; i++) {
+          const aiDeck = aiDecks[i - humanSeats], entry = selectedAI[i - humanSeats];
+          room.players.push({ user: 'AI' + code + (i + 1), name: 'AI ' + (i + 1), kind: 'ai', seat: i,
+            commander: aiDeck.commanders[0].cardName, deckName: aiDeck.name, aiDeckId: entry.id, deck: aiDeck });
+        }
+        rooms.set(code, room); await persist();
         return { room: publicRoom(room, user) };
       }
       const room = rooms.get(String(body.code ?? '').toUpperCase());
@@ -148,32 +165,77 @@ export async function startGateway(options = {}) {
         if (roomFor(user)) throw new Problem('Leave your current engine table first.', 409);
         if (room.status !== 'lobby' || room.players.filter(p => p.kind === 'human').length >= room.humanSeats) throw new Problem('This engine table has no open human seats.', 409);
         const deck = await validateCommanderDeck(client, body.deck);
-        await client.call('joinTable', { tableId: room.tableId, playerName: user, playerType: 'HUMAN', skill: 1, deck, password: room.password });
-        room.players.push({ user, name, kind: 'human', commander: deck.commanders[0].cardName, deckName: deck.name });
+        const seat = [0, 1, 2, 3].find(index => !room.players.some(p => p.seat === index));
+        const players = [...room.players, { user, name, kind: 'human', seat, commander: deck.commanders[0].cardName, deckName: deck.name, deck }];
+        await avoidHumanCopies(client, players);
+        room.players = players;
         await persist(); return { room: publicRoom(room, user) };
       }
       const view = publicRoom(room, user);
       if (body.operation === 'room') return { room: view };
+      if (body.operation === 'configure') {
+        if (room.host !== user) throw new Problem('Only the host can configure bot seats.', 403);
+        if (room.status !== 'lobby') throw new Problem('Seats can only change before the game starts.', 409);
+        if (!Number.isInteger(body.seat) || body.seat < 0 || body.seat > 3 || !['human', 'ai'].includes(body.kind)) throw new Problem('Choose a valid seat and player type.');
+        const current = room.players.find(p => p.seat === body.seat);
+        if (current?.kind === 'human') throw new Problem('An occupied human seat cannot be changed.', 409);
+        const players = room.players.filter(p => p.seat !== body.seat);
+        if (body.kind === 'ai') players.push(await makeAI(client, room.code, body.seat, players, body.deckId, current?.aiDeckId));
+        room.players = players.sort((a, b) => a.seat - b.seat);
+        room.humanSeats = 4 - players.filter(p => p.kind === 'ai').length;
+        await persist(); return { room: publicRoom(room, user) };
+      }
+      if (body.operation === 'changeDeck') {
+        if (room.status !== 'lobby') throw new Problem('Decks can only change before the game starts.', 409);
+        const deck = await validateCommanderDeck(client, body.deck);
+        const players = room.players.map(p => p.user === user ? { ...p, deck, commander: deck.commanders[0].cardName, deckName: deck.name } : { ...p });
+        await avoidHumanCopies(client, players);
+        room.players = players;
+        await persist(); return { room: publicRoom(room, user) };
+      }
       if (body.operation === 'start') {
         if (room.host !== user) throw new Problem('Only the host can start this game.', 403);
         if (room.status !== 'lobby' || room.players.length !== 4) throw new Problem('Wait for every human seat to be filled.', 409);
         room.status = 'starting';
-        try { await client.call('startMatch', { tableId: room.tableId }); } catch (error) { room.status = 'lobby'; throw error; }
+        try {
+          const players = [...room.players].sort((a, b) => a.seat - b.seat);
+          const created = await client.call('createTable', { name: 'Fourth Seat ' + room.code, password: room.password,
+            gameType: 'Commander Free For All', deckType: 'Variant Magic - Commander', winsNeeded: 1,
+            playerTypes: players.map(p => p.kind === 'ai' ? 'COMPUTER_MAD' : 'HUMAN'),
+            attackOption: 'MULTIPLE', range: 'ALL', skipInitShuffling: false, skipStartingPlayerChoice: false });
+          if (!created?.tableId) throw new Problem('The engine did not create a table.', 502);
+          room.tableId = created.tableId;
+          for (const player of players) {
+            const owner = player.kind === 'human' ? await connection(player.user) : client;
+            await owner.call('joinTable', { tableId: room.tableId, playerName: player.user,
+              playerType: player.kind === 'ai' ? 'COMPUTER_MAD' : 'HUMAN', skill: 1, deck: player.deck, password: room.password });
+          }
+          await client.call('startMatch', { tableId: room.tableId });
+        } catch (error) {
+          // A timeout has an uncertain outcome: don't retry into a duplicate live game.
+          if (error.status === 504 || error.message === 'Engine connection closed.') {
+            room.status = 'expired';
+          } else {
+            if (room.tableId) await client.call('removeTable', { tableId: room.tableId }).catch(() => {});
+            room.status = 'lobby'; room.tableId = null;
+          }
+          await persist(); throw error;
+        }
         await persist(); return { room: publicRoom(room, user) };
       }
       if (body.operation === 'leave') {
         if (room.status !== 'lobby' && room.status !== 'finished' && !room.players.find(p => p.user === user)?.conceded) throw new Problem('Concede before leaving an active engine game.', 409);
         if (room.host === user && (room.status === 'lobby' || room.status === 'finished')) {
-          if (room.status === 'lobby') await client.call('removeTable', { tableId: room.tableId });
+          if (room.status === 'lobby' && room.tableId) await client.call('removeTable', { tableId: room.tableId });
           rooms.delete(room.code);
         } else {
-          if (room.status === 'lobby') await client.call('leaveTable', { tableId: room.tableId });
+          if (room.status === 'lobby' && room.tableId) await client.call('leaveTable', { tableId: room.tableId });
           room.players = room.players.filter(p => p.user !== user);
         }
         await persist(); return { left: true };
       }
       throw new Problem('Unknown engine operation.');
-    });
+    }));
   }
   const server = http.createServer(async (request, response) => {
     response.setHeader('Cache-Control', 'no-store');

@@ -2,6 +2,8 @@
 
 Manual multiplayer rooms and solo testing remain the default experience. Rules Engine play is an optional game setup with one to four human seats; native `COMPUTER_MAD` seats fill the table to four. AI seats receive different random decks from ten unchanged published Bracket 3 Commander lists. The host's commander is excluded from the draw. [Deck sources and snapshot policy](AI-DECKS.md).
 
+The Rules Engine lobby exposes four stable player slots. The host can add or remove bots in open slots, select a published deck or reroll one, and view each actual deck/commander before starting. Human occupants cannot be evicted by bot configuration. Players can change their own saved deck before Start; any bot sharing that human commander is rerolled. Random assignments avoid duplicate bots and all human commanders. The gateway validates deck lists in the lobby and only materializes the authoritative XMage table at Start. Lobby edits are unavailable after Start. Gateway restarts expire previous lobbies and games.
+
 ## Same table, different rules authority
 
 The Site keeps its actual `GameTable`, responsive hand, battlefield rows, stone surface, player strip, commander dock, card previews, zone inspection, and overview navigation. `lib/rules/projection.ts` translates private XMage views into the existing renderer's input. It does not resolve spells, infer legal moves, or write manual game state. `EngineControlsContext` replaces game mutations with allowed selections and suppresses manual-only controls. The original manual reducer, room API, D1 records and synchronization remain independent.

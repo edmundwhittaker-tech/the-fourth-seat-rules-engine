@@ -86,7 +86,16 @@ try{
   const created=await api(key1,'create',{displayName:'HostPilot',humanSeats:2,deck});
   const code=created.room.code;
   await api(key2,'join',{displayName:'FriendPilot',code,deck});
+  const initial=(await api(key1,'room',{code})).room;
+  check('editable lobby exposes ten sourced bot decks and stable seat indexes',initial.lobbyEditable===true&&initial.aiDecks.length===10&&initial.players.every(p=>Number.isInteger(p.seat)));
+  const bot=initial.players.find(p=>p.kind==='ai');
+  await api(key1,'configure',{code,seat:bot.seat,kind:'human'});
+  const selected=initial.aiDecks.find(d=>!initial.players.some(p=>p.commander===d.commander));
+  await api(key1,'configure',{code,seat:bot.seat,kind:'ai',deckId:selected.id});
+  await api(key2,'changeDeck',{code,deck});
   const room=(await api(key1,'room',{code})).room;
+  check('host can remove and replace a bot with its selected published deck',room.players.find(p=>p.seat===bot.seat).deckId===selected.id);
+
   check('two human accounts and two native AI fill an engine room',room.players.filter(p=>p.kind==='human').length===2&&room.players.filter(p=>p.kind==='ai').length===2);
   check('mixed games use separate randomly assigned AI decks',new Set(room.players.filter(p=>p.kind==='ai').map(p=>p.commander)).size===2&&room.players.filter(p=>p.kind==='ai').every(p=>p.commander!=='Krenko, Mob Boss'));
   check('room responses omit private table passwords',room.password===undefined&&room.tableId===undefined);
