@@ -1,0 +1,126 @@
+name: Verify Fourth Seat engine integration
+
+on:
+  push:
+    branches: [integration/xmage]
+    paths:
+      - '.github/workflows/fourth-seat.yml'
+      - 'integrations/fourth-seat/**'
+      - 'integrations/nexus/browser/reusable-build.json'
+      - 'integrations/nexus/upstream.json'
+      - 'scripts/build-xmage-bridge.sh'
+      - 'scripts/run-fourth-seat.py'
+      - 'scripts/verify-engine-container.py'
+      - '.dockerignore'
+      - 'scripts/reuse-xmage-build.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: fourth-seat-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration:
+    name: Engine gateway with two humans and two native AI
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      MAVEN_OPTS: -Xmx4g -Dfile.encoding=UTF-8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Read dependency pins
+        id: pin
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          pin = json.loads(Path('integrations/nexus/upstream.json').read_text())
+          assert pin['repository'] == 'Adamychen/xmage-nexus'
+          for key in ('bridgeCommit', 'serverForkCommit', 'upstreamBaseline'):
+              assert re.fullmatch(r'[0-9a-f]{40}', pin[key])
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              for key, value in pin.items():
+                  assert '\n' not in value and '\r' not in value
+                  print(f'{key}={value}', file=output)
+          PY
+      - name: Check out pinned bridge
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: ${{ steps.pin.outputs.repository }}
+          ref: ${{ steps.pin.outputs.bridgeCommit }}
+          path: .upstream/nexus
+          persist-credentials: false
+      - name: Check out pinned server compatibility fork
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: ${{ steps.pin.outputs.repository }}
+          ref: ${{ steps.pin.outputs.serverForkCommit }}
+          path: .upstream/nexus-server
+          persist-credentials: false
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: ${{ steps.pin.outputs.javaVersion }}
+          cache: maven
+          cache-dependency-path: |
+            integrations/nexus/upstream.json
+            .upstream/nexus/Mage.Proxy/pom.xml
+            .upstream/nexus-server/**/pom.xml
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ steps.pin.outputs.nodeVersion }}
+      - name: Download previously verified pinned build
+        continue-on-error: true
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          artifact-ids: 12013046299
+          run-id: 38820704551
+          github-token: ${{ github.token }}
+          path: .reused-xmage
+          merge-multiple: true
+      - name: Validate reusable build pins and binary checksums
+        id: reuse
+        run: python3 scripts/reuse-xmage-build.py
+      - name: Compile server and test/package bridge
+        if: steps.reuse.outputs.ready != 'true'
+        run: bash scripts/build-xmage-bridge.sh
+      - name: Install gateway dependencies
+        working-directory: integrations/fourth-seat/gateway
+        run: npm ci --ignore-scripts
+      - name: Verify adapter and gateway policies
+        run: node --test integrations/fourth-seat/tests/*.test.mjs
+      - name: Verify independent engine gateway on our private server
+        timeout-minutes: 12
+        run: python3 scripts/run-fourth-seat.py
+      - name: Check deployable container under a four-GB memory limit
+        timeout-minutes: 14
+        run: python3 scripts/verify-engine-container.py
+      - name: Upload service proof and diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: fourth-seat-integration-${{ github.run_id }}
+          path: |
+            build/nexus/fourth-seat/*.png
+            build/nexus/fourth-seat/*state.json
+            build/nexus/fourth-seat/*dom.txt
+            build/nexus/fourth-seat/ai-decks-result.json
+            build/nexus/fourth-seat/result.json
+            build/nexus/fourth-seat/container-result.json
+            build/nexus/fourth-seat/container.log
+            build/nexus/fourth-seat-runtime-result.json
+            build/nexus/browser-runtime-config.xml
+            build/nexus/reused-build.json
+            build/nexus/server.log
+            build/nexus/proxy.log
+            build/nexus/web*.log
+            build/nexus/*LICENSE.txt
+            .upstream/nexus/Mage.Proxy/target/surefire-reports/
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,3418 @@
+{
+  "version": 1,
+  "decks": [
+    {
+      "id": "archidekt-23045205",
+      "strategy": "angels",
+      "source": {
+        "url": "https://archidekt.com/decks/23045205",
+        "author": "Puroa",
+        "title": "Giada bracket 3",
+        "updatedAt": "2026-06-05T14:48:35.598106Z",
+        "importedAt": "2026-10-16T03:10:50.906072+00:00",
+        "bracket": 3,
+        "bracketBasis": "estimated",
+        "bracketReviewedAt": "2026-10-16"
+      },
+      "checks": {
+        "cardCount": 100,
+        "gameChangers": [
+          "Farewell",
+          "Smothering Tithe",
+          "Teferi's Protection"
+        ],
+        "commanderLegality": "legal",
+        "legalitySource": "Archidekt card data, checked at import",
+        "contentSha256": "3151e8efcfd2015b3368959a584e9f311f1d42bbbd170aab727ec7764178fa82"
+      },
+      "deck": {
+        "name": "Giada bracket 3",
+        "cards": [
+          {
+            "cardName": "Akroma's Will",
+            "amount": 1
+          },
+          {
+            "cardName": "Angel of Destiny",
+            "amount": 1
+          },
+          {
+            "cardName": "Angel of Finality",
+            "amount": 1
+          },
+          {
+            "cardName": "Angel of Jubilation",
+            "amount": 1
+          },
+          {
+            "cardName": "Angel of Vitality",
+            "amount": 1
+          },
+          {
+            "cardName": "Angel of the Ruins",
+            "amount": 1
+          },
+          {
+            "cardName": "Angelic Accord",
+            "amount": 1
+          },
+          {
+            "cardName": "Angelic Field Marshal",
+            "amount": 1
+          },
+          {
+            "cardName": "Angelic Skirmisher",
+            "amount": 1
+          },
+          {
+            "cardName": "Arcane Signet",
+            "amount": 1
+          },
+          {
+            "cardName": "Archaeomancer's Map",
+            "amount": 1
+          },
+          {
+            "cardName": "Archangel of Thune",
+            "amount": 1
+          },
+          {
+            "cardName": "Archangel of Tithes",
+            "amount": 1
+          },
+          {
+            "cardName": "Austere Command",
+            "amount": 1
+          },
+          {
+            "cardName": "Authority of the Consuls",
+            "amount": 1
+          },
+          {
+            "cardName": "Avacyn, Angel of Hope",
+            "amount": 1
+          },
+          {
+            "cardName": "Baneslayer Angel",
+            "amount": 1
+          },
+          {
+            "cardName": "Battle Angels of Tyr",
+            "amount": 1
+          },
+          {
+            "cardName": "Bishop of Wings",
+            "amount": 1
+          },
+          {
+            "cardName": "Bonders' Enclave",
+            "amount": 1
+          },
+          {
+            "cardName": "Bruna, the Fading Light",
+            "amount": 1
+          },
+          {
+            "cardName": "Cavern of Souls",
+            "amount": 1
+          },
+          {
+            "cardName": "Court of Grace",
+            "amount": 1
+          },
+          {
+            "cardName": "Eiganjo, Seat of the Empire",
+            "amount": 1
+          },
+          {
+            "cardName": "Emeria Shepherd",
+            "amount": 1
+          },
+          {
+            "cardName": "Emeria, the Sky Ruin",
+            "amount": 1
+          },
+          {
+            "cardName": "Entreat the Angels",
+            "amount": 1
+          },
+          {
+            "cardName": "Exemplar of Light",
+            "amount": 1
+          },
+          {
+            "cardName": "Farewell",
+            "amount": 1
+          },
+          {
+            "cardName": "Firemane Commando",
+            "amount": 1
+          },
+          {
+            "cardName": "Flare of Fortitude",
+            "amount": 1
+          },
+          {
+            "cardName": "Flawless Maneuver",
+            "amount": 1
+          },
+          {
+            "cardName": "Folk Hero",
+            "amount": 1
+          },
+          {
+            "cardName": "Generous Gift",
+            "amount": 1
+          },
+          {
+            "cardName": "Gisela, the Broken Blade",
+            "amount": 1
+          },
+          {
+            "cardName": "Herald of War",
+            "amount": 1
+          },
+          {
+            "cardName": "Herald's Horn",
+            "amount": 1
+          },
+          {
+            "cardName": "Inspiring Overseer",
+            "amount": 1
+          },
+          {
+            "cardName": "Land Tax",
+            "amount": 1
+          },
+          {
+            "cardName": "Lightning Greaves",
+            "amount": 1
+          },
+          {
+            "cardName": "Linvala, Keeper of Silence",
+            "amount": 1
+          },
+          {
+            "cardName": "Luminarch Ascension",
+            "amount": 1
+          },
+          {
+            "cardName": "Lyra Dawnbringer",
+            "amount": 1
+          },
+          {
+            "cardName": "Metropolis Reformer",
+            "amount": 1
+          },
+          {
+            "cardName": "Minas Tirith",
+            "amount": 1
+          },
+          {
+            "cardName": "Myriad Landscape",
+            "amount": 1
+          },
+          {
+            "cardName": "Nykthos, Shrine to Nyx",
+            "amount": 1
+          },
+          {
+            "cardName": "Oketra's Monument",
+            "amount": 1
+          },
+          {
+            "cardName": "Path of Ancestry",
+            "amount": 1
+          },
+          {
+            "cardName": "Path to Exile",
+            "amount": 1
+          },
+          {
+            "cardName": "Pearl Medallion",
+            "amount": 1
+          },
+          {
+            "cardName": "Plains",
+            "amount": 25
+          },
+          {
+            "cardName": "Resplendent Angel",
+            "amount": 1
+          },
+          {
+            "cardName": "Righteous Valkyrie",
+            "amount": 1
+          },
+          {
+            "cardName": "Sephara, Sky's Blade",
+            "amount": 1
+          },
+          {
+            "cardName": "Seraph Sanctuary",
+            "amount": 1
+          },
+          {
+            "cardName": "Serra the Benevolent",
+            "amount": 1
+          },
+          {
+            "cardName": "Serra's Emissary",
+            "amount": 1
+          },
+          {
+            "cardName": "Smothering Tithe",
+            "amount": 1
+          },
+          {
+            "cardName": "Sol Ring",
+            "amount": 1
+          },
+          {
+            "cardName": "Starnheim Aspirant",
+            "amount": 1
+          },
+          {
+            "cardName": "Stroke of Midnight",
+            "amount": 1
+          },
+          {
+            "cardName": "Sunblast Angel",
+            "amount": 1
+          },
+          {
+            "cardName": "Swiftfoot Boots",
+            "amount": 1
+          },
+          {
+            "cardName": "Sword of the Animist",
+            "amount": 1
+          },
+          {
+            "cardName": "Swords to Plowshares",
+            "amount": 1
+          },
+          {
+            "cardName": "Teferi's Protection",
+            "amount": 1
+          },
+          {
+            "cardName": "The Book of Exalted Deeds",
+            "amount": 1
+          },
+          {
+            "cardName": "Thraben Watcher",
+            "amount": 1
+          },
+          {
+            "cardName": "Urza's Incubator",
+            "amount": 1
+          },
+          {
+            "cardName": "Valkyrie Harbinger",
+            "amount": 1
+          },
+          {
+            "cardName": "Vanquisher's Banner",
+            "amount": 1
+          },
+          {
+            "cardName": "War Room",
+            "amount": 1
+          },
+          {
+            "cardName": "Wrath of God",
+            "amount": 1
+          },
+          {
+            "cardName": "Youthful Valkyrie",
+            "amount": 1
+          }
+        ],
+        "commanders": [
+          {
+            "cardName": "Giada, Font of Hope",
+            "amount": 1
+          }
+        ],
+        "sideboard": []
+      }
+    },
+    {
+      "id": "archidekt-18019886",
+      "strategy": "goblins",
+      "source": {
+        "url": "https://archidekt.com/decks/18019886",
+        "author": "Heavymetalfan81",
+        "title": "Krenko Bracket 3",
+        "updatedAt": "2026-05-03T21:08:09.858216Z",
+        "importedAt": "2026-10-16T03:10:50.906072+00:00",
+        "bracket": 3,
+        "bracketBasis": "author",
+        "bracketReviewedAt": "2026-10-16"
+      },
+      "checks": {
+        "cardCount": 100,
+        "gameChangers": [
+          "Ancient Tomb"
+        ],
+        "commanderLegality": "legal",
+        "legalitySource": "Archidekt card data, checked at import",
+        "contentSha256": "c9da1ceae0c8f4b60e64cb1ee77b4b70af825789058d631477697bc2686299b0"
+      },
+      "deck": {
+        "name": "Krenko Bracket 3",
+        "cards": [
+          {
+            "cardName": "Amonkhet Raceway",
+            "amount": 1
+          },
+          {
+            "cardName": "Ancient Tomb",
+            "amount": 1
+          },
+          {
+            "cardName": "Anger",
+            "amount": 1
+          },
+          {
+            "cardName": "Battle Cry Goblin",
+            "amount": 1
+          },
+          {
+            "cardName": "Battle Squadron",
+            "amount": 1
+          },
+          {
+            "cardName": "Big Score",
+            "amount": 1
+          },
+          {
+            "cardName": "Blasphemous Act",
+            "amount": 1
+          },
+          {
+            "cardName": "Bolt Bend",
+            "amount": 1
+          },
+          {
+            "cardName": "Brash Taunter",
+            "amount": 1
+          },
+          {
+            "cardName": "Breeches, Eager Pillager",
+            "amount": 1
+          },
+          {
+            "cardName": "Castle Embereth",
+            "amount": 1
+          },
+          {
+            "cardName": "Chaos Warp",
+            "amount": 1
+          },
+          {
+            "cardName": "Conspicuous Snoop",
+            "amount": 1
+          },
+          {
+            "cardName": "Count on Luck",
+            "amount": 1
+          },
+          {
+            "cardName": "Deflecting Swat",
+            "amount": 1
+          },
+          {
+            "cardName": "Demand Answers",
+            "amount": 1
+          },
+          {
+            "cardName": "Embrace the Unknown",
+            "amount": 1
+          },
+          {
+            "cardName": "Faithless Looting",
+            "amount": 1
+          },
+          {
+            "cardName": "Flare of Duplication",
+            "amount": 1
+          },
+          {
+            "cardName": "General Kreat, the Boltbringer",
+            "amount": 1
+          },
+          {
+            "cardName": "Glimpse the Impossible",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Bombardment",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Chieftain",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Chirurgeon",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Grenade",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin King",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Lackey",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Matron",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Motivator",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Recruiter",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Ringleader",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Sledder",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Trashmaster",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin War Strike",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Warchief",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Wizard",
+            "amount": 1
+          },
+          {
+            "cardName": "Goro-Goro, Disciple of Ryusei",
+            "amount": 1
+          },
+          {
+            "cardName": "Hexing Squelcher",
+            "amount": 1
+          },
+          {
+            "cardName": "Hobgoblin Bandit Lord",
+            "amount": 1
+          },
+          {
+            "cardName": "Howlsquad Heavy",
+            "amount": 1
+          },
+          {
+            "cardName": "Impact Tremors",
+            "amount": 1
+          },
+          {
+            "cardName": "Krenko's Command",
+            "amount": 1
+          },
+          {
+            "cardName": "Krenko, Tin Street Kingpin",
+            "amount": 1
+          },
+          {
+            "cardName": "Legion Loyalist",
+            "amount": 1
+          },
+          {
+            "cardName": "Legion Warboss",
+            "amount": 1
+          },
+          {
+            "cardName": "Lightning Greaves",
+            "amount": 1
+          },
+          {
+            "cardName": "Mass Hysteria",
+            "amount": 1
+          },
+          {
+            "cardName": "Massive Raid",
+            "amount": 1
+          },
+          {
+            "cardName": "Moria Marauder",
+            "amount": 1
+          },
+          {
+            "cardName": "Mountain",
+            "amount": 32
+          },
+          {
+            "cardName": "Muxus, Goblin Grandee",
+            "amount": 1
+          },
+          {
+            "cardName": "Pashalik Mons",
+            "amount": 1
+          },
+          {
+            "cardName": "Pyroblast",
+            "amount": 1
+          },
+          {
+            "cardName": "Quest for the Goblin Lord",
+            "amount": 1
+          },
+          {
+            "cardName": "Redirect Lightning",
+            "amount": 1
+          },
+          {
+            "cardName": "Return the Favor",
+            "amount": 1
+          },
+          {
+            "cardName": "Romantic Rendezvous",
+            "amount": 1
+          },
+          {
+            "cardName": "Rundvelt Hordemaster",
+            "amount": 1
+          },
+          {
+            "cardName": "Shared Animosity",
+            "amount": 1
+          },
+          {
+            "cardName": "Skirk Prospector",
+            "amount": 1
+          },
+          {
+            "cardName": "Skullclamp",
+            "amount": 1
+          },
+          {
+            "cardName": "Sol Ring",
+            "amount": 1
+          },
+          {
+            "cardName": "Springleaf Drum",
+            "amount": 1
+          },
+          {
+            "cardName": "Swiftfoot Boots",
+            "amount": 1
+          },
+          {
+            "cardName": "Vandalblast",
+            "amount": 1
+          },
+          {
+            "cardName": "War Room",
+            "amount": 1
+          },
+          {
+            "cardName": "Warren Instigator",
+            "amount": 1
+          },
+          {
+            "cardName": "Wild Wasteland",
+            "amount": 1
+          }
+        ],
+        "commanders": [
+          {
+            "cardName": "Krenko, Mob Boss",
+            "amount": 1
+          }
+        ],
+        "sideboard": []
+      }
+    },
+    {
+      "id": "archidekt-24644469",
+      "strategy": "elves",
+      "source": {
+        "url": "https://archidekt.com/decks/24644469",
+        "author": "Degimod",
+        "title": "Lathril - Verdant Dominance",
+        "updatedAt": "2026-10-07T14:56:07.956085Z",
+        "importedAt": "2026-10-16T03:10:50.906072+00:00",
+        "bracket": 3,
+        "bracketBasis": "author",
+        "bracketReviewedAt": "2026-10-16"
+      },
+      "checks": {
+        "cardCount": 100,
+        "gameChangers": [],
+        "commanderLegality": "legal",
+        "legalitySource": "Archidekt card data, checked at import",
+        "contentSha256": "2776678d8316efc2f70e318ec105d1cff0d82db1025004df7f3b02485139e7d7"
+      },
+      "deck": {
+        "name": "Lathril - Verdant Dominance",
+        "cards": [
+          {
+            "cardName": "Arbor Elf",
+            "amount": 1
+          },
+          {
+            "cardName": "Beast Whisperer",
+            "amount": 1
+          },
+          {
+            "cardName": "Beast Within",
+            "amount": 1
+          },
+          {
+            "cardName": "Bojuka Bog",
+            "amount": 1
+          },
+          {
+            "cardName": "Cantankerous Keepers",
+            "amount": 1
+          },
+          {
+            "cardName": "Celestial Reunion",
+            "amount": 1
+          },
+          {
+            "cardName": "Champions of the Perfect",
+            "amount": 1
+          },
+          {
+            "cardName": "Collective Resistance",
+            "amount": 1
+          },
+          {
+            "cardName": "Collective Unconscious",
+            "amount": 1
+          },
+          {
+            "cardName": "Command Tower",
+            "amount": 1
+          },
+          {
+            "cardName": "Crippling Fear",
+            "amount": 1
+          },
+          {
+            "cardName": "Cultist of the Absolute",
+            "amount": 1
+          },
+          {
+            "cardName": "Deathcap Glade",
+            "amount": 1
+          },
+          {
+            "cardName": "Demonic Embrace",
+            "amount": 1
+          },
+          {
+            "cardName": "Devoted Druid",
+            "amount": 1
+          },
+          {
+            "cardName": "Dwynen, Gilt-Leaf Daen",
+            "amount": 1
+          },
+          {
+            "cardName": "Eclipsed Elf",
+            "amount": 1
+          },
+          {
+            "cardName": "Eclipsed Realms",
+            "amount": 1
+          },
+          {
+            "cardName": "Elven Passage",
+            "amount": 1
+          },
+          {
+            "cardName": "Elvish Archdruid",
+            "amount": 1
+          },
+          {
+            "cardName": "Elvish Dreadlord",
+            "amount": 1
+          },
+          {
+            "cardName": "Elvish Guidance",
+            "amount": 1
+          },
+          {
+            "cardName": "Elvish Mystic",
+            "amount": 1
+          },
+          {
+            "cardName": "Elvish Warmaster",
+            "amount": 1
+          },
+          {
+            "cardName": "Emerald Charm",
+            "amount": 1
+          },
+          {
+            "cardName": "Exotic Orchard",
+            "amount": 1
+          },
+          {
+            "cardName": "Festering Thicket",
+            "amount": 1
+          },
+          {
+            "cardName": "Finale of Devastation",
+            "amount": 1
+          },
+          {
+            "cardName": "Forest",
+            "amount": 11
+          },
+          {
+            "cardName": "Fyndhorn Elves",
+            "amount": 1
+          },
+          {
+            "cardName": "Get a Leg Up",
+            "amount": 1
+          },
+          {
+            "cardName": "Gloom Ripper",
+            "amount": 1
+          },
+          {
+            "cardName": "Gnarlroot Trapper",
+            "amount": 1
+          },
+          {
+            "cardName": "Golgari Charm",
+            "amount": 1
+          },
+          {
+            "cardName": "Grim Backwoods",
+            "amount": 1
+          },
+          {
+            "cardName": "Harald Unites the Elves",
+            "amount": 1
+          },
+          {
+            "cardName": "Heritage Druid",
+            "amount": 1
+          },
+          {
+            "cardName": "Immaculate Magistrate",
+            "amount": 1
+          },
+          {
+            "cardName": "Imperious Perfect",
+            "amount": 1
+          },
+          {
+            "cardName": "Joraga Treespeaker",
+            "amount": 1
+          },
+          {
+            "cardName": "Kindred Summons",
+            "amount": 1
+          },
+          {
+            "cardName": "Lightning Greaves",
+            "amount": 1
+          },
+          {
+            "cardName": "Llanowar Elves",
+            "amount": 1
+          },
+          {
+            "cardName": "Llanowar Wastes",
+            "amount": 1
+          },
+          {
+            "cardName": "Might of the Masses",
+            "amount": 1
+          },
+          {
+            "cardName": "Minions' Murmurs",
+            "amount": 1
+          },
+          {
+            "cardName": "Morcant's Loyalist",
+            "amount": 1
+          },
+          {
+            "cardName": "My Precious // Allure of Power",
+            "amount": 1
+          },
+          {
+            "cardName": "Necroblossom Snarl",
+            "amount": 1
+          },
+          {
+            "cardName": "Night's Whisper",
+            "amount": 1
+          },
+          {
+            "cardName": "Overrun",
+            "amount": 1
+          },
+          {
+            "cardName": "Overwhelming Stampede",
+            "amount": 1
+          },
+          {
+            "cardName": "Path of Ancestry",
+            "amount": 1
+          },
+          {
+            "cardName": "Pile On",
+            "amount": 1
+          },
+          {
+            "cardName": "Plumb the Forbidden",
+            "amount": 1
+          },
+          {
+            "cardName": "Poison-Tip Archer",
+            "amount": 1
+          },
+          {
+            "cardName": "Priest of Titania",
+            "amount": 1
+          },
+          {
+            "cardName": "Realmwalker",
+            "amount": 1
+          },
+          {
+            "cardName": "Reclamation Sage",
+            "amount": 1
+          },
+          {
+            "cardName": "Return of the Wildspeaker",
+            "amount": 1
+          },
+          {
+            "cardName": "Revitalizing Repast // Old-Growth Grove",
+            "amount": 1
+          },
+          {
+            "cardName": "Rogue's Passage",
+            "amount": 1
+          },
+          {
+            "cardName": "Secluded Courtyard",
+            "amount": 1
+          },
+          {
+            "cardName": "Selfless Safewright",
+            "amount": 1
+          },
+          {
+            "cardName": "Shaman of the Pack",
+            "amount": 1
+          },
+          {
+            "cardName": "Shamanic Revelation",
+            "amount": 1
+          },
+          {
+            "cardName": "Skemfar Avenger",
+            "amount": 1
+          },
+          {
+            "cardName": "Skemfar Elderhall",
+            "amount": 1
+          },
+          {
+            "cardName": "Skemfar Shadowsage",
+            "amount": 1
+          },
+          {
+            "cardName": "Stargaze",
+            "amount": 1
+          },
+          {
+            "cardName": "Swamp",
+            "amount": 6
+          },
+          {
+            "cardName": "Swiftfoot Boots",
+            "amount": 1
+          },
+          {
+            "cardName": "Timberwatch Elf",
+            "amount": 1
+          },
+          {
+            "cardName": "Trystan's Command",
+            "amount": 1
+          },
+          {
+            "cardName": "Twilight Mire",
+            "amount": 1
+          },
+          {
+            "cardName": "Tyvar's Stand",
+            "amount": 1
+          },
+          {
+            "cardName": "Unclaimed Territory",
+            "amount": 1
+          },
+          {
+            "cardName": "Vernal Fen",
+            "amount": 1
+          },
+          {
+            "cardName": "Viridescent Bog",
+            "amount": 1
+          },
+          {
+            "cardName": "Virulent Emissary",
+            "amount": 1
+          },
+          {
+            "cardName": "Vitalize",
+            "amount": 1
+          },
+          {
+            "cardName": "Wirewood Channeler",
+            "amount": 1
+          },
+          {
+            "cardName": "Wirewood Symbiote",
+            "amount": 1
+          },
+          {
+            "cardName": "Woodland Cemetery",
+            "amount": 1
+          }
+        ],
+        "commanders": [
+          {
+            "cardName": "Lathril, Blade of the Elves",
+            "amount": 1
+          }
+        ],
+        "sideboard": []
+      }
+    },
+    {
+      "id": "archidekt-19894242",
+      "strategy": "large creatures",
+      "source": {
+        "url": "https://archidekt.com/decks/19894242",
+        "author": "jatabo",
+        "title": "GHALTA, PRIMAL HUNGER",
+        "updatedAt": "2026-10-10T14:52:37.300262Z",
+        "importedAt": "2026-10-16T03:10:50.906072+00:00",
+        "bracket": 3,
+        "bracketBasis": "author",
+        "bracketReviewedAt": "2026-10-16"
+      },
+      "checks": {
+        "cardCount": 100,
+        "gameChangers": [],
+        "commanderLegality": "legal",
+        "legalitySource": "Archidekt card data, checked at import",
+        "contentSha256": "138ba174f22eb3ab2ea4c9737b6707016fc325516459542fa33748a45d188d51"
+      },
+      "deck": {
+        "name": "GHALTA, PRIMAL HUNGER",
+        "cards": [
+          {
+            "cardName": "Agonasaur Rex",
+            "amount": 1
+          },
+          {
+            "cardName": "Arbor Elf",
+            "amount": 1
+          },
+          {
+            "cardName": "Badgermole Cub",
+            "amount": 1
+          },
+          {
+            "cardName": "Beast Whisperer",
+            "amount": 1
+          },
+          {
+            "cardName": "Beast Within",
+            "amount": 1
+          },
+          {
+            "cardName": "Boseiju, Who Endures",
+            "amount": 1
+          },
+          {
+            "cardName": "Bramble Familiar // Fetch Quest",
+            "amount": 1
+          },
+          {
+            "cardName": "Bridgeworks Battle // Tanglespan Bridgeworks",
+            "amount": 1
+          },
+          {
+            "cardName": "Bushwhack",
+            "amount": 1
+          },
+          {
+            "cardName": "Collective Resistance",
+            "amount": 1
+          },
+          {
+            "cardName": "Cultivate",
+            "amount": 1
+          },
+          {
+            "cardName": "Disciple of Freyalise // Garden of Freyalise",
+            "amount": 1
+          },
+          {
+            "cardName": "Drover of the Mighty",
+            "amount": 1
+          },
+          {
+            "cardName": "Elder Gargaroth",
+            "amount": 1
+          },
+          {
+            "cardName": "Elvish Mystic",
+            "amount": 1
+          },
+          {
+            "cardName": "Fanatic of Rhonas",
+            "amount": 1
+          },
+          {
+            "cardName": "Flare of Cultivation",
+            "amount": 1
+          },
+          {
+            "cardName": "Forest",
+            "amount": 21
+          },
+          {
+            "cardName": "Fyndhorn Elves",
+            "amount": 1
+          },
+          {
+            "cardName": "Garruk's Uprising",
+            "amount": 1
+          },
+          {
+            "cardName": "Gigantosaurus",
+            "amount": 1
+          },
+          {
+            "cardName": "Goreclaw, Terror of Qal Sisma",
+            "amount": 1
+          },
+          {
+            "cardName": "Gwenna, Eyes of Gaea",
+            "amount": 1
+          },
+          {
+            "cardName": "Herd Heirloom",
+            "amount": 1
+          },
+          {
+            "cardName": "Hulking Raptor",
+            "amount": 1
+          },
+          {
+            "cardName": "Ilysian Caryatid",
+            "amount": 1
+          },
+          {
+            "cardName": "Intrepid Paleontologist",
+            "amount": 1
+          },
+          {
+            "cardName": "Karametra's Acolyte",
+            "amount": 1
+          },
+          {
+            "cardName": "Kazandu Mammoth // Kazandu Valley",
+            "amount": 1
+          },
+          {
+            "cardName": "Kogla, the Titan Ape",
+            "amount": 1
+          },
+          {
+            "cardName": "Lair of the Hydra",
+            "amount": 1
+          },
+          {
+            "cardName": "Lightning Greaves",
+            "amount": 1
+          },
+          {
+            "cardName": "Llanowar Elves",
+            "amount": 1
+          },
+          {
+            "cardName": "Llanowar Tribe",
+            "amount": 1
+          },
+          {
+            "cardName": "Lotus Cobra",
+            "amount": 1
+          },
+          {
+            "cardName": "Majestic Genesis",
+            "amount": 1
+          },
+          {
+            "cardName": "Misty Rainforest",
+            "amount": 1
+          },
+          {
+            "cardName": "Mosswort Bridge",
+            "amount": 1
+          },
+          {
+            "cardName": "Nissa's Pilgrimage",
+            "amount": 1
+          },
+          {
+            "cardName": "Nullhide Ferox",
+            "amount": 1
+          },
+          {
+            "cardName": "Nykthos, Shrine to Nyx",
+            "amount": 1
+          },
+          {
+            "cardName": "Nylea, Keen-Eyed",
+            "amount": 1
+          },
+          {
+            "cardName": "Outcaster Trailblazer",
+            "amount": 1
+          },
+          {
+            "cardName": "Overlord of the Hauntwoods",
+            "amount": 1
+          },
+          {
+            "cardName": "Paradise Druid",
+            "amount": 1
+          },
+          {
+            "cardName": "Phytotitan",
+            "amount": 1
+          },
+          {
+            "cardName": "Primal Might",
+            "amount": 1
+          },
+          {
+            "cardName": "Pugnacious Hammerskull",
+            "amount": 1
+          },
+          {
+            "cardName": "Questing Beast",
+            "amount": 1
+          },
+          {
+            "cardName": "Raucous Audience",
+            "amount": 1
+          },
+          {
+            "cardName": "Reclamation Sage",
+            "amount": 1
+          },
+          {
+            "cardName": "Regal Imperiosaur",
+            "amount": 1
+          },
+          {
+            "cardName": "Rhonas the Indomitable",
+            "amount": 1
+          },
+          {
+            "cardName": "Scrapshooter",
+            "amount": 1
+          },
+          {
+            "cardName": "Selvala, Heart of the Wilds",
+            "amount": 1
+          },
+          {
+            "cardName": "Sol Ring",
+            "amount": 1
+          },
+          {
+            "cardName": "Spinner of Souls",
+            "amount": 1
+          },
+          {
+            "cardName": "Steel Leaf Champion",
+            "amount": 1
+          },
+          {
+            "cardName": "Summon: Fenrir",
+            "amount": 1
+          },
+          {
+            "cardName": "Surrak, Elusive Hunter",
+            "amount": 1
+          },
+          {
+            "cardName": "Surrak, the Hunt Caller",
+            "amount": 1
+          },
+          {
+            "cardName": "Swiftfoot Boots",
+            "amount": 1
+          },
+          {
+            "cardName": "Sylvan Library",
+            "amount": 1
+          },
+          {
+            "cardName": "Tangled Florahedron // Tangled Vale",
+            "amount": 1
+          },
+          {
+            "cardName": "Tangleweave Armor",
+            "amount": 1
+          },
+          {
+            "cardName": "Tender Wildguide",
+            "amount": 1
+          },
+          {
+            "cardName": "The Great Henge",
+            "amount": 1
+          },
+          {
+            "cardName": "The Skullspore Nexus",
+            "amount": 1
+          },
+          {
+            "cardName": "Topiary Stomper",
+            "amount": 1
+          },
+          {
+            "cardName": "Tribute to the World Tree",
+            "amount": 1
+          },
+          {
+            "cardName": "Turntimber Symbiosis // Turntimber, Serpentine Wood",
+            "amount": 1
+          },
+          {
+            "cardName": "Utopia Sprawl",
+            "amount": 1
+          },
+          {
+            "cardName": "Vaultborn Tyrant",
+            "amount": 1
+          },
+          {
+            "cardName": "Vorinclex // The Grand Evolution",
+            "amount": 1
+          },
+          {
+            "cardName": "Wayward Swordtooth",
+            "amount": 1
+          },
+          {
+            "cardName": "Whisperer of the Wilds",
+            "amount": 1
+          },
+          {
+            "cardName": "Wild Growth",
+            "amount": 1
+          },
+          {
+            "cardName": "Wooded Foothills",
+            "amount": 1
+          },
+          {
+            "cardName": "Yorvo, Lord of Garenbrig",
+            "amount": 1
+          }
+        ],
+        "commanders": [
+          {
+            "cardName": "Ghalta, Primal Hunger",
+            "amount": 1
+          }
+        ],
+        "sideboard": []
+      }
+    },
+    {
+      "id": "archidekt-22625596",
+      "strategy": "power-four creatures",
+      "source": {
+        "url": "https://archidekt.com/decks/22625596",
+        "author": "SunnyOfAThousandVoices",
+        "title": "The Power of Four",
+        "updatedAt": "2026-08-21T22:45:03.158510Z",
+        "importedAt": "2026-10-16T03:10:50.906072+00:00",
+        "bracket": 3,
+        "bracketBasis": "author",
+        "bracketReviewedAt": "2026-10-16"
+      },
+      "checks": {
+        "cardCount": 100,
+        "gameChangers": [],
+        "commanderLegality": "legal",
+        "legalitySource": "Archidekt card data, checked at import",
+        "contentSha256": "61bc2ac5e63149f87a2f54e010f04d3953013c2f4fe65b8de670f7096c252310"
+      },
+      "deck": {
+        "name": "The Power of Four",
+        "cards": [
+          {
+            "cardName": "Apex Altisaur",
+            "amount": 1
+          },
+          {
+            "cardName": "Apex Devastator",
+            "amount": 1
+          },
+          {
+            "cardName": "Badgermole Cub",
+            "amount": 1
+          },
+          {
+            "cardName": "Bala Ged Recovery // Bala Ged Sanctuary",
+            "amount": 1
+          },
+          {
+            "cardName": "Beast Whisperer",
+            "amount": 1
+          },
+          {
+            "cardName": "Beast Within",
+            "amount": 1
+          },
+          {
+            "cardName": "Bellowing Tanglewurm",
+            "amount": 1
+          },
+          {
+            "cardName": "Beorn the Fierce",
+            "amount": 1
+          },
+          {
+            "cardName": "Bonders' Enclave",
+            "amount": 1
+          },
+          {
+            "cardName": "Boseiju, Who Endures",
+            "amount": 1
+          },
+          {
+            "cardName": "Castle Garenbrig",
+            "amount": 1
+          },
+          {
+            "cardName": "Challenger Troll",
+            "amount": 1
+          },
+          {
+            "cardName": "Craterhoof Behemoth",
+            "amount": 1
+          },
+          {
+            "cardName": "Demolition Field",
+            "amount": 1
+          },
+          {
+            "cardName": "Disciple of Freyalise // Garden of Freyalise",
+            "amount": 1
+          },
+          {
+            "cardName": "Elder Gargaroth",
+            "amount": 1
+          },
+          {
+            "cardName": "Emerald Medallion",
+            "amount": 1
+          },
+          {
+            "cardName": "Evendo, Waking Haven",
+            "amount": 1
+          },
+          {
+            "cardName": "Fanatic of Rhonas",
+            "amount": 1
+          },
+          {
+            "cardName": "Frenzied Baloth",
+            "amount": 1
+          },
+          {
+            "cardName": "Garruk's Packleader",
+            "amount": 1
+          },
+          {
+            "cardName": "Garruk's Uprising",
+            "amount": 1
+          },
+          {
+            "cardName": "Guardian Project",
+            "amount": 1
+          },
+          {
+            "cardName": "Gwenna, Eyes of Gaea",
+            "amount": 1
+          },
+          {
+            "cardName": "Heartwood Storyteller",
+            "amount": 1
+          },
+          {
+            "cardName": "Heroic Intervention",
+            "amount": 1
+          },
+          {
+            "cardName": "Ilysian Caryatid",
+            "amount": 1
+          },
+          {
+            "cardName": "Intrepid Paleontologist",
+            "amount": 1
+          },
+          {
+            "cardName": "Kamahl, Heart of Krosa",
+            "amount": 1
+          },
+          {
+            "cardName": "Keeper of Fables",
+            "amount": 1
+          },
+          {
+            "cardName": "Kenrith's Transformation",
+            "amount": 1
+          },
+          {
+            "cardName": "Kodama of the East Tree",
+            "amount": 1
+          },
+          {
+            "cardName": "Kogla, the Titan Ape",
+            "amount": 1
+          },
+          {
+            "cardName": "Kona, Rescue Beastie",
+            "amount": 1
+          },
+          {
+            "cardName": "Manglehorn",
+            "amount": 1
+          },
+          {
+            "cardName": "Mosswort Bridge",
+            "amount": 1
+          },
+          {
+            "cardName": "Nature's Lore",
+            "amount": 1
+          },
+          {
+            "cardName": "Nykthos, Shrine to Nyx",
+            "amount": 1
+          },
+          {
+            "cardName": "Nylea, Keen-Eyed",
+            "amount": 1
+          },
+          {
+            "cardName": "Ohran Frostfang",
+            "amount": 1
+          },
+          {
+            "cardName": "Ojer Kaslem, Deepest Growth // Temple of Cultivation",
+            "amount": 1
+          },
+          {
+            "cardName": "Outcaster Trailblazer",
+            "amount": 1
+          },
+          {
+            "cardName": "Overlord of the Hauntwoods",
+            "amount": 1
+          },
+          {
+            "cardName": "Overwhelming Stampede",
+            "amount": 1
+          },
+          {
+            "cardName": "Prowling Serpopard",
+            "amount": 1
+          },
+          {
+            "cardName": "Questing Beast",
+            "amount": 1
+          },
+          {
+            "cardName": "Radagast of Rhosgobel",
+            "amount": 1
+          },
+          {
+            "cardName": "Rampaging Baloths",
+            "amount": 1
+          },
+          {
+            "cardName": "Regal Behemoth",
+            "amount": 1
+          },
+          {
+            "cardName": "Rhonas the Indomitable",
+            "amount": 1
+          },
+          {
+            "cardName": "Rhonas's Monument",
+            "amount": 1
+          },
+          {
+            "cardName": "Rogue's Passage",
+            "amount": 1
+          },
+          {
+            "cardName": "Sakura-Tribe Elder",
+            "amount": 1
+          },
+          {
+            "cardName": "Scavenger Grounds",
+            "amount": 1
+          },
+          {
+            "cardName": "Selvala, Heart of the Wilds",
+            "amount": 1
+          },
+          {
+            "cardName": "Silverback Elder",
+            "amount": 1
+          },
+          {
+            "cardName": "Smuggler's Surprise",
+            "amount": 1
+          },
+          {
+            "cardName": "Snow-Covered Forest",
+            "amount": 23
+          },
+          {
+            "cardName": "Sol Ring",
+            "amount": 1
+          },
+          {
+            "cardName": "Soul of the Harvest",
+            "amount": 1
+          },
+          {
+            "cardName": "Studious First-Year // Rampant Growth",
+            "amount": 1
+          },
+          {
+            "cardName": "Surrak and Goreclaw",
+            "amount": 1
+          },
+          {
+            "cardName": "Surrak, the Hunt Caller",
+            "amount": 1
+          },
+          {
+            "cardName": "Sword of Light and Shadow",
+            "amount": 1
+          },
+          {
+            "cardName": "Tangled Florahedron // Tangled Vale",
+            "amount": 1
+          },
+          {
+            "cardName": "Terastodon",
+            "amount": 1
+          },
+          {
+            "cardName": "The Earth King",
+            "amount": 1
+          },
+          {
+            "cardName": "The Great Henge",
+            "amount": 1
+          },
+          {
+            "cardName": "Thunderfoot Baloth",
+            "amount": 1
+          },
+          {
+            "cardName": "Toski, Bearer of Secrets",
+            "amount": 1
+          },
+          {
+            "cardName": "Trailtracker Scout",
+            "amount": 1
+          },
+          {
+            "cardName": "Vaultborn Tyrant",
+            "amount": 1
+          },
+          {
+            "cardName": "War Room",
+            "amount": 1
+          },
+          {
+            "cardName": "Wayward Swordtooth",
+            "amount": 1
+          },
+          {
+            "cardName": "Whisperer of the Wilds",
+            "amount": 1
+          },
+          {
+            "cardName": "Yeva, Nature's Herald",
+            "amount": 1
+          },
+          {
+            "cardName": "Zopandrel, Hunger Dominus",
+            "amount": 1
+          }
+        ],
+        "commanders": [
+          {
+            "cardName": "Goreclaw, Terror of Qal Sisma",
+            "amount": 1
+          }
+        ],
+        "sideboard": []
+      }
+    },
+    {
+      "id": "archidekt-11353536",
+      "strategy": "burn",
+      "source": {
+        "url": "https://archidekt.com/decks/11353536",
+        "author": "Polizei",
+        "title": "Torbran, Thane of Red Fell",
+        "updatedAt": "2025-04-22T23:02:57.573059Z",
+        "importedAt": "2026-10-16T03:10:50.906072+00:00",
+        "bracket": 3,
+        "bracketBasis": "author",
+        "bracketReviewedAt": "2026-10-16"
+      },
+      "checks": {
+        "cardCount": 100,
+        "gameChangers": [
+          "Ancient Tomb",
+          "Jeska's Will"
+        ],
+        "commanderLegality": "legal",
+        "legalitySource": "Archidekt card data, checked at import",
+        "contentSha256": "6fd9eb8988eff20ede76d19b2bed98ba7ada297f7e6f3d0983b87e4f12f62d93"
+      },
+      "deck": {
+        "name": "Torbran, Thane of Red Fell",
+        "cards": [
+          {
+            "cardName": "Abrade",
+            "amount": 1
+          },
+          {
+            "cardName": "Ancient Tomb",
+            "amount": 1
+          },
+          {
+            "cardName": "Arcane Signet",
+            "amount": 1
+          },
+          {
+            "cardName": "Arena of Glory",
+            "amount": 1
+          },
+          {
+            "cardName": "Blasphemous Act",
+            "amount": 1
+          },
+          {
+            "cardName": "Boltwave",
+            "amount": 1
+          },
+          {
+            "cardName": "By Force",
+            "amount": 1
+          },
+          {
+            "cardName": "Cemetery Gatekeeper",
+            "amount": 1
+          },
+          {
+            "cardName": "Chain Reaction",
+            "amount": 1
+          },
+          {
+            "cardName": "Chandra's Incinerator",
+            "amount": 1
+          },
+          {
+            "cardName": "Chaos Warp",
+            "amount": 1
+          },
+          {
+            "cardName": "City on Fire",
+            "amount": 1
+          },
+          {
+            "cardName": "Dead // Gone",
+            "amount": 1
+          },
+          {
+            "cardName": "Defiler of Instinct",
+            "amount": 1
+          },
+          {
+            "cardName": "Deflecting Swat",
+            "amount": 1
+          },
+          {
+            "cardName": "Delayed Blast Fireball",
+            "amount": 1
+          },
+          {
+            "cardName": "Dwarven Mine",
+            "amount": 1
+          },
+          {
+            "cardName": "Eidolon of the Great Revel",
+            "amount": 1
+          },
+          {
+            "cardName": "End the Festivities",
+            "amount": 1
+          },
+          {
+            "cardName": "Faithless Looting",
+            "amount": 1
+          },
+          {
+            "cardName": "Fiery Confluence",
+            "amount": 1
+          },
+          {
+            "cardName": "Fiery Emancipation",
+            "amount": 1
+          },
+          {
+            "cardName": "Forgotten Cave",
+            "amount": 1
+          },
+          {
+            "cardName": "Fury",
+            "amount": 1
+          },
+          {
+            "cardName": "Generous Plunderer",
+            "amount": 1
+          },
+          {
+            "cardName": "Glimpse the Impossible",
+            "amount": 1
+          },
+          {
+            "cardName": "Goblin Chainwhirler",
+            "amount": 1
+          },
+          {
+            "cardName": "Impact Resonance",
+            "amount": 1
+          },
+          {
+            "cardName": "Inferno Titan",
+            "amount": 1
+          },
+          {
+            "cardName": "Jeska's Will",
+            "amount": 1
+          },
+          {
+            "cardName": "Lightning Bolt",
+            "amount": 1
+          },
+          {
+            "cardName": "Lightning Greaves",
+            "amount": 1
+          },
+          {
+            "cardName": "Liquimetal Torque",
+            "amount": 1
+          },
+          {
+            "cardName": "Magda, Brazen Outlaw",
+            "amount": 1
+          },
+          {
+            "cardName": "Magda, the Hoardmaster",
+            "amount": 1
+          },
+          {
+            "cardName": "Manabarbs",
+            "amount": 1
+          },
+          {
+            "cardName": "Mechanized Warfare",
+            "amount": 1
+          },
+          {
+            "cardName": "Mimic Vat",
+            "amount": 1
+          },
+          {
+            "cardName": "Mines of Moria",
+            "amount": 1
+          },
+          {
+            "cardName": "Mizzium Mortars",
+            "amount": 1
+          },
+          {
+            "cardName": "Mountain",
+            "amount": 25
+          },
+          {
+            "cardName": "Neheb, the Eternal",
+            "amount": 1
+          },
+          {
+            "cardName": "Nykthos, Shrine to Nyx",
+            "amount": 1
+          },
+          {
+            "cardName": "Ojer Axonil, Deepest Might // Temple of Power",
+            "amount": 1
+          },
+          {
+            "cardName": "Pinnacle Monk // Mystic Peak",
+            "amount": 1
+          },
+          {
+            "cardName": "Price of Progress",
+            "amount": 1
+          },
+          {
+            "cardName": "Pyrokinesis",
+            "amount": 1
+          },
+          {
+            "cardName": "Quakebringer",
+            "amount": 1
+          },
+          {
+            "cardName": "Ragavan, Nimble Pilferer",
+            "amount": 1
+          },
+          {
+            "cardName": "Rampaging Ferocidon",
+            "amount": 1
+          },
+          {
+            "cardName": "Ramunap Ruins",
+            "amount": 1
+          },
+          {
+            "cardName": "Razorkin Needlehead",
+            "amount": 1
+          },
+          {
+            "cardName": "Red Elemental Blast",
+            "amount": 1
+          },
+          {
+            "cardName": "Ruby Medallion",
+            "amount": 1
+          },
+          {
+            "cardName": "Scavenger Grounds",
+            "amount": 1
+          },
+          {
+            "cardName": "Screaming Nemesis",
+            "amount": 1
+          },
+          {
+            "cardName": "Scytheclaw Raptor",
+            "amount": 1
+          },
+          {
+            "cardName": "Sensei's Divining Top",
+            "amount": 1
+          },
+          {
+            "cardName": "Sin Prodder",
+            "amount": 1
+          },
+          {
+            "cardName": "Sokenzan, Crucible of Defiance",
+            "amount": 1
+          },
+          {
+            "cardName": "Sol Ring",
+            "amount": 1
+          },
+          {
+            "cardName": "Solphim, Mayhem Dominus",
+            "amount": 1
+          },
+          {
+            "cardName": "Spikefield Hazard // Spikefield Cave",
+            "amount": 1
+          },
+          {
+            "cardName": "Spinerock Knoll",
+            "amount": 1
+          },
+          {
+            "cardName": "Stigma Lasher",
+            "amount": 1
+          },
+          {
+            "cardName": "Sundering Eruption // Volcanic Fissure",
+            "amount": 1
+          },
+          {
+            "cardName": "Sunspine Lynx",
+            "amount": 1
+          },
+          {
+            "cardName": "Swiftfoot Boots",
+            "amount": 1
+          },
+          {
+            "cardName": "Tectonic Hazard",
+            "amount": 1
+          },
+          {
+            "cardName": "Terror of the Peaks",
+            "amount": 1
+          },
+          {
+            "cardName": "Valakut Exploration",
+            "amount": 1
+          },
+          {
+            "cardName": "Vandalblast",
+            "amount": 1
+          },
+          {
+            "cardName": "Virtue of Courage // Embereth Blaze",
+            "amount": 1
+          },
+          {
+            "cardName": "Wild Magic Surge",
+            "amount": 1
+          },
+          {
+            "cardName": "Zoyowa's Justice",
+            "amount": 1
+          }
+        ],
+        "commanders": [
+          {
+            "cardName": "Torbran, Thane of Red Fell",
+            "amount": 1
+          }
+        ],
+        "sideboard": []
+      }
+    },
+    {
+      "id": "archidekt-5319321",
+      "strategy": "drakes and spells",
+      "source": {
+        "url": "https://archidekt.com/decks/5319321",
+        "author": "Bublon98",
+        "title": "Talrand",
+        "updatedAt": "2026-10-12T01:15:59.522613Z",
+        "importedAt": "2026-10-16T03:10:50.906072+00:00",
+        "bracket": 3,
+        "bracketBasis": "estimated",
+        "bracketReviewedAt": "2026-10-16"
+      },
+      "checks": {
+        "cardCount": 100,
+        "gameChangers": [
+          "Narset, Parter of Veils",
+          "Rhystic Study"
+        ],
+        "commanderLegality": "legal",
+        "legalitySource": "Archidekt card data, checked at import",
+        "contentSha256": "d9b6682f7c6185f868ce7206051042513e3bf4fa505c3edb90e7bae005149c36"
+      },
+      "deck": {
+        "name": "Talrand",
+        "cards": [
+          {
+            "cardName": "Abjure",
+            "amount": 1
+          },
+          {
+            "cardName": "Aetherize",
+            "amount": 1
+          },
+          {
+            "cardName": "An Offer You Can't Refuse",
+            "amount": 1
+          },
+          {
+            "cardName": "Arcane Denial",
+            "amount": 1
+          },
+          {
+            "cardName": "Arcane Signet",
+            "amount": 1
+          },
+          {
+            "cardName": "Archmage Emeritus",
+            "amount": 1
+          },
+          {
+            "cardName": "Archmage of Runes",
+            "amount": 1
+          },
+          {
+            "cardName": "Archmage's Charm",
+            "amount": 1
+          },
+          {
+            "cardName": "Baral, Chief of Compliance",
+            "amount": 1
+          },
+          {
+            "cardName": "Bident of Thassa",
+            "amount": 1
+          },
+          {
+            "cardName": "Blink of an Eye",
+            "amount": 1
+          },
+          {
+            "cardName": "Brainstorm",
+            "amount": 1
+          },
+          {
+            "cardName": "Case of the Ransacked Lab",
+            "amount": 1
+          },
+          {
+            "cardName": "Castle Vantress",
+            "amount": 1
+          },
+          {
+            "cardName": "Chart a Course",
+            "amount": 1
+          },
+          {
+            "cardName": "Chemister's Insight",
+            "amount": 1
+          },
+          {
+            "cardName": "Coastal Piracy",
+            "amount": 1
+          },
+          {
+            "cardName": "Consider",
+            "amount": 1
+          },
+          {
+            "cardName": "Counterspell",
+            "amount": 1
+          },
+          {
+            "cardName": "Curse of the Swine",
+            "amount": 1
+          },
+          {
+            "cardName": "Dig Through Time",
+            "amount": 1
+          },
+          {
+            "cardName": "Disdainful Stroke",
+            "amount": 1
+          },
+          {
+            "cardName": "Dispel",
+            "amount": 1
+          },
+          {
+            "cardName": "Dissolve",
+            "amount": 1
+          },
+          {
+            "cardName": "Everflowing Chalice",
+            "amount": 1
+          },
+          {
+            "cardName": "Favorable Winds",
+            "amount": 1
+          },
+          {
+            "cardName": "Flood of Recollection",
+            "amount": 1
+          },
+          {
+            "cardName": "Flow of Knowledge",
+            "amount": 1
+          },
+          {
+            "cardName": "Frantic Search",
+            "amount": 1
+          },
+          {
+            "cardName": "Gitaxian Probe",
+            "amount": 1
+          },
+          {
+            "cardName": "Heraldic Banner",
+            "amount": 1
+          },
+          {
+            "cardName": "Hermes, Overseer of Elpis",
+            "amount": 1
+          },
+          {
+            "cardName": "High Tide",
+            "amount": 1
+          },
+          {
+            "cardName": "Hullbreaker Horror",
+            "amount": 1
+          },
+          {
+            "cardName": "Into the Roil",
+            "amount": 1
+          },
+          {
+            "cardName": "Island",
+            "amount": 29
+          },
+          {
+            "cardName": "Metallurgic Summonings",
+            "amount": 1
+          },
+          {
+            "cardName": "Mission Briefing",
+            "amount": 1
+          },
+          {
+            "cardName": "Murmuring Mystic",
+            "amount": 1
+          },
+          {
+            "cardName": "Myriad Landscape",
+            "amount": 1
+          },
+          {
+            "cardName": "Mystic Sanctuary",
+            "amount": 1
+          },
+          {
+            "cardName": "Narset, Parter of Veils",
+            "amount": 1
+          },
+          {
+            "cardName": "Negate",
+            "amount": 1
+          },
+          {
+            "cardName": "Opt",
+            "amount": 1
+          },
+          {
+            "cardName": "Ponder",
+            "amount": 1
+          },
+          {
+            "cardName": "Pongify",
+            "amount": 1
+          },
+          {
+            "cardName": "Preordain",
+            "amount": 1
+          },
+          {
+            "cardName": "Quick Study",
+            "amount": 1
+          },
+          {
+            "cardName": "Rapid Hybridization",
+            "amount": 1
+          },
+          {
+            "cardName": "Ravenform",
+            "amount": 1
+          },
+          {
+            "cardName": "Reality Shift",
+            "amount": 1
+          },
+          {
+            "cardName": "Reconnaissance Mission",
+            "amount": 1
+          },
+          {
+            "cardName": "Refute",
+            "amount": 1
+          },
+          {
+            "cardName": "Reliquary Tower",
+            "amount": 1
+          },
+          {
+            "cardName": "Rewind",
+            "amount": 1
+          },
+          {
+            "cardName": "Rhystic Study",
+            "amount": 1
+          },
+          {
+            "cardName": "Riptide Laboratory",
+            "amount": 1
+          },
+          {
+            "cardName": "Rivendell",
+            "amount": 1
+          },
+          {
+            "cardName": "Sapphire Medallion",
+            "amount": 1
+          },
+          {
+            "cardName": "Serum Visions",
+            "amount": 1
+          },
+          {
+            "cardName": "Sol Ring",
+            "amount": 1
+          },
+          {
+            "cardName": "Solve the Equation",
+            "amount": 1
+          },
+          {
+            "cardName": "Think Twice",
+            "amount": 1
+          },
+          {
+            "cardName": "Thought Vessel",
+            "amount": 1
+          },
+          {
+            "cardName": "Transcendent Message",
+            "amount": 1
+          },
+          {
+            "cardName": "Treasure Cruise",
+            "amount": 1
+          },
+          {
+            "cardName": "Unwind",
+            "amount": 1
+          },
+          {
+            "cardName": "Wash Away",
+            "amount": 1
+          },
+          {
+            "cardName": "Wavebreak Hippocamp",
+            "amount": 1
+          },
+          {
+            "cardName": "Winged Words",
+            "amount": 1
+          },
+          {
+            "cardName": "Wizard's Retort",
+            "amount": 1
+          }
+        ],
+        "commanders": [
+          {
+            "cardName": "Talrand, Sky Summoner",
+            "amount": 1
+          }
+        ],
+        "sideboard": []
+      }
+    },
+    {
+      "id": "archidekt-23009292",
+      "strategy": "landfall",
+      "source": {
+        "url": "https://archidekt.com/decks/23009292",
+        "author": "SMGrubbin",
+        "title": "Aesi",
+        "updatedAt": "2026-07-30T23:48:12.553172Z",
+        "importedAt": "2026-10-16T03:10:50.906072+00:00",
+        "bracket": 3,
+        "bracketBasis": "author",
+        "bracketReviewedAt": "2026-10-16"
+      },
+      "checks": {
+        "cardCount": 100,
+        "gameChangers": [
+          "Crop Rotation"
+        ],
+        "commanderLegality": "legal",
+        "legalitySource": "Archidekt card data, checked at import",
+        "contentSha256": "e68cfa61708c89865f7a55ddc9ca657e11bb8528307a3f219f2e6a222032e2bf"
+      },
+      "deck": {
+        "name": "Aesi",
+        "cards": [
+          {
+            "cardName": "An Offer You Can't Refuse",
+            "amount": 1
+          },
+          {
+            "cardName": "Ancient Greenwarden",
+            "amount": 1
+          },
+          {
+            "cardName": "Arcane Signet",
+            "amount": 1
+          },
+          {
+            "cardName": "Arixmethes, Slumbering Isle",
+            "amount": 1
+          },
+          {
+            "cardName": "Ashaya, Soul of the Wild",
+            "amount": 1
+          },
+          {
+            "cardName": "Azusa, Lost but Seeking",
+            "amount": 1
+          },
+          {
+            "cardName": "Beast Within",
+            "amount": 1
+          },
+          {
+            "cardName": "Boseiju, Who Endures",
+            "amount": 1
+          },
+          {
+            "cardName": "Breeding Pool",
+            "amount": 1
+          },
+          {
+            "cardName": "Bristly Bill, Spine Sower",
+            "amount": 1
+          },
+          {
+            "cardName": "Burgeoning",
+            "amount": 1
+          },
+          {
+            "cardName": "Command Tower",
+            "amount": 1
+          },
+          {
+            "cardName": "Counterspell",
+            "amount": 1
+          },
+          {
+            "cardName": "Courser of Kruphix",
+            "amount": 1
+          },
+          {
+            "cardName": "Crop Rotation",
+            "amount": 1
+          },
+          {
+            "cardName": "Cultivate",
+            "amount": 1
+          },
+          {
+            "cardName": "Dreamroot Cascade",
+            "amount": 1
+          },
+          {
+            "cardName": "Dryad of the Ilysian Grove",
+            "amount": 1
+          },
+          {
+            "cardName": "Entish Restoration",
+            "amount": 1
+          },
+          {
+            "cardName": "Evolution Sage",
+            "amount": 1
+          },
+          {
+            "cardName": "Evolving Wilds",
+            "amount": 1
+          },
+          {
+            "cardName": "Exploration",
+            "amount": 1
+          },
+          {
+            "cardName": "Fabled Passage",
+            "amount": 1
+          },
+          {
+            "cardName": "Farseek",
+            "amount": 1
+          },
+          {
+            "cardName": "Forest",
+            "amount": 25
+          },
+          {
+            "cardName": "Garruk's Uprising",
+            "amount": 1
+          },
+          {
+            "cardName": "Growth Spiral",
+            "amount": 1
+          },
+          {
+            "cardName": "Harrow",
+            "amount": 1
+          },
+          {
+            "cardName": "Heroic Intervention",
+            "amount": 1
+          },
+          {
+            "cardName": "Hinterland Harbor",
+            "amount": 1
+          },
+          {
+            "cardName": "Icetill Explorer",
+            "amount": 1
+          },
+          {
+            "cardName": "Island",
+            "amount": 1
+          },
+          {
+            "cardName": "Khalni Heart Expedition",
+            "amount": 1
+          },
+          {
+            "cardName": "Kodama's Reach",
+            "amount": 1
+          },
+          {
+            "cardName": "Lightning Greaves",
+            "amount": 1
+          },
+          {
+            "cardName": "Lotus Cobra",
+            "amount": 1
+          },
+          {
+            "cardName": "Misty Rainforest",
+            "amount": 1
+          },
+          {
+            "cardName": "Mole Man, Moloid Master",
+            "amount": 1
+          },
+          {
+            "cardName": "Mossborn Hydra",
+            "amount": 1
+          },
+          {
+            "cardName": "Multani, Yavimaya's Avatar",
+            "amount": 1
+          },
+          {
+            "cardName": "Murkfiend Liege",
+            "amount": 1
+          },
+          {
+            "cardName": "Myriad Landscape",
+            "amount": 1
+          },
+          {
+            "cardName": "Nature's Lore",
+            "amount": 1
+          },
+          {
+            "cardName": "Oracle of Mul Daya",
+            "amount": 1
+          },
+          {
+            "cardName": "Planar Engineering",
+            "amount": 1
+          },
+          {
+            "cardName": "Pongify",
+            "amount": 1
+          },
+          {
+            "cardName": "Rampaging Baloths",
+            "amount": 1
+          },
+          {
+            "cardName": "Rampant Growth",
+            "amount": 1
+          },
+          {
+            "cardName": "Ramunap Excavator",
+            "amount": 1
+          },
+          {
+            "cardName": "Rapid Hybridization",
+            "amount": 1
+          },
+          {
+            "cardName": "Rejuvenating Springs",
+            "amount": 1
+          },
+          {
+            "cardName": "Reliquary Tower",
+            "amount": 1
+          },
+          {
+            "cardName": "Retreat to Coralhelm",
+            "amount": 1
+          },
+          {
+            "cardName": "Retreat to Kazandu",
+            "amount": 1
+          },
+          {
+            "cardName": "Ride the Shoopuf",
+            "amount": 1
+          },
+          {
+            "cardName": "Roaring Earth",
+            "amount": 1
+          },
+          {
+            "cardName": "Roiling Regrowth",
+            "amount": 1
+          },
+          {
+            "cardName": "Sakura-Tribe Elder",
+            "amount": 1
+          },
+          {
+            "cardName": "Sazh's Chocobo",
+            "amount": 1
+          },
+          {
+            "cardName": "Scute Swarm",
+            "amount": 1
+          },
+          {
+            "cardName": "Scythecat Cub",
+            "amount": 1
+          },
+          {
+            "cardName": "Simic Growth Chamber",
+            "amount": 1
+          },
+          {
+            "cardName": "Skyshroud Claim",
+            "amount": 1
+          },
+          {
+            "cardName": "Sol Ring",
+            "amount": 1
+          },
+          {
+            "cardName": "Springheart Nantuko",
+            "amount": 1
+          },
+          {
+            "cardName": "Swiftfoot Boots",
+            "amount": 1
+          },
+          {
+            "cardName": "Tatyova, Benthic Druid",
+            "amount": 1
+          },
+          {
+            "cardName": "Terramorphic Expanse",
+            "amount": 1
+          },
+          {
+            "cardName": "Three Visits",
+            "amount": 1
+          },
+          {
+            "cardName": "Tireless Provisioner",
+            "amount": 1
+          },
+          {
+            "cardName": "Traveling Chocobo",
+            "amount": 1
+          },
+          {
+            "cardName": "Tropical Island",
+            "amount": 1
+          },
+          {
+            "cardName": "Uro, Titan of Nature's Wrath",
+            "amount": 1
+          },
+          {
+            "cardName": "Yavimaya Coast",
+            "amount": 1
+          },
+          {
+            "cardName": "Yavimaya, Cradle of Growth",
+            "amount": 1
+          }
+        ],
+        "commanders": [
+          {
+            "cardName": "Aesi, Tyrant of Gyre Strait",
+            "amount": 1
+          }
+        ],
+        "sideboard": []
+      }
+    },
+    {
+      "id": "archidekt-25055843",
+      "strategy": "dinosaurs",
+      "source": {
+        "url": "https://archidekt.com/decks/25055843",
+        "author": "chester999",
+        "title": "Gishath",
+        "updatedAt": "2026-08-12T04:51:30.545527Z",
+        "importedAt": "2026-10-16T03:10:50.906072+00:00",
+        "bracket": 3,
+        "bracketBasis": "author",
+        "bracketReviewedAt": "2026-10-16"
+      },
+      "checks": {
+        "cardCount": 100,
+        "gameChangers": [
+          "Farewell"
+        ],
+        "commanderLegality": "legal",
+        "legalitySource": "Archidekt card data, checked at import",
+        "contentSha256": "0b89e9f8944fdff4d1644b8993fcc3bd32be719d0f98f11112ef4d69e6c30084"
+      },
+      "deck": {
+        "name": "Gishath",
+        "cards": [
+          {
+            "cardName": "Akroma's Will",
+            "amount": 1
+          },
+          {
+            "cardName": "Apex Altisaur",
+            "amount": 1
+          },
+          {
+            "cardName": "Arcane Signet",
+            "amount": 1
+          },
+          {
+            "cardName": "Arid Mesa",
+            "amount": 1
+          },
+          {
+            "cardName": "Blasphemous Act",
+            "amount": 1
+          },
+          {
+            "cardName": "Bonehoard Dracosaur",
+            "amount": 1
+          },
+          {
+            "cardName": "Boros Charm",
+            "amount": 1
+          },
+          {
+            "cardName": "Bountiful Promenade",
+            "amount": 1
+          },
+          {
+            "cardName": "Bronzebeak Foragers",
+            "amount": 1
+          },
+          {
+            "cardName": "Canopy Vista",
+            "amount": 1
+          },
+          {
+            "cardName": "Cavern of Souls",
+            "amount": 1
+          },
+          {
+            "cardName": "Chandra's Ignition",
+            "amount": 1
+          },
+          {
+            "cardName": "Cinder Glade",
+            "amount": 1
+          },
+          {
+            "cardName": "Clifftop Retreat",
+            "amount": 1
+          },
+          {
+            "cardName": "Command Tower",
+            "amount": 1
+          },
+          {
+            "cardName": "Congregation at Dawn",
+            "amount": 1
+          },
+          {
+            "cardName": "Contest of Claws",
+            "amount": 1
+          },
+          {
+            "cardName": "Curious Altisaur",
+            "amount": 1
+          },
+          {
+            "cardName": "Earthshaker Dreadmaw",
+            "amount": 1
+          },
+          {
+            "cardName": "Etali, Primal Conqueror // Etali, Primal Sickness",
+            "amount": 1
+          },
+          {
+            "cardName": "Etali, Primal Storm",
+            "amount": 1
+          },
+          {
+            "cardName": "Fabled Passage",
+            "amount": 1
+          },
+          {
+            "cardName": "Farewell",
+            "amount": 1
+          },
+          {
+            "cardName": "Farseek",
+            "amount": 1
+          },
+          {
+            "cardName": "Forest",
+            "amount": 5
+          },
+          {
+            "cardName": "Garruk's Uprising",
+            "amount": 1
+          },
+          {
+            "cardName": "Generous Gift",
+            "amount": 1
+          },
+          {
+            "cardName": "Ghalta and Mavren",
+            "amount": 1
+          },
+          {
+            "cardName": "Ghalta, Primal Hunger",
+            "amount": 1
+          },
+          {
+            "cardName": "Ghalta, Stampede Tyrant",
+            "amount": 1
+          },
+          {
+            "cardName": "Guardian Project",
+            "amount": 1
+          },
+          {
+            "cardName": "Heroic Intervention",
+            "amount": 1
+          },
+          {
+            "cardName": "Hulking Raptor",
+            "amount": 1
+          },
+          {
+            "cardName": "Hunting Velociraptor",
+            "amount": 1
+          },
+          {
+            "cardName": "Invasion of Ikoria // Zilortha, Apex of Ikoria",
+            "amount": 1
+          },
+          {
+            "cardName": "Jetmir's Garden",
+            "amount": 1
+          },
+          {
+            "cardName": "Kogla and Yidaro",
+            "amount": 1
+          },
+          {
+            "cardName": "Monster Manual // Zoological Study",
+            "amount": 1
+          },
+          {
+            "cardName": "Mountain",
+            "amount": 4
+          },
+          {
+            "cardName": "Nature's Lore",
+            "amount": 1
+          },
+          {
+            "cardName": "Overgrown Farmland",
+            "amount": 1
+          },
+          {
+            "cardName": "Overwhelming Stampede",
+            "amount": 1
+          },
+          {
+            "cardName": "Pantlaza, Sun-Favored",
+            "amount": 1
+          },
+          {
+            "cardName": "Path of Ancestry",
+            "amount": 1
+          },
+          {
+            "cardName": "Path to Exile",
+            "amount": 1
+          },
+          {
+            "cardName": "Plains",
+            "amount": 4
+          },
+          {
+            "cardName": "Quartzwood Crasher",
+            "amount": 1
+          },
+          {
+            "cardName": "Rampaging Brontodon",
+            "amount": 1
+          },
+          {
+            "cardName": "Rampant Growth",
+            "amount": 1
+          },
+          {
+            "cardName": "Regal Behemoth",
+            "amount": 1
+          },
+          {
+            "cardName": "Regisaur Alpha",
+            "amount": 1
+          },
+          {
+            "cardName": "Rhythm of the Wild",
+            "amount": 1
+          },
+          {
+            "cardName": "Rogue's Passage",
+            "amount": 1
+          },
+          {
+            "cardName": "Rootbound Crag",
+            "amount": 1
+          },
+          {
+            "cardName": "Sacred Foundry",
+            "amount": 1
+          },
+          {
+            "cardName": "Savage Order",
+            "amount": 1
+          },
+          {
+            "cardName": "Sawhorn Nemesis",
+            "amount": 1
+          },
+          {
+            "cardName": "Scion of Calamity",
+            "amount": 1
+          },
+          {
+            "cardName": "Secluded Courtyard",
+            "amount": 1
+          },
+          {
+            "cardName": "Sheltering Landscape",
+            "amount": 1
+          },
+          {
+            "cardName": "Skyshroud Claim",
+            "amount": 1
+          },
+          {
+            "cardName": "Sol Ring",
+            "amount": 1
+          },
+          {
+            "cardName": "Spectator Seating",
+            "amount": 1
+          },
+          {
+            "cardName": "Spire Garden",
+            "amount": 1
+          },
+          {
+            "cardName": "Stomping Ground",
+            "amount": 1
+          },
+          {
+            "cardName": "Sundown Pass",
+            "amount": 1
+          },
+          {
+            "cardName": "Sunfrill Imitator",
+            "amount": 1
+          },
+          {
+            "cardName": "Sunpetal Grove",
+            "amount": 1
+          },
+          {
+            "cardName": "Swords to Plowshares",
+            "amount": 1
+          },
+          {
+            "cardName": "Temple Altisaur",
+            "amount": 1
+          },
+          {
+            "cardName": "Temple Garden",
+            "amount": 1
+          },
+          {
+            "cardName": "The Great Henge",
+            "amount": 1
+          },
+          {
+            "cardName": "The Skullspore Nexus",
+            "amount": 1
+          },
+          {
+            "cardName": "Thrashing Brontodon",
+            "amount": 1
+          },
+          {
+            "cardName": "Three Visits",
+            "amount": 1
+          },
+          {
+            "cardName": "Thunderherd Migration",
+            "amount": 1
+          },
+          {
+            "cardName": "Topiary Stomper",
+            "amount": 1
+          },
+          {
+            "cardName": "Trumpeting Carnosaur",
+            "amount": 1
+          },
+          {
+            "cardName": "Unclaimed Territory",
+            "amount": 1
+          },
+          {
+            "cardName": "Urza's Incubator",
+            "amount": 1
+          },
+          {
+            "cardName": "Vaultborn Tyrant",
+            "amount": 1
+          },
+          {
+            "cardName": "Wayward Swordtooth",
+            "amount": 1
+          },
+          {
+            "cardName": "Welcome to . . . // Jurassic Park",
+            "amount": 1
+          },
+          {
+            "cardName": "Windswept Heath",
+            "amount": 1
+          },
+          {
+            "cardName": "Wooded Foothills",
+            "amount": 1
+          },
+          {
+            "cardName": "World War Hulk",
+            "amount": 1
+          },
+          {
+            "cardName": "Wrathful Raptors",
+            "amount": 1
+          },
+          {
+            "cardName": "Zacama, Primal Calamity",
+            "amount": 1
+          },
+          {
+            "cardName": "Zetalpa, Primal Dawn",
+            "amount": 1
+          }
+        ],
+        "commanders": [
+          {
+            "cardName": "Gishath, Sun's Avatar",
+            "amount": 1
+          }
+        ],
+        "sideboard": []
+      }
+    },
+    {
+      "id": "archidekt-2755449",
+      "strategy": "human tokens",
+      "source": {
+        "url": "https://archidekt.com/decks/2755449",
+        "author": "Kdos",
+        "title": "Adeline",
+        "updatedAt": "2022-05-24T02:56:10.252980Z",
+        "importedAt": "2026-10-16T03:10:50.906072+00:00",
+        "bracket": 3,
+        "bracketBasis": "estimated",
+        "bracketReviewedAt": "2026-10-16"
+      },
+      "checks": {
+        "cardCount": 100,
+        "gameChangers": [
+          "Smothering Tithe",
+          "Teferi's Protection"
+        ],
+        "commanderLegality": "legal",
+        "legalitySource": "Archidekt card data, checked at import",
+        "contentSha256": "06282d4ddfb031d476e6b6bfb9e8938af4d9cd3c19ed2bb5b2b584c7c36e726e"
+      },
+      "deck": {
+        "name": "Adeline",
+        "cards": [
+          {
+            "cardName": "Akroma's Will",
+            "amount": 1
+          },
+          {
+            "cardName": "Anointed Procession",
+            "amount": 1
+          },
+          {
+            "cardName": "Arcane Signet",
+            "amount": 1
+          },
+          {
+            "cardName": "Archaeomancer's Map",
+            "amount": 1
+          },
+          {
+            "cardName": "Austere Command",
+            "amount": 1
+          },
+          {
+            "cardName": "Bennie Bracks, Zoologist",
+            "amount": 1
+          },
+          {
+            "cardName": "By Invitation Only",
+            "amount": 1
+          },
+          {
+            "cardName": "Castle Ardenvale",
+            "amount": 1
+          },
+          {
+            "cardName": "Cathars' Crusade",
+            "amount": 1
+          },
+          {
+            "cardName": "Champion of the Parish",
+            "amount": 1
+          },
+          {
+            "cardName": "Coat of Arms",
+            "amount": 1
+          },
+          {
+            "cardName": "Collective Effort",
+            "amount": 1
+          },
+          {
+            "cardName": "Court Street Denizen",
+            "amount": 1
+          },
+          {
+            "cardName": "Divine Visitation",
+            "amount": 1
+          },
+          {
+            "cardName": "Dolmen Gate",
+            "amount": 1
+          },
+          {
+            "cardName": "Elesh Norn, Grand Cenobite",
+            "amount": 1
+          },
+          {
+            "cardName": "Elspeth, Sun's Champion",
+            "amount": 1
+          },
+          {
+            "cardName": "Emeria's Call // Emeria, Shattered Skyclave",
+            "amount": 1
+          },
+          {
+            "cardName": "Emeria, the Sky Ruin",
+            "amount": 1
+          },
+          {
+            "cardName": "Esper Sentinel",
+            "amount": 1
+          },
+          {
+            "cardName": "Flawless Maneuver",
+            "amount": 1
+          },
+          {
+            "cardName": "Frontline Medic",
+            "amount": 1
+          },
+          {
+            "cardName": "Generous Gift",
+            "amount": 1
+          },
+          {
+            "cardName": "Ghostly Prison",
+            "amount": 1
+          },
+          {
+            "cardName": "Goldnight Commander",
+            "amount": 1
+          },
+          {
+            "cardName": "Grand Abolisher",
+            "amount": 1
+          },
+          {
+            "cardName": "Guardian of Faith",
+            "amount": 1
+          },
+          {
+            "cardName": "Halo Fountain",
+            "amount": 1
+          },
+          {
+            "cardName": "Hanweir Militia Captain // Westvale Cult Leader",
+            "amount": 1
+          },
+          {
+            "cardName": "Heliod's Intervention",
+            "amount": 1
+          },
+          {
+            "cardName": "Heraldic Banner",
+            "amount": 1
+          },
+          {
+            "cardName": "Hero of Bladehold",
+            "amount": 1
+          },
+          {
+            "cardName": "Hour of Reckoning",
+            "amount": 1
+          },
+          {
+            "cardName": "Idol of Oblivion",
+            "amount": 1
+          },
+          {
+            "cardName": "Intrepid Adversary",
+            "amount": 1
+          },
+          {
+            "cardName": "Keeper of the Accord",
+            "amount": 1
+          },
+          {
+            "cardName": "Knight of the White Orchid",
+            "amount": 1
+          },
+          {
+            "cardName": "Land Tax",
+            "amount": 1
+          },
+          {
+            "cardName": "Lightning Greaves",
+            "amount": 1
+          },
+          {
+            "cardName": "Loyal Warhound",
+            "amount": 1
+          },
+          {
+            "cardName": "Luminarch Ascension",
+            "amount": 1
+          },
+          {
+            "cardName": "Mangara, the Diplomat",
+            "amount": 1
+          },
+          {
+            "cardName": "Mentor of the Meek",
+            "amount": 1
+          },
+          {
+            "cardName": "Mirror Entity",
+            "amount": 1
+          },
+          {
+            "cardName": "Mother of Runes",
+            "amount": 1
+          },
+          {
+            "cardName": "Nykthos, Shrine to Nyx",
+            "amount": 1
+          },
+          {
+            "cardName": "Odric, Master Tactician",
+            "amount": 1
+          },
+          {
+            "cardName": "Oketra's Monument",
+            "amount": 1
+          },
+          {
+            "cardName": "Paladin Class",
+            "amount": 1
+          },
+          {
+            "cardName": "Path to Exile",
+            "amount": 1
+          },
+          {
+            "cardName": "Pearl Medallion",
+            "amount": 1
+          },
+          {
+            "cardName": "Plains",
+            "amount": 27
+          },
+          {
+            "cardName": "Prava of the Steel Legion",
+            "amount": 1
+          },
+          {
+            "cardName": "Reconnaissance",
+            "amount": 1
+          },
+          {
+            "cardName": "Rogue's Passage",
+            "amount": 1
+          },
+          {
+            "cardName": "Rumor Gatherer",
+            "amount": 1
+          },
+          {
+            "cardName": "Selfless Spirit",
+            "amount": 1
+          },
+          {
+            "cardName": "Smothering Tithe",
+            "amount": 1
+          },
+          {
+            "cardName": "Sol Ring",
+            "amount": 1
+          },
+          {
+            "cardName": "Soul Warden",
+            "amount": 1
+          },
+          {
+            "cardName": "Sun Titan",
+            "amount": 1
+          },
+          {
+            "cardName": "Swiftfoot Boots",
+            "amount": 1
+          },
+          {
+            "cardName": "Sword of the Animist",
+            "amount": 1
+          },
+          {
+            "cardName": "Swords to Plowshares",
+            "amount": 1
+          },
+          {
+            "cardName": "Teferi's Protection",
+            "amount": 1
+          },
+          {
+            "cardName": "Thalia's Lieutenant",
+            "amount": 1
+          },
+          {
+            "cardName": "Thalia, Heretic Cathar",
+            "amount": 1
+          },
+          {
+            "cardName": "Unbreakable Formation",
+            "amount": 1
+          },
+          {
+            "cardName": "Victory's Envoy",
+            "amount": 1
+          },
+          {
+            "cardName": "War Room",
+            "amount": 1
+          },
+          {
+            "cardName": "Welcoming Vampire",
+            "amount": 1
+          },
+          {
+            "cardName": "Whispersilk Cloak",
+            "amount": 1
+          },
+          {
+            "cardName": "Windbrisk Heights",
+            "amount": 1
+          }
+        ],
+        "commanders": [
+          {
+            "cardName": "Adeline, Resplendent Cathar",
+            "amount": 1
+          }
+        ],
+        "sideboard": []
+      }
+    }
+  ]
+}

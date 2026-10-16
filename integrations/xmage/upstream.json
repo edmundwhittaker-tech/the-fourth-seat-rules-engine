@@ -1,0 +1,9 @@
+{
+  "repository": "magefree/mage",
+  "release": "xmage_1.4.62V1",
+  "commit": "eb69d05b88142b5c4eec4869bcb23a0fec13c091",
+  "mavenVersion": "1.4.62",
+  "javaVersion": "17.0.20",
+  "distribution": "temurin",
+  "assemblyPluginVersion": "3.7.1"
+}
