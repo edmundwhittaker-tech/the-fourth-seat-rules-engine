@@ -98,9 +98,14 @@ public final class DeckPlan {
                 }
             }
         }
-        if (is("Torbran") && n.equals("Lightning Bolt")) {
-            // Exact named spell only. Never infer burn damage from mana value or generic text.
-            int damage = 3 + (commanderPresent ? 2 : 0);
+        if (cards.contains(n) && (n.equals("Lightning Bolt") || n.equals("Goblin Grenade") || n.equals("Goblin War Strike") || n.equals("Massive Raid"))) {
+            // Audited named spell bounds only. Never infer burn damage from mana value or generic text.
+            int goblins = 0; for (CardView c : board) if (c.creature && c.subtypes.contains("Goblin")) goblins++;
+            int damage = n.equals("Lightning Bolt") ? 3 : n.equals("Goblin Grenade") ? 5 : n.equals("Goblin War Strike") ? goblins : creatures;
+            if (n.equals("Goblin War Strike") || n.equals("Massive Raid")) {
+                for (CardView c : board) if (a.sacrifices.contains(c.id) && c.creature && (n.equals("Massive Raid") || c.subtypes.contains("Goblin"))) damage--;
+            }
+            if (damage > 0 && has(board,"Torbran, Thane of Red Fell")) damage += 2;
             if (selfTarget || !enemyTarget) return -1000;
             double burnScore = -8;
             for (Seat s : o.seats) if (!s.id.equals(o.selfId)) {
@@ -113,27 +118,55 @@ public final class DeckPlan {
             return burnScore;
         }
         if (r == Role.COUNTER) {
+            if (n.equals("Archmage's Charm") && a.outcomes.contains("DrawCard") && !a.outcomes.contains("Counter"))
+                return 8 + (o.hand.size() <= 3 ? 4 : 0) + (commanderPresent ? 3 : 0);
             // Adapter supplies public stack controller provenance; never counter our own spell.
             if (o.stack.isEmpty()) return -25;
-            boolean stackTarget = false;
-            for (CardView c : o.stack) if (!c.controllerId.isEmpty() && !c.controllerId.equals(o.selfId) && a.targetIds.contains(c.id)) stackTarget = true;
-            return stackTarget ? 13 : -20;
+            boolean stackTarget = false, meaningfulThreat = false;
+            for (CardView c : o.stack) if (!c.controllerId.isEmpty() && !c.controllerId.equals(o.selfId) && a.targetIds.contains(c.id)) {
+                stackTarget = true;
+                if (counterWorthy(c,o,board,own)) meaningfulThreat = true;
+            }
+            return stackTarget && meaningfulThreat ? 13 : -1000; // Preserve limited answers against small bait spells.
         }
         if (r == Role.PROTECTION) {
             if (is("Lathril") && n.equals("Vitalize")) {
                 int untapped = 0; for (CardView c : board) if (c.creature && c.subtypes.contains("Elf") && !c.tapped) untapped++;
                 return tribeCount >= 11 && untapped < 10 && commanderPresent ? 15 : -10;
             }
+            String selectedEffect = a.effectText.toLowerCase(Locale.ROOT);
+            if (n.equals("Golgari Charm")) {
+                if (!a.outcomes.contains("Regenerate") || !selectedEffect.contains("regenerate")) return -1000;
+                for (CardView spell : o.stack) if (!spell.controllerId.isEmpty() && !spell.controllerId.equals(o.selfId)) {
+                    String threatName = front(spell.name), threat = spell.text.toLowerCase(Locale.ROOT);
+                    if (threatName.equals("Wrath of God") || threat.contains("exile") || threat.contains("can't be regenerated")
+                        || threat.contains("cannot be regenerated") || threat.contains("can’t be regenerated")) continue;
+                    boolean destructionOrDamage = threat.contains("destroy") || threat.contains("damage")
+                        || threatName.equals("Blasphemous Act") || threatName.equals("Chain Reaction");
+                    if (!destructionOrDamage) continue;
+                    for (CardView c : board) if (c.creature && spell.targetIds.contains(c.id)) return 18;
+                    if (creatures > 0 && (threat.contains("destroy all creatures") || threat.contains("destroy all permanents")
+                        || threatName.equals("Blasphemous Act") || threatName.equals("Chain Reaction"))) return 18;
+                }
+                return -1000; // Regeneration does not stop exile, toughness loss, or cannot-regenerate destruction.
+            }
+            boolean borosProtection = n.equals("Boros Charm") && a.outcomes.contains("AddAbility") && selectedEffect.contains("indestructible");
+            if (n.equals("Boros Charm") && !borosProtection) return -1000;
+            boolean targetedProtection = n.equals("Tyvar's Stand") || n.equals("Collective Resistance");
+            if (targetedProtection && !a.outcomes.isEmpty() && !selectedEffect.contains("indestructible") && !selectedEffect.contains("hexproof")) return -1000;
+            boolean protectsOwnedCreature = false;
+            for (CardView c : board) if (c.creature && a.targetIds.contains(c.id)) protectsOwnedCreature = true;
+            if (targetedProtection && !protectsOwnedCreature) return -1000;
             boolean threatened = false;
             for (CardView spell : o.stack) if (!spell.controllerId.isEmpty() && !spell.controllerId.equals(o.selfId)) {
-                if (spell.targetIds.contains(o.selfId)) threatened = true;
-                for (CardView c : board) if (spell.targetIds.contains(c.id)) threatened = true;
+                if (spell.targetIds.contains(o.selfId) && !targetedProtection) threatened = true;
+                for (CardView c : board) if (spell.targetIds.contains(c.id) && (!targetedProtection || a.targetIds.contains(c.id))) threatened = true;
                 String threatName = front(spell.name), threatText = spell.text.toLowerCase(Locale.ROOT);
                 boolean destroyArmy = threatName.equals("Wrath of God") || threatName.equals("Blasphemous Act")
                     || threatName.equals("Chain Reaction") || threatText.contains("destroy all creatures") || threatText.contains("destroy all permanents");
                 boolean exileArmy = threatName.equals("Farewell") || threatText.contains("exile all creatures") || threatText.contains("exile all permanents");
                 boolean indestructible = n.equals("Heroic Intervention") || n.equals("Flawless Maneuver") || n.equals("Flare of Fortitude")
-                    || n.equals("Boros Charm") || n.equals("Unbreakable Formation") || n.equals("Tyvar's Stand") || n.equals("Collective Resistance");
+                    || borosProtection || n.equals("Unbreakable Formation") || n.equals("Tyvar's Stand") || n.equals("Collective Resistance");
                 if (creatures > 0 && ((destroyArmy && (indestructible || n.equals("Teferi's Protection")))
                     || (exileArmy && n.equals("Teferi's Protection")))) threatened = true;
             }
@@ -207,6 +240,29 @@ public final class DeckPlan {
             }
         }
         return score;
+    }
+    private boolean counterWorthy(CardView spell, Observation o, List<CardView> board, Seat own) {
+        String n = front(spell.name), t = spell.text.toLowerCase(Locale.ROOT);
+        if (spell.manaValue >= 5) return true;
+        if (PLANS.containsKey(n)) return true; // Known commander identity, not an inferred unknown commander.
+        if (t.contains("destroy all creatures") || t.contains("exile all creatures") || t.contains("destroy all permanents")
+            || t.contains("exile all permanents") || t.contains("extra turn") || t.contains("you win the game")) return true;
+        if (n.equals("Wrath of God") || n.equals("Blasphemous Act") || n.equals("Farewell") || n.equals("Chain Reaction")) return true;
+        if (n.equals("Rhystic Study") || n.equals("Sylvan Library") || n.equals("Smothering Tithe")
+            || n.equals("Skullclamp") || n.equals("Beast Whisperer") || n.equals("Guardian Project")
+            || n.equals("Anointed Procession") || n.equals("Mechanized Warfare")) return true;
+        if (spell.creature && own != null && spell.power > 0 && spell.power >= own.life) return true;
+        boolean hostile = t.contains("destroy") || t.contains("exile") || t.contains("damage") || t.contains("counter target") || t.contains("lose");
+        if (hostile) {
+            if (spell.targetIds.contains(o.selfId)) return true;
+            for (CardView c : board) if (spell.targetIds.contains(c.id) && (front(c.name).equals(commander) || cardValue(c) >= 7)) return true;
+            for (CardView c : o.stack) if (c.controllerId.equals(o.selfId) && spell.targetIds.contains(c.id) && cardValue(c) >= 5) return true;
+        }
+        Role publicRole = ROLES.get(n);
+        if (publicRole == Role.PAYOFF) {
+            for (Seat s : o.seats) if (s.id.equals(spell.controllerId) && countCreatures(s.battlefield) >= 3) return true;
+        }
+        return spell.creature && (spell.power >= 5 || spell.manaValue >= 4 && t.contains("draw"));
     }
     private static boolean isCombatFinisher(String n) {
         return n.equals("Akroma's Will") || n.equals("Overrun") || n.equals("Overwhelming Stampede");

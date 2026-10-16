@@ -35,7 +35,15 @@ public final class CommanderPolicy {
         for(Action a:bounded) {
             if(clock.nanoTime()-start>=budgetNanos) {termination="BUDGET_EXHAUSTED";break;}
             if(a.mana) continue; // Engine mana payment chooses producers; never repeatedly float mana as a policy action.
-            double value=plan.actionValue(a,observation)+targetAdjustment(observation,a);
+            Double activation=ActivationPolicy.score(observation,a);
+            double value=(activation==null?plan.actionValue(a,observation):activation)+targetAdjustment(observation,a);
+            if(a.kind==ActionKind.SPELL && a.outcomes.contains("BoostCreature") && plan.role(a.sourceName)!=DeckPlan.Role.PROTECTION) {
+                String step=observation.step.toUpperCase(Locale.ROOT).replace(' ','_');
+                boolean relevant=(observation.active&&(step.equals("PRECOMBAT_MAIN")||step.equals("BEGIN_COMBAT")||step.equals("DECLARE_BLOCKERS")))||(!observation.active&&step.equals("DECLARE_BLOCKERS"));
+                if(!relevant)value=-1000;
+            }
+            for(String sacrifice:a.sacrifices)for(CardView c:observation.self().battlefield)
+                if(c.id.equals(sacrifice))value-=plan.cardValue(c)*0.6;
             // Do not spend Aesi's land drop before an already-affordable commander resolves.
             if(a.land && observation.commander.equals("Aesi, Tyrant of Gyre Strait")) {
                 for(Action option:legalActions) if(option.sourceName.equals(observation.commander) && !option.mana && !option.land) {
@@ -102,11 +110,32 @@ public final class CommanderPolicy {
         return score;
     }
     private double targetAdjustment(Observation o,Action a) {
+        boolean beneficial=a.outcomes.contains("DrawCard")||a.outcomes.contains("BoostCreature")||a.outcomes.contains("AddAbility")||a.outcomes.contains("Protect")||a.outcomes.contains("Untap")||a.outcomes.contains("GainLife");
+        boolean harmful=a.outcomes.contains("Damage")||a.outcomes.contains("DestroyPermanent")||a.outcomes.contains("Exile")||a.outcomes.contains("LoseLife")||a.outcomes.contains("Removal")||a.outcomes.contains("UnboostCreature");
+        if(beneficial&&!harmful) {
+            for(Seat seat:o.seats) if(!seat.id.equals(o.selfId)) {
+                if(a.targetIds.contains(seat.id)) return -1000;
+                for(CardView c:seat.battlefield) if(a.targetIds.contains(c.id)) return -1000;
+            }
+        }
+        if(harmful&&!beneficial) {
+            if(a.targetIds.contains(o.selfId))return -1000;
+            for(CardView c:o.self().battlefield)if(a.targetIds.contains(c.id))return -1000;
+        }
         String text=a.text.toLowerCase(Locale.ROOT);
         DeckPlan.Role role=DeckPlan.forCommander(o.commander).role(a.sourceName);
         // Intent comes from audited frozen-card roles, never mere rules-text matches (blink is not removal).
-        boolean hostile=role==DeckPlan.Role.COUNTER||role==DeckPlan.Role.REMOVAL;
-        if(!hostile || a.targetIds.isEmpty()) return 0;
+        boolean hostile=(role==DeckPlan.Role.COUNTER||role==DeckPlan.Role.REMOVAL)&&!beneficial;
+        if(!hostile || a.targetIds.isEmpty()) {
+            double utility=0;
+            if(a.outcomes.contains("BoostCreature")) for(CardView c:o.self().battlefield) if(a.targetIds.contains(c.id)) {
+                // A temporary pump must help the current combat, not an idle high-value engine.
+                if(c.attacking) utility+=20;
+                else if(o.active && (o.step.equals("DECLARE_BLOCKERS")||o.step.equals("DECLARE_ATTACKERS"))) utility-=100;
+                else if(!c.tapped&&!c.summoningSick) utility+=2;
+            }
+            return utility;
+        }
         double adjustment=0;
         for(String target:a.targetIds) {
             for(CardView spell:o.stack) if(spell.id.equals(target)) {

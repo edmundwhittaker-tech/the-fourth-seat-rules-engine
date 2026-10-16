@@ -1,0 +1,97 @@
+PASS Giada, Font of Hope actual own-hand spell extraction and paid cast
+PASS Giada, Font of Hope actual command-zone cast
+PASS Giada, Font of Hope unaffordable cast excluded
+PASS Krenko, Mob Boss actual own-hand spell extraction and paid cast
+PASS Krenko, Mob Boss actual command-zone cast
+PASS Krenko, Mob Boss unaffordable cast excluded
+PASS Lathril, Blade of the Elves actual own-hand spell extraction and paid cast
+PASS Lathril, Blade of the Elves actual command-zone cast
+PASS Lathril, Blade of the Elves unaffordable cast excluded
+PASS Ghalta, Primal Hunger actual own-hand spell extraction and paid cast
+PASS Ghalta, Primal Hunger actual command-zone cast
+PASS Ghalta, Primal Hunger unaffordable cast excluded
+PASS Goreclaw, Terror of Qal Sisma actual own-hand spell extraction and paid cast
+PASS Goreclaw, Terror of Qal Sisma actual command-zone cast
+PASS Goreclaw, Terror of Qal Sisma unaffordable cast excluded
+PASS Torbran, Thane of Red Fell actual own-hand spell extraction and paid cast
+PASS Torbran, Thane of Red Fell actual command-zone cast
+PASS Torbran, Thane of Red Fell unaffordable cast excluded
+PASS Talrand, Sky Summoner actual own-hand spell extraction and paid cast
+PASS Talrand, Sky Summoner actual command-zone cast
+PASS Talrand, Sky Summoner unaffordable cast excluded
+PASS Aesi, Tyrant of Gyre Strait actual own-hand spell extraction and paid cast
+PASS Aesi, Tyrant of Gyre Strait actual command-zone cast
+PASS Aesi, Tyrant of Gyre Strait unaffordable cast excluded
+PASS Gishath, Sun's Avatar actual own-hand spell extraction and paid cast
+PASS Gishath, Sun's Avatar actual command-zone cast
+PASS Gishath, Sun's Avatar unaffordable cast excluded
+PASS Adeline, Resplendent Cathar actual own-hand spell extraction and paid cast
+PASS Adeline, Resplendent Cathar actual command-zone cast
+PASS Adeline, Resplendent Cathar unaffordable cast excluded
+PASS Commander tax is enforced on an actual second command-zone cast
+PASS Krenko real legal tap activation
+PASS Krenko casts a token maker before multiplying goblins
+log4j:WARN No appenders could be found for logger (mage.abilities.AbilityImpl).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+PASS Krenko allows own token spell to resolve before multiplication
+PASS Krenko tapped cannot activate
+PASS Lathril ten untapped elves permits actual drain activation
+PASS Lathril fewer than ten other elves cannot drain
+PASS Talrand does not counter an empty stack
+PASS Talrand counters a threat while at two life
+PASS Talrand preserves counter for a harmless opposing Bear
+PASS Talrand never counters its own spell
+PASS Talrand reserves UU rather than main-phase cantrip
+PASS Talrand uses cantrip at opponent end step
+PASS Ghalta actual power discount makes two-green cast legal
+PASS Lathril combat preserves a live ten-elf drain
+PASS Ghalta combat chooses available lethal opponent
+PASS Giada is established before a follow-up Angel
+PASS Giada preserves untargeted protection
+PASS Goreclaw develops rather than casting a postcombat finisher
+PASS Torbran amplified Bolt selects a lethal opponent
+PASS Aesi precedes land when already funded
+PASS Aesi still plays land when commander is not payable
+PASS Torbran does not assume five damage without commander on board
+PASS Gishath attacks the unblocked opponent
+PASS Adeline can trigger while staying back
+PASS Kamahl animates a land once rather than repeatedly paying for no change
+PASS Gwenna restricted mana pays Kamahl creature activation
+PASS Gwenna supplies both green pips for a real double-green creature
+PASS Swiftfoot Boots does not re-equip its existing wearer
+PASS Giada names Angel when actual Banner resolves
+PASS Boros Charm chooses indestructible and survives an actual Wrath
+PASS Tyvar's Stand protects the threatened Elf, not another own creature
+PASS Get a Leg Up buffs own attacker rather than enemy Giada
+PASS Get a Leg Up is not wasted during upkeep
+PASS Goblin Grenade sacrifices expendable Goblin, not Krenko
+PASS By Force pays affordable X for 1 actual artifact targets
+PASS By Force pays affordable X for 2 actual artifact targets
+PASS Entreat the Angels pays XX plus WWW and produces two Angels
+PASS Castle Embereth reserves its own tap while other lands pay
+PASS Myriad Landscape pays from other lands and resolves real search
+PASS Entreat chooses X one with five white mana
+PASS Entreat cannot substitute colorless for WWW
+PASS Entreat uses a multi-mana producer without double counting
+PASS Flare of Fortitude can pay normal mana to preserve its creatures
+PASS Myriad with only one other land is rejected without failed activation
+PASS Adeline, Resplendent Cathar chooses correct Heraldic Banner color
+PASS Talrand, Sky Summoner chooses correct Heraldic Banner color
+PASS Flare without mana sacrifices expendable white creature
+PASS Giada restricted mana does not fund a non-Angel artifact
+PASS Giada restricted white mana pays an actual Angel spell
+PASS Selvala dependent mana preserves activation green to cast commander
+PASS Golgari Charm regenerates Lathril through actual Murder
+PASS Golgari Charm does not pretend regeneration stops exile
+PASS Tender Wildguide chooses affordable Offspring with 2 mana
+PASS Tender Wildguide chooses affordable Offspring with 4 mana
+PASS Smuggler's Surprise pays only an affordable Spree mode with 1 mana
+PASS Smuggler's Surprise pays only an affordable Spree mode with 2 mana
+PASS Selvala dependent commander-tax recast is rejected when short
+PASS Selvala dependent commander-tax recast succeeds when funded
+PASS Failed real spell payment restores transient context on rollback player
+PASS Observation uses actual subtype and changeling rules
+PASS Observation excludes opponent hand identity
+RESULT: 92 passed, 0 failed real-engine checks
+FourthSeatAdditionalCostContractTest: 27 checks passed

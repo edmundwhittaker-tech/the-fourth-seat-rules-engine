@@ -27,19 +27,19 @@ public final class DeckPlanTest {
             String cmd=COMMANDERS[i]; DeckPlan plan=DeckPlan.forCommander(cmd);
             check(plan.knownCardCount()>60,"Frozen profile populated: "+cmd);
             check(plan.role(RAMP[i])==DeckPlan.Role.RAMP,"Exact ramp role: "+cmd);
-            List<CardView> board=Arrays.asList(card("l1","Forest",0,true,false,0),card("l2","Forest",0,true,false,0));
+            List<CardView> board=Arrays.asList(card("l1","Forest",0,true,false,0),card("l2","Forest",0,true,false,0),card("key",cmd,4,false,true,3));
             List<CardView> hand=Arrays.asList(card("r",RAMP[i],1,false,RAMP[i].contains("Elves"),1),card("a",ANSWER[i],3,false,false,0));
             Observation o=observation(cmd,hand,board,empty());
             Decision d=policy().choose(o,Arrays.asList(action("ramp",RAMP[i],1),action("answer",ANSWER[i],3)),1000000);
             check("ramp".equals(d.actionId),"Develop rather than waste answer: "+cmd);
             check(policy().choose(o,Arrays.asList(action("answer",ANSWER[i],3)),1000000).actionId==null,"Pass rather than unneeded interaction: "+cmd);
-            CardView enemySpell=new CardView("spell","Public targeted spell",5,false,false,0,0,false,"destroy target permanent","enemy",Arrays.asList("l1"));
+            CardView enemySpell=new CardView("spell","Public targeted spell",5,false,false,0,0,false,"destroy target permanent","enemy",Arrays.asList("key"));
             o=observation(cmd,hand,board,Arrays.asList(enemySpell));
-            d=policy().choose(o,Arrays.asList(action("answer",ANSWER[i],3,"spell")),1000000);
+            d=policy().choose(o,Arrays.asList(action("answer",ANSWER[i],3,(i==2 || i==3)?"key":"spell")),1000000);
             check("answer".equals(d.actionId),"Respond to public threat: "+cmd);
             CardView ownSpell=new CardView("spell","Own spell",5,false,false,0,0,false,"draw","self",Arrays.asList("l1"));
             o=observation(cmd,hand,board,Arrays.asList(ownSpell));
-            check(policy().choose(o,Arrays.asList(action("answer",ANSWER[i],3,"spell")),1000000).actionId==null,"Do not answer own spell: "+cmd);
+            check(policy().choose(o,Arrays.asList(action("answer",ANSWER[i],3,(i==2 || i==3)?"key":"spell")),1000000).actionId==null,"Do not answer own spell: "+cmd);
             o=observation(cmd,empty(),board,empty());
             check("commander".equals(policy().choose(o,Arrays.asList(action("commander",cmd,4)),1000000).actionId),"Commander development: "+cmd);
             System.out.println("PASS "+cmd+": ramp, preserve answer, respond, own-stack veto, commander");
@@ -146,6 +146,48 @@ public final class DeckPlanTest {
         Action dinoCast=action("dino","Quartzwood Crasher",5);
         check(policy().choose(observation(COMMANDERS[8],Arrays.asList(dinosaur),eightLands,empty()),Arrays.asList(dinoCast),1000000).score
             > policy().choose(observation(COMMANDERS[8],Arrays.asList(nonDinosaur),eightLands,empty()),Arrays.asList(dinoCast),1000000).score,"Gishath late Dinosaur bonus requires public subtype");
+        CardView bears=new CardView("bait","Grizzly Bears",2,false,true,2,2,false,"","enemy",Collections.<String>emptyList());
+        Observation harmlessBears=new Observation("self",talrand,"PRECOMBAT_MAIN",false,5,empty(),Arrays.asList(new Seat("self",30,2,empty()),new Seat("enemy",30,2,empty())),Arrays.asList(bears));
+        Action counterBears=action("counter","Counterspell",2,"bait");
+        check(policy().choose(harmlessBears,Arrays.asList(counterBears),1000000).actionId==null,"Preserve counter against harmless small creature bait");
+        Observation lethalBears=new Observation("self",talrand,"PRECOMBAT_MAIN",false,5,empty(),Arrays.asList(new Seat("self",2,2,empty()),new Seat("enemy",30,2,empty())),Arrays.asList(bears));
+        check("counter".equals(policy().choose(lethalBears,Arrays.asList(counterBears),1000000).actionId),"Small creature becomes meaningful at low own life");
+        CardView study=new CardView("engine","Rhystic Study",3,false,false,0,0,false,"draw a card","enemy",Collections.<String>emptyList());
+        check("counter".equals(policy().choose(observation(talrand,empty(),empty(),Arrays.asList(study)),Arrays.asList(action("counter","Counterspell",2,"engine")),1000000).actionId),"Counter known high-impact cheap engine");
+        CardView removal=new CardView("removal","Swords to Plowshares",1,false,false,0,0,false,"exile target creature","enemy",Arrays.asList("talrand"));
+        check("counter".equals(policy().choose(observation(talrand,empty(),Arrays.asList(card("talrand",talrand,4,false,true,2)),Arrays.asList(removal)),Arrays.asList(action("counter","Counterspell",2,"removal")),1000000).actionId),"Protect own commander from cheap targeted removal");
+        Action borosDamage=new Action("damage","Boros Charm","Choose one",2,false,false,true,Arrays.asList("enemy"),ActionKind.SPELL,Collections.singleton("Damage"),"boros","Boros Charm deals 4 damage to target player");
+        Action borosDouble=new Action("double","Boros Charm","Choose one",2,false,false,true,Arrays.asList("own"),ActionKind.SPELL,Collections.singleton("AddAbility"),"boros","Target creature gains double strike until end of turn");
+        Action borosSave=new Action("save","Boros Charm","Choose one",2,false,false,true,Collections.<String>emptyList(),ActionKind.SPELL,Collections.singleton("AddAbility"),"boros","Permanents you control gain indestructible until end of turn");
+        Observation borosWrath=observation(COMMANDERS[8],empty(),protectedArmy,Arrays.asList(wrath));
+        check("save".equals(policy().choose(borosWrath,Arrays.asList(borosDamage,borosDouble,borosSave),1000000).actionId),"Boros Charm selects indestructible, not damage or double strike, against Wrath");
+        check(policy().choose(borosWrath,Arrays.asList(borosDamage,borosDouble),1000000).actionId==null,"Wrong Boros modes do not receive protection score");
+        List<CardView> twoOwn=Arrays.asList(card("key",COMMANDERS[2],4,false,true,2),card("other","Creature token",0,false,true,1));
+        CardView keyRemoval=new CardView("remove","Swords to Plowshares",1,false,false,0,0,false,"exile target creature","enemy",Arrays.asList("key"));
+        Observation tyvarRemoval=observation(COMMANDERS[2],empty(),twoOwn,Arrays.asList(keyRemoval));
+        Action rightTyvar=new Action("right","Tyvar's Stand","Target creature",1,false,false,true,Arrays.asList("key"),ActionKind.SPELL,Collections.singleton("AddAbility"),"tyvar","Target creature gains hexproof and indestructible until end of turn");
+        Action wrongTyvar=new Action("wrong","Tyvar's Stand","Target creature",1,false,false,true,Arrays.asList("other"),ActionKind.SPELL,Collections.singleton("AddAbility"),"tyvar","Target creature gains hexproof and indestructible until end of turn");
+        check("right".equals(policy().choose(tyvarRemoval,Arrays.asList(wrongTyvar,rightTyvar),1000000).actionId),"Targeted protection chooses actually threatened own creature");
+        check(policy().choose(tyvarRemoval,Arrays.asList(wrongTyvar),1000000).actionId==null,"Do not protect unrelated own creature");
+        Action charmDraw=new Action("draw","Archmage's Charm","Choose one",3,false,false,true,Arrays.asList("self"),ActionKind.SPELL,Collections.singleton("DrawCard"),"charm","Target player draws two cards");
+        check("draw".equals(policy().choose(observation(talrand,empty(),empty(),empty()),Arrays.asList(charmDraw),1000000).actionId),"Archmage Charm draw mode works with an empty stack");
+        List<CardView> fiveGoblins=new ArrayList<CardView>(goblins); fiveGoblins.add(card("krenko",COMMANDERS[1],4,false,true,3));
+        Observation goblinLethal=new Observation("self",COMMANDERS[1],"PRECOMBAT_MAIN",true,6,empty(),Arrays.asList(new Seat("self",30,2,fiveGoblins),new Seat("enemy",5,2,smallEnemy)));
+        Observation goblinNotLethal=new Observation("self",COMMANDERS[1],"PRECOMBAT_MAIN",true,6,empty(),Arrays.asList(new Seat("self",30,2,fiveGoblins),new Seat("enemy",6,2,smallEnemy)));
+        for(String burn:Arrays.asList("Goblin Grenade","Goblin War Strike","Massive Raid")) {
+            Action finisher=action("finisher",burn,1,"enemy");
+            check("finisher".equals(policy().choose(goblinLethal,Arrays.asList(finisher),1000000).actionId),"Known Goblin burn estimates lethal: "+burn);
+            check(policy().choose(goblinNotLethal,Arrays.asList(finisher),1000000).actionId==null,"Preserve nonlethal Goblin burn: "+burn);
+        }
+        Action golgariShrink=new Action("shrink","Golgari Charm","Choose one",2,false,false,true,Collections.<String>emptyList(),ActionKind.SPELL,Collections.singleton("UnboostCreature"),"charm","All creatures get -1/-1 until end of turn");
+        Action golgariDestroy=new Action("destroy","Golgari Charm","Choose one",2,false,false,true,Collections.<String>emptyList(),ActionKind.SPELL,Collections.singleton("DestroyPermanent"),"charm","Destroy target enchantment");
+        Action golgariRegen=new Action("regen","Golgari Charm","Choose one",2,false,false,true,Collections.<String>emptyList(),ActionKind.SPELL,Collections.singleton("Regenerate"),"charm","Regenerate each creature you control");
+        CardView destroyLathril=new CardView("destroy","Beast Within",3,false,false,0,0,false,"Destroy target permanent","enemy",Arrays.asList("key"));
+        Observation lathrilThreat=observation(COMMANDERS[2],empty(),twoOwn,Arrays.asList(destroyLathril));
+        check("regen".equals(policy().choose(lathrilThreat,Arrays.asList(golgariShrink,golgariDestroy,golgariRegen),1000000).actionId),"Golgari Charm chooses regeneration, not shrink or destroy mode, to save Lathril");
+        check(policy().choose(lathrilThreat,Arrays.asList(golgariShrink,golgariDestroy),1000000).actionId==null,"Golgari wrong modes cannot inherit protection score");
+        check(policy().choose(tyvarRemoval,Arrays.asList(golgariRegen),1000000).actionId==null,"Golgari regeneration does not stop Swords exile");
+        check(policy().choose(observation(COMMANDERS[2],empty(),twoOwn,Arrays.asList(wrath)),Arrays.asList(golgariRegen),1000000).actionId==null,"Golgari regeneration does not stop Wrath of God");
         System.out.println("DeckPlanTest: "+checks+" checks passed");
     }
 }

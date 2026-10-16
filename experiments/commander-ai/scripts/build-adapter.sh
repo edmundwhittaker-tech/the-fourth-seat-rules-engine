@@ -23,6 +23,10 @@ MODULE="$DEST/Mage.Server.Plugins/Mage.Player.AI/src"
 cp -R "$ROOT/src/main/java/fourthseat" "$MODULE/"
 cp "$ROOT"/adapter/src/mage/player/ai/*.java "$MODULE/mage/player/ai/"
 "${MAVEN:-mvn}" "${MAVEN_ARGUMENTS[@]}" -f "$DEST/pom.xml" -Dmaven.repo.local="${MAVEN_REPO:-$DEST/.m2}" \
-    -pl Mage.Server.Plugins/Mage.Player.AI -am -DskipTests package
+    -pl Mage.Server.Plugins/Mage.Player.AI -am -DskipTests install
+"${MAVEN:-mvn}" "${MAVEN_ARGUMENTS[@]}" \
+    -f "$DEST/Mage.Server.Plugins/Mage.Player.AI/pom.xml" -Dmaven.repo.local="${MAVEN_REPO:-$DEST/.m2}" \
+    org.apache.maven.plugins:maven-dependency-plugin:3.6.1:build-classpath \
+    -DincludeScope=runtime -Dmdep.outputFile="$DEST/Mage.Server.Plugins/Mage.Player.AI/target/fourth-seat-runtime-classpath.txt"
 printf '\nBuilt isolated overlay only. No configuration, runtime or deployment was changed.\n%s\n' \
     "$DEST/Mage.Server.Plugins/Mage.Player.AI/target/mage-player-ai-1.4.62.jar"

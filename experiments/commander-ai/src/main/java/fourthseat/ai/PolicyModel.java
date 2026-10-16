@@ -11,7 +11,7 @@ public final class PolicyModel {
         public final List<String> targetIds;
         public final Set<String> subtypes;
         public final int manaValue,power,toughness;
-        public final boolean land,creature,tapped,attacking;
+        public final boolean land,creature,tapped,attacking,summoningSick;
         public CardView(String id,String name,int manaValue,boolean land,boolean creature,int power,int toughness,boolean tapped,String text) {
             this(id,name,manaValue,land,creature,power,toughness,tapped,text,"",Collections.<String>emptyList());
         }
@@ -22,6 +22,10 @@ public final class PolicyModel {
             this(id,name,manaValue,land,creature,power,toughness,tapped,text,controllerId,targetIds,attacking,Collections.<String>emptySet());
         }
         public CardView(String id,String name,int manaValue,boolean land,boolean creature,int power,int toughness,boolean tapped,String text,String controllerId,List<String> targetIds,boolean attacking,Set<String> subtypes) {
+            this(id,name,manaValue,land,creature,power,toughness,tapped,text,controllerId,targetIds,attacking,subtypes,false);
+        }
+        public CardView(String id,String name,int manaValue,boolean land,boolean creature,int power,int toughness,boolean tapped,String text,String controllerId,List<String> targetIds,boolean attacking,Set<String> subtypes,boolean summoningSick) {
+            this.summoningSick=summoningSick;
             this.subtypes=Collections.unmodifiableSet(new HashSet<String>(subtypes));
             this.attacking=attacking;
             this.controllerId=controllerId==null?"":controllerId;this.targetIds=frozen(targetIds);
@@ -53,9 +57,22 @@ public final class PolicyModel {
         }
         public Seat self() { for(Seat s:seats) if(s.id.equals(selfId)) return s; throw new IllegalArgumentException("Self seat missing"); }
     }
+    public enum ActionKind { SPELL, LAND, ACTIVATION, EQUIP, SPECIAL }
     public static final class Action {
-        public final String id,sourceName,text;public final int manaValue;public final boolean land,mana,usesStack;public final List<String> targetIds;
+        public final String id,sourceName,text,sourceId,effectText;public final ActionKind kind;public final Set<String> outcomes;public final int manaValue;public final boolean land,mana,usesStack;public final List<String> targetIds,sacrifices;
         public Action(String id,String sourceName,String text,int manaValue,boolean land,boolean mana,boolean usesStack,List<String> targetIds) {
+            this(id,sourceName,text,manaValue,land,mana,usesStack,targetIds,land?ActionKind.LAND:ActionKind.SPELL,Collections.<String>emptySet(),"");
+        }
+        public Action(String id,String sourceName,String text,int manaValue,boolean land,boolean mana,boolean usesStack,List<String> targetIds,ActionKind kind,Set<String> outcomes,String sourceId) {
+            this(id,sourceName,text,manaValue,land,mana,usesStack,targetIds,kind,outcomes,sourceId,text);
+        }
+        public Action(String id,String sourceName,String text,int manaValue,boolean land,boolean mana,boolean usesStack,List<String> targetIds,ActionKind kind,Set<String> outcomes,String sourceId,String effectText) {
+            this(id,sourceName,text,manaValue,land,mana,usesStack,targetIds,kind,outcomes,sourceId,effectText,Collections.<String>emptyList());
+        }
+        public Action(String id,String sourceName,String text,int manaValue,boolean land,boolean mana,boolean usesStack,List<String> targetIds,ActionKind kind,Set<String> outcomes,String sourceId,String effectText,List<String> sacrifices) {
+            this.sacrifices=frozen(sacrifices);
+            this.effectText=effectText==null?"":effectText;
+            this.kind=Objects.requireNonNull(kind);this.outcomes=Collections.unmodifiableSet(new HashSet<String>(outcomes));this.sourceId=sourceId;
             this.id=Objects.requireNonNull(id);this.sourceName=sourceName==null?"":sourceName;this.text=text==null?"":text;this.manaValue=Math.max(0,manaValue);this.land=land;this.mana=mana;this.usesStack=usesStack;this.targetIds=frozen(targetIds);
         }
     }

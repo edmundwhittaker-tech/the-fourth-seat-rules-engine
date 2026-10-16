@@ -39,6 +39,20 @@ public final class CommanderPolicyTest {
   Collections.reverse(many);
   check("zz-land".equals(p.choose(o,many,1000000000L).actionId),"Capped choice stable under reordered options");
   check("zz-land".equals(p.choose(o,many,0).actionId),"Legal land fallback at expired budget");
-  System.out.println("CommanderPolicyTest: 16 assertions passed");
+  Set<String> boost=new HashSet<String>(Arrays.asList("BoostCreature","AddAbility"));
+  Action ownBuff=new Action("own-buff","Get a Leg Up","",1,false,false,true,Arrays.asList("mine"),ActionKind.SPELL,boost,"buff");
+  Action enemyBuff=new Action("enemy-buff","Get a Leg Up","",1,false,false,true,Arrays.asList("small"),ActionKind.SPELL,boost,"buff");
+  Observation buffBoard=obs(Arrays.asList(selfThreat,low));
+  check("own-buff".equals(p.choose(buffBoard,Arrays.asList(enemyBuff,ownBuff),1000000000L).actionId),"Beneficial effect cannot target opponent");
+  Observation upkeep=new Observation("self","Giada, Font of Hope","UPKEEP",true,4,Collections.<CardView>emptyList(),buffBoard.seats);
+  check(p.choose(upkeep,Arrays.asList(ownBuff),1000000000L).actionId==null,"Hold temporary pump until relevant combat");
+  check(p.choose(buffBoard,Arrays.asList(enemyBuff),1000000000L).actionId==null,"No forced wrong-target buff fallback");
+  CardView attacker=new CardView("attacker","Lathril, Blade of the Elves",4,false,true,2,3,true,"","self",Collections.<String>emptyList(),true);
+  Observation combat=new Observation("self","Lathril, Blade of the Elves","DECLARE_BLOCKERS",true,4,Collections.<CardView>emptyList(),Arrays.asList(seat("self",40,attacker,card("idle","Llanowar Elves",1,false,1)),low));
+  Action pumpAttacker=new Action("z-attacker","Get a Leg Up","",1,false,false,true,Arrays.asList("attacker"),ActionKind.SPELL,boost,"buff");
+  Action pumpIdle=new Action("a-idle","Get a Leg Up","",1,false,false,true,Arrays.asList("idle"),ActionKind.SPELL,boost,"buff");
+  check("z-attacker".equals(p.choose(combat,Arrays.asList(pumpIdle,pumpAttacker),1000000000L).actionId),"Pump current attacker instead of idle owned engine");
+  check(p.choose(combat,Arrays.asList(pumpIdle),1000000000L).actionId==null,"Do not waste combat pump on idle own creature");
+  System.out.println("CommanderPolicyTest: 21 assertions passed");
  }
 }
