@@ -110,6 +110,7 @@ jobs:
             build/nexus/fourth-seat/*.png
             build/nexus/fourth-seat/*state.json
             build/nexus/fourth-seat/*dom.txt
+            build/nexus/fourth-seat/ai-decks-result.json
             build/nexus/fourth-seat/result.json
             build/nexus/fourth-seat/container-result.json
             build/nexus/fourth-seat/container.log

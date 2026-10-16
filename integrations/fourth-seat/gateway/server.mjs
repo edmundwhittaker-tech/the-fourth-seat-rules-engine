@@ -4,6 +4,8 @@ import { readFile, mkdir, writeFile, rename } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import WebSocket, { WebSocketServer } from 'ws';
+import { validateCommanderDeck } from './deck-validation.mjs';
+import { chooseAIDecks } from './ai-decks.mjs';
 import { Problem, equal, identity, signTicket, readTicket, authorizeAction, publicRoom } from './policy.mjs';
 
 export async function startGateway(options = {}) {
@@ -20,6 +22,14 @@ export async function startGateway(options = {}) {
   const rooms = new Map(saved.filter(r => r.createdAt > Date.now() - 86400_000).map(r => [r.code, { ...r, status: 'expired' }]));
   const clients = new Map();
   const locks = new Map();
+  const validatedAIDecks = new Map();
+  async function validatedAI(client, entry) {
+    if (!validatedAIDecks.has(entry.id)) {
+      const pending = validateCommanderDeck(client, entry.deck).catch(error => { validatedAIDecks.delete(entry.id); throw error; });
+      validatedAIDecks.set(entry.id, pending);
+    }
+    return validatedAIDecks.get(entry.id);
+  }
   let saveChain = Promise.resolve();
   const persist = () => saveChain = saveChain.then(async () => {
     const temporary = file + '.tmp';
@@ -89,25 +99,6 @@ export async function startGateway(options = {}) {
     const json = JSON.stringify(message);
     for (const socket of client.browsers) if (socket.readyState === WebSocket.OPEN) socket.send(json);
   }
-  async function validate(client, deck) {
-    if (!deck || !Array.isArray(deck.cards) || !Array.isArray(deck.commanders) || deck.cards.length > 250 || deck.commanders.length !== 1) throw new Problem('Choose a saved deck with one commander.');
-    const names = [...new Set([...deck.cards, ...deck.commanders].map(c => c.cardName))];
-    if (names.some(n => typeof n !== 'string' || !n || n.length > 200)) throw new Problem('Invalid deck card name.');
-    const catalog = await client.call('resolvePrintings', { names });
-    if (!catalog.ready) throw new Problem('The engine is still loading its card library. Try again shortly.', 503);
-    const printing = new Map(catalog.results.filter(p => p.found).map(p => [p.name, p]));
-    const missing = names.filter(name => !printing.has(name));
-    if (missing.length) throw new Problem('This engine version does not support: ' + missing.join(', '), 422);
-    const convert = cards => cards.map(c => {
-      if (!Number.isInteger(c.amount) || c.amount < 1 || c.amount > 100) throw new Problem('Invalid card quantity.');
-      const p = printing.get(c.cardName);
-      return { cardName: p.cardName, setCode: p.setCode, cardNumber: p.cardNumber, amount: c.amount };
-    });
-    const result = { name: String(deck.name ?? 'Commander').slice(0, 80), cards: convert(deck.cards), commanders: convert(deck.commanders), sideboard: [] };
-    const check = await client.call('validateDeckFormat', { deck: result, gameType: 'Commander Free For All', deckType: 'Variant Magic - Commander' });
-    if (!check.supported || !check.valid) throw new Problem('Commander deck validation: ' + (check.errors ?? []).map(e => e.message ?? e.cardName ?? e.type).join('; '), 422);
-    return result;
-  }
   async function operate(body) {
     const user = identity(secret, body.browserKey);
     if (body.operation === 'session') {
@@ -121,7 +112,11 @@ export async function startGateway(options = {}) {
         if (rooms.size >= 50) throw new Problem('The engine has reached its table limit.', 503);
         const humanSeats = Number(body.humanSeats);
         if (!Number.isInteger(humanSeats) || humanSeats < 1 || humanSeats > 4) throw new Problem('Choose one to four human seats.');
-        const deck = await validate(client, body.deck);
+        const deck = await validateCommanderDeck(client, body.deck);
+        const selectedAI = chooseAIDecks(4 - humanSeats, deck.commanders[0].cardName);
+        // Validate every selected list before creating a table; never silently change it.
+        const aiDecks = [];
+        for (const entry of selectedAI) aiDecks.push(await validatedAI(client, entry));
         let code;
         do { code = randomBytes(8).toString('hex').slice(0, 5).toUpperCase(); } while (rooms.has(code));
         const password = randomBytes(24).toString('hex');
@@ -136,8 +131,10 @@ export async function startGateway(options = {}) {
           room.players.push({ user, name, kind: 'human', commander: deck.commanders[0].cardName, deckName: deck.name });
           for (let i = humanSeats; i < 4; i++) {
             const aiName = 'AI' + code + (i + 1);
-            await client.call('joinTable', { tableId: room.tableId, playerName: aiName, playerType: 'COMPUTER_MAD', skill: 1, deck, password });
-            room.players.push({ user: aiName, name: 'AI ' + (i + 1), kind: 'ai', commander: deck.commanders[0].cardName, deckName: deck.name });
+            const aiDeck = aiDecks[i - humanSeats];
+            const entry = selectedAI[i - humanSeats];
+            await client.call('joinTable', { tableId: room.tableId, playerName: aiName, playerType: 'COMPUTER_MAD', skill: 1, deck: aiDeck, password });
+            room.players.push({ user: aiName, name: 'AI ' + (i + 1), kind: 'ai', commander: aiDeck.commanders[0].cardName, deckName: aiDeck.name, aiDeckId: entry.id });
           }
           rooms.set(code, room); await persist();
         } catch (error) { await client.call('removeTable', { tableId: room.tableId }).catch(() => {}); throw error; }
@@ -150,7 +147,7 @@ export async function startGateway(options = {}) {
         if (room.players.some(p => p.user === user)) return { room: publicRoom(room, user) };
         if (roomFor(user)) throw new Problem('Leave your current engine table first.', 409);
         if (room.status !== 'lobby' || room.players.filter(p => p.kind === 'human').length >= room.humanSeats) throw new Problem('This engine table has no open human seats.', 409);
-        const deck = await validate(client, body.deck);
+        const deck = await validateCommanderDeck(client, body.deck);
         await client.call('joinTable', { tableId: room.tableId, playerName: user, playerType: 'HUMAN', skill: 1, deck, password: room.password });
         room.players.push({ user, name, kind: 'human', commander: deck.commanders[0].cardName, deckName: deck.name });
         await persist(); return { room: publicRoom(room, user) };

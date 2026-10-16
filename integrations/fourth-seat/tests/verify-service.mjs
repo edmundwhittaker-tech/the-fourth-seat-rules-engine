@@ -4,6 +4,8 @@ import { randomBytes } from 'node:crypto';
 import path from 'node:path';
 import WebSocket from '../gateway/node_modules/ws/wrapper.mjs';
 import { startGateway } from '../gateway/server.mjs';
+import { aiDeckPool } from '../gateway/ai-decks.mjs';
+import { validateCommanderDeck } from '../gateway/deck-validation.mjs';
 import { emptyEngineState, reduceEngineFrame, records } from '../client/session.ts';
 
 const out=path.resolve('build/nexus/fourth-seat');await mkdir(out,{recursive:true});
@@ -34,8 +36,50 @@ async function attach(key){
   });
   await ready;return client;
 }
+// This validator uses the private loopback bridge in CI, never a public browser privilege.
+async function verifyPool() {
+  const socket = new WebSocket('ws://127.0.0.1:8787');
+  const pending = new Map(); let counter = 0;
+  socket.on('message', raw => {
+    const frame = JSON.parse(String(raw)); const receive = pending.get(frame.requestId);
+    if (receive) { pending.delete(frame.requestId); receive(frame); }
+  });
+  const call = (action, args = {}) => new Promise((resolve, reject) => {
+    const requestId = 'pool-' + ++counter;
+    const timer = setTimeout(() => { pending.delete(requestId); reject(new Error('Pool validation timed out')); }, 35_000);
+    pending.set(requestId, frame => { clearTimeout(timer); frame.ok ? resolve(frame.data) : reject(new Error(frame.error)); });
+    socket.send(JSON.stringify({ requestId, action, args }));
+  });
+  const results = [];
+  try {
+    await new Promise((resolve, reject) => { socket.once('open', resolve); socket.once('error', reject); });
+    await call('connect', { host: '127.0.0.1', port: 17171, username: 'Pool' + randomBytes(4).toString('hex'), password: randomBytes(24).toString('hex') });
+    for (const entry of aiDeckPool) {
+      try {
+        const resolved = await validateCommanderDeck({ call }, entry.deck);
+        results.push({ id: entry.id, source: entry.source.url, commander: resolved.commanders[0].cardName,
+          contentSha256: entry.checks.contentSha256, valid: true });
+        console.log('VALID ' + entry.id + ': ' + resolved.commanders[0].cardName);
+      } catch (error) {
+        results.push({ id: entry.id, valid: false, error: error.message });
+        console.error('INVALID ' + entry.id + ': ' + error.message);
+      }
+    }
+  } finally {
+    socket.terminate();
+    await writeFile(path.join(out, 'ai-decks-result.json'), JSON.stringify({ integrationCommit: process.env.GITHUB_SHA, results }, null, 2));
+  }
+  check('all ten unchanged published decks pass the real pinned XMage Commander validator', results.length === 10 && results.every(r => r.valid));
+}
 let failure;
 try{
+  await verifyPool();
+  const soloKey=randomBytes(32).toString('hex');
+  const soloDeck={name:'Solo pool check',cards:[{cardName:'Mountain',amount:99}],commanders:[{cardName:'Krenko, Mob Boss',amount:1}]};
+  const solo=(await api(soloKey,'create',{humanSeats:1,deck:soloDeck})).room;
+  const soloAI=solo.players.filter(p=>p.kind==='ai');
+  check('one human receives three distinct published AI decks, avoiding the host commander',soloAI.length===3&&new Set(soloAI.map(p=>p.commander)).size===3&&soloAI.every(p=>p.commander!=='Krenko, Mob Boss'&&aiDeckPool.some(d=>d.deck.commanders[0].cardName===p.commander)));
+  await api(soloKey,'leave',{code:solo.code});
   const key1=randomBytes(32).toString('hex'),key2=randomBytes(32).toString('hex');
   const host=await attach(key1),friend=await attach(key2);
   const deck={name:'Cloud Commander verification',cards:[{cardName:'Mountain',amount:99}],commanders:[{cardName:'Krenko, Mob Boss',amount:1}]};
@@ -44,6 +88,7 @@ try{
   await api(key2,'join',{displayName:'FriendPilot',code,deck});
   const room=(await api(key1,'room',{code})).room;
   check('two human accounts and two native AI fill an engine room',room.players.filter(p=>p.kind==='human').length===2&&room.players.filter(p=>p.kind==='ai').length===2);
+  check('mixed games use separate randomly assigned AI decks',new Set(room.players.filter(p=>p.kind==='ai').map(p=>p.commander)).size===2&&room.players.filter(p=>p.kind==='ai').every(p=>p.commander!=='Krenko, Mob Boss'));
   check('room responses omit private table passwords',room.password===undefined&&room.tableId===undefined);
   await api(key1,'start',{code});
   await wait(()=>host.state.game?.players?.length===4&&friend.state.game?.players?.length===4,'both private game views');

@@ -1,6 +1,6 @@
 # Optional XMage rules in The Fourth Seat
 
-Manual multiplayer rooms and solo testing remain the default experience. Rules Engine play is an optional game setup with one to four human seats; native `COMPUTER_MAD` seats fill the table to four. AI seats currently use the host's selected Commander deck.
+Manual multiplayer rooms and solo testing remain the default experience. Rules Engine play is an optional game setup with one to four human seats; native `COMPUTER_MAD` seats fill the table to four. AI seats receive different random decks from ten unchanged published Bracket 3 Commander lists. The host's commander is excluded from the draw. [Deck sources and snapshot policy](AI-DECKS.md).
 
 ## Same table, different rules authority
 
@@ -20,7 +20,7 @@ Room records contain lobby membership and table references, never a second rules
 
 ## Cloud verification
 
-`.github/workflows/fourth-seat.yml` verifies the adapter and policy tests, then launches our pinned private XMage server, Nexus bridge, and gateway. The service check creates a two-human/two-native-AI room, starts Commander, answers opening prompts, plays a land, verifies private views, and reconnects. No full game to victory is required. Container startup is separately verified under a 4 GiB memory limit.
+`.github/workflows/fourth-seat.yml` verifies the adapter and policy tests, then launches our pinned private XMage server, Nexus bridge, and gateway. The service check validates all ten published decks against the pinned XMage catalog and Commander rules, checks three distinct random AI seats, then creates a two-human/two-native-AI room with different decks, starts Commander, answers opening prompts, plays a land, verifies private views, and reconnects. No full game to victory is required. Container startup is separately verified under a 4 GiB memory limit.
 
 The real Fourth Seat interface also passed a two-browser integration check: 12 checks, zero JavaScript errors, shared authoritative land play, private hands, and reload. Its harness belongs in the private Site repository (`tools/engine/verify-ui.mjs`), rather than a public copy of the website implementation. Public CI verifies the independent service contract.
 
