@@ -45,7 +45,7 @@ public final class PolicyModel {
         public int total() { return white+blue+black+red+green+colorless+generic+any; }
     }
     public static final class Observation {
-        public final String selfId,commander,step;public final boolean active;public final int turn;public final List<CardView> hand,stack;public final List<Seat> seats;public final List<ManaView> manaOptions;
+        public final String selfId,commander,step;public final boolean active,combatBeforeDevelopment;public final int turn;public final List<CardView> hand,stack;public final List<Seat> seats;public final List<ManaView> manaOptions;
         public Observation(String selfId,String commander,String step,boolean active,int turn,List<CardView> hand,List<Seat> seats) {
             this(selfId,commander,step,active,turn,hand,seats,Collections.<CardView>emptyList());
         }
@@ -53,6 +53,10 @@ public final class PolicyModel {
             this(selfId,commander,step,active,turn,hand,seats,stack,Collections.<ManaView>emptyList());
         }
         public Observation(String selfId,String commander,String step,boolean active,int turn,List<CardView> hand,List<Seat> seats,List<CardView> stack,List<ManaView> manaOptions) {
+            this(selfId,commander,step,active,turn,hand,seats,stack,manaOptions,false);
+        }
+        public Observation(String selfId,String commander,String step,boolean active,int turn,List<CardView> hand,List<Seat> seats,List<CardView> stack,List<ManaView> manaOptions,boolean combatBeforeDevelopment) {
+            this.combatBeforeDevelopment=combatBeforeDevelopment;
             this.manaOptions=frozen(manaOptions);this.stack=frozen(stack);this.selfId=Objects.requireNonNull(selfId);this.commander=commander==null?"":commander;this.step=Objects.requireNonNull(step);this.active=active;this.turn=turn;this.hand=frozen(hand);this.seats=frozen(seats);
         }
         public Seat self() { for(Seat s:seats) if(s.id.equals(selfId)) return s; throw new IllegalArgumentException("Self seat missing"); }

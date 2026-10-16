@@ -26,6 +26,15 @@ for i in 0 1 2;do
  timeout --signal=TERM --kill-after=5 "$SECONDS_PER_POD" java -Dlog4j.configuration="file:$HERE/adapter/soak/log4j.properties" -Xmx1400m -ea -cp "$BUILD:$CP" mage.player.ai.FourthSeatSoak "$OUT/decks" "$((SEED+i))" "$TURN_LIMIT" ${PODS[$i]} > "$OUT/pod-$i.log" 2>&1
  status=$?;set -e
  echo "POD $i exit=$status decks=${PODS[$i]}" | tee -a "$OUT/summary.log"
+ if [[ $status == 124 ]]; then
+   echo "TIMEOUT pod=$i limitSeconds=$SECONDS_PER_POD exit=$status; NOT a completed game"
+ elif [[ $status == 137 ]]; then
+   echo "KILLED pod=$i exit=137 (timeout hard-kill or external kill); NOT a completed game"
+ fi
+ if grep -qE 'activation-failed|priority failed|^ERROR|Exception in thread' "$OUT/pod-$i.log"; then
+   echo "BOUNDED_DIAGNOSTICS pod=$i first10 action-failure/error lines (max1600 characters each)"
+   grep -E 'activation-failed|priority failed|^ERROR|Exception in thread' "$OUT/pod-$i.log" | awk 'NR <= 10 { print substr($0,1,1600) }' || true
+ fi
  grep -E 'RESULT|TURN_DONE|HEARTBEAT|Exception|ERROR|WARN' "$OUT/pod-$i.log" | tail -8 || true
  [[ $status == 0 ]] || failed=1
  done

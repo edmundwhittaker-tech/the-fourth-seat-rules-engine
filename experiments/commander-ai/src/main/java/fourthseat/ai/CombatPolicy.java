@@ -4,7 +4,8 @@ import java.util.*;
 
 /** Pure, bounded multiplayer attack heuristic. Engine supplies legality, never private cards.
  * Damage is a conservative vanilla-combat projection, NOT a combat rules simulator:
- * no trample, first strike, prevention, replacement effects or commander-damage ledger.
+ * trample and minimum-blocker counts are modeled, but not first strike, prevention,
+ * replacement effects or the commander-damage ledger.
  * Such effects cannot be inferred from names/text. The adapter must validate the final declaration.
  */
 public final class CombatPolicy {
@@ -12,21 +13,32 @@ public final class CombatPolicy {
     public static final int MAX_ATTACKERS=32, MAX_DEFENDERS=8, MAX_EVALUATIONS=2048;
     public static final class Attacker {
         public final String id,name; public final int power,toughness; public final double value;
-        public final boolean vigilance; public final Set<String> legalDefenders; public final double tapOpportunityCost;
+        public final boolean vigilance; public final Set<String> legalDefenders; public final double tapOpportunityCost; public final String publicCombatKey; public final boolean trample,goreclawAttackTrigger; public final int minBlockers;
         public Attacker(String id,String name,int power,int toughness,double value,boolean vigilance,Set<String> legalDefenders) {
             this(id,name,power,toughness,value,vigilance,legalDefenders,0);
         }
         /** Opportunity cost supplied from public, currently usable tap abilities. */
         public Attacker(String id,String name,int power,int toughness,double value,boolean vigilance,Set<String> legalDefenders,double tapOpportunityCost) {
+            this(id,name,power,toughness,value,vigilance,legalDefenders,tapOpportunityCost,"");
+        }
+        public Attacker(String id,String name,int power,int toughness,double value,boolean vigilance,Set<String> legalDefenders,double tapOpportunityCost,String publicCombatKey) {
+            this(id,name,power,toughness,value,vigilance,legalDefenders,tapOpportunityCost,publicCombatKey,false,1,false);
+        }
+        public Attacker(String id,String name,int power,int toughness,double value,boolean vigilance,Set<String> legalDefenders,double tapOpportunityCost,String publicCombatKey,boolean trample,int minBlockers,boolean goreclawAttackTrigger) {
+            this.trample=trample;this.minBlockers=Math.max(1,minBlockers);this.goreclawAttackTrigger=goreclawAttackTrigger;
+            this.publicCombatKey=Objects.requireNonNull(publicCombatKey);
             this.tapOpportunityCost=Math.max(0,tapOpportunityCost);
             this.id=Objects.requireNonNull(id);this.name=name==null?"":name;this.power=Math.max(0,power);this.toughness=Math.max(0,toughness);
             this.value=Math.max(0,value);this.vigilance=vigilance;this.legalDefenders=freeze(legalDefenders);
         }
     }
     public static final class Blocker {
-        public final String id; public final int power,toughness;public final Set<String> blockableAttackerIds;
+        public final String id; public final int power,toughness,maxBlocks;public final Set<String> blockableAttackerIds;
         public Blocker(String id,int power,int toughness,Set<String> blockableAttackerIds) {
-            this.id=Objects.requireNonNull(id);this.power=Math.max(0,power);this.toughness=Math.max(0,toughness);this.blockableAttackerIds=freeze(blockableAttackerIds);
+            this(id,power,toughness,blockableAttackerIds,1);
+        }
+        public Blocker(String id,int power,int toughness,Set<String> blockableAttackerIds,int maxBlocks) {
+            this.id=Objects.requireNonNull(id);this.power=Math.max(0,power);this.toughness=Math.max(0,toughness);this.blockableAttackerIds=freeze(blockableAttackerIds);this.maxBlocks=Math.max(0,maxBlocks);
         }
     }
     public static final class Defender {
@@ -45,7 +57,9 @@ public final class CombatPolicy {
     }
     private static Set<String> freeze(Set<String> x) {return Collections.unmodifiableSet(new HashSet<String>(x));}
     /** Includes ALL opponent seats in risk, including seats no attacker can legally attack.
-     * Attackers beyond the 32 strongest legal candidates are kept home. At most eight seats
+     * At most 32 attackers are individually optimized. Equivalent surplus may be expanded
+     * in bounded batches after risk rescoring. Non-equivalent bodies can participate only
+     * through a separately rescored whole-army seed. At most eight seats
      * can be attack destinations; additional seats still contribute to visible crackback risk.
      * No human/AI marker, hidden hand, deck order, engine state, or randomness is accepted.
      */
@@ -58,12 +72,41 @@ public final class CombatPolicy {
         List<Defender> seats=new ArrayList<Defender>(opponents);Collections.sort(seats,Comparator.comparing(d->d.id));
         unique.clear();for(Defender d:seats) if(!unique.add(d.id)) throw new IllegalArgumentException("Duplicate defender ID");
         List<Defender> destinations=seats.subList(0,Math.min(MAX_DEFENDERS,seats.size()));
+        Set<String> sampled=new HashSet<String>();for(Attacker a:candidates) sampled.add(a.id);
+        Map<List<Object>,List<Attacker>> overflow=new LinkedHashMap<List<Object>,List<Attacker>>();
+        for(Attacker a:all) if(!sampled.contains(a.id)&&a.tapOpportunityCost==0&&!a.legalDefenders.isEmpty()) {
+            List<Object> key=equivalenceKey(a,seats);
+            overflow.computeIfAbsent(key,k->new ArrayList<Attacker>()).add(a);
+        }
+        Map<String,Map<String,BlockRisk>> risks=blockRisks(all,seats);
         Map<String,String> best=new TreeMap<String,String>();double bestScore=0;int evaluations=1;
         // Full-team seeds allow a token army to break through even when no solo attack is good.
         for(Defender d:destinations) {
             Map<String,String> seed=new TreeMap<String,String>();for(Attacker a:candidates) if(a.legalDefenders.contains(d.id)) seed.put(a.id,d.id);
-            double s=score(commander,selfLife,all,seats,seed);evaluations++;
+            double s=score(commander,selfLife,all,seats,risks,seed);evaluations++;
             if(s>bestScore+1e-9) {best=seed;bestScore=s;}
+            // A 32-body sample may be fully blocked even though the actual equivalent
+            // army overwhelms that defense. One bulk seed per seat prevents that trap.
+            Map<String,String> bulk=new TreeMap<String,String>(seed);Set<List<Object>> included=new HashSet<List<Object>>();
+            for(Attacker a:candidates) if(seed.containsKey(a.id)&&a.tapOpportunityCost==0) {
+                List<Object> key=equivalenceKey(a,seats);if(!included.add(key)) continue;
+                List<Attacker> extras=overflow.get(key);
+                if(extras!=null) for(Attacker extra:extras) bulk.put(extra.id,d.id);
+            }
+            if(!bulk.equals(seed)) {
+                double bulkScore=score(commander,selfLife,all,seats,risks,bulk);evaluations++;
+                if(bulkScore>bestScore+1e-9) {best=bulk;bestScore=bulkScore;}
+            }
+        }
+        // Separate whole-army baseline, not an equivalence assumption. Every body
+        // has its own legal edge, value and risk. This permits modified/counter-bearing
+        // armies beyond the sample without pretending those bodies are interchangeable.
+        for(Defender d:destinations) {
+            Map<String,String> army=new TreeMap<String,String>();
+            for(Attacker a:all) if(a.tapOpportunityCost==0&&a.legalDefenders.contains(d.id)) army.put(a.id,d.id);
+            if(evaluations>=MAX_EVALUATIONS) break;
+            double armyScore=score(commander,selfLife,all,seats,risks,army);evaluations++;
+            if(armyScore>bestScore+1e-9) {best=army;bestScore=armyScore;}
         }
         // Strict improvement only, stable ID ties; bounded independent of any wall-clock clock.
         for(int round=0;round<6 && evaluations<MAX_EVALUATIONS;round++) {
@@ -76,18 +119,74 @@ public final class CombatPolicy {
                     if(evaluations>=MAX_EVALUATIONS) break search;
                     Map<String,String> proposal=new TreeMap<String,String>(best);
                     if(target==null) proposal.remove(a.id);else proposal.put(a.id,target);
-                    double s=score(commander,selfLife,all,seats,proposal);evaluations++;
+                    double s=score(commander,selfLife,all,seats,risks,proposal);evaluations++;
                     if(s>nextScore+1e-9) {next=proposal;nextScore=s;}
                 }
             }
             if(next==best) break;best=next;bestScore=nextScore;
         }
+        // Expand only surplus equivalent to a selected representative. Equality includes
+        // public features AND every supplied blocker relation, not merely creature name.
+        // Reserved tap engines never enter overflow, even if they have vigilance.
+        Set<List<Object>> expanded=new HashSet<List<Object>>();
+        for(Attacker representative:candidates) {
+            String target=best.get(representative.id);
+            if(target==null||representative.tapOpportunityCost!=0) continue;
+            List<Object> key=equivalenceKey(representative,seats);
+            if(!expanded.add(key)) continue;
+            List<Attacker> extras=overflow.get(key);if(extras==null||extras.isEmpty()) continue;
+            // Four options per equivalence group: all, half, or a smaller batch sufficient
+            // to add roughly one opposing life total. Every option includes crackback risk.
+            int life=0;for(Defender d:seats) if(d.id.equals(target)) life=Math.max(0,d.life);
+            int lethalBatch=representative.power==0?1:(int)Math.min(extras.size(),((long)life+representative.power-1)/representative.power);
+            int[] batches={extras.size(),Math.max(1,extras.size()/2),Math.max(1,lethalBatch),1};
+            Map<String,String> expandedBest=best;double expandedScore=bestScore;
+            for(int count:batches) {
+                if(evaluations>=MAX_EVALUATIONS) break;
+                Map<String,String> proposal=new TreeMap<String,String>(best);
+                for(int i=0;i<Math.min(count,extras.size());i++) proposal.put(extras.get(i).id,target);
+                double s=score(commander,selfLife,all,seats,risks,proposal);evaluations++;
+                if(s>expandedScore+1e-9) {expandedBest=proposal;expandedScore=s;}
+            }
+            best=expandedBest;bestScore=expandedScore;
+        }
         return new Plan(best,bestScore,evaluations);
     }
-    private static double score(String commander,int selfLife,List<Attacker> all,List<Defender> seats,Map<String,String> attacks) {
+    static boolean samePublicCombatGroup(Attacker a,Attacker b,List<Defender> seats) {
+        return equivalenceKey(a,seats).equals(equivalenceKey(b,seats));
+    }
+    private static final class BlockRisk {
+        final boolean blockable;final long power,toughness;final int count;
+        BlockRisk(boolean blockable,long power,long toughness,int count) {this.blockable=blockable;this.power=power;this.toughness=toughness;this.count=count;}
+    }
+    private static Map<String,Map<String,BlockRisk>> blockRisks(List<Attacker> all,List<Defender> seats) {
+        Map<String,Map<String,BlockRisk>> result=new HashMap<String,Map<String,BlockRisk>>();
+        for(Defender d:seats) {
+            Map<String,BlockRisk> byAttacker=new HashMap<String,BlockRisk>();
+            for(Attacker a:all) {
+                long power=0,toughness=0;int count=0;boolean blockable=false;
+                for(Blocker b:d.blockers) if(b.maxBlocks>0&&b.blockableAttackerIds.contains(a.id)) {blockable=true;power+=b.power;toughness+=b.toughness;count++;}
+                byAttacker.put(a.id,new BlockRisk(blockable,power,toughness,count));
+            }
+            result.put(d.id,byAttacker);
+        }
+        return result;
+    }
+    private static List<Object> equivalenceKey(Attacker a,List<Defender> seats) {
+        BitSet blockedBy=new BitSet();int index=0;
+        for(Defender d:seats) for(Blocker b:d.blockers) {
+            if(b.blockableAttackerIds.contains(a.id)) blockedBy.set(index);index++;
+        }
+        return Arrays.<Object>asList(a.name,a.power,a.toughness,a.value,a.vigilance,
+                new TreeSet<String>(a.legalDefenders),a.tapOpportunityCost,a.publicCombatKey,a.trample,a.minBlockers,a.goreclawAttackTrigger,blockedBy);
+    }
+    private static boolean hasTrample(Attacker a,boolean goreclawBoost) {return a.trample||(goreclawBoost&&a.power>=4);}
+    private static int effectivePower(Attacker a,boolean goreclawBoost) {return a.power+(goreclawBoost&&a.power>=4&&a.power<Integer.MAX_VALUE?1:0);}
+    private static double score(String commander,int selfLife,List<Attacker> all,List<Defender> seats,Map<String,Map<String,BlockRisk>> risks,Map<String,String> attacks) {
         if(attacks.isEmpty()) return 0;
         double value=0,remainingDefense=0,baselineDefense=0,enemyPower=0,baselineEnemy=0;
-        boolean adeline=false,goreclaw=false;int bigAttackers=0,liveSeats=0;
+        boolean adeline=false,goreclaw=false,goreclawBoost=false;int bigAttackers=0,liveSeats=0;
+        for(Attacker a:all) if(a.goreclawAttackTrigger&&attacks.containsKey(a.id)) goreclawBoost=true;
         for(Attacker a:all) {
             baselineDefense+=a.toughness;
             if(!attacks.containsKey(a.id)||a.vigilance) remainingDefense+=a.toughness;
@@ -103,30 +202,53 @@ public final class CombatPolicy {
         if(!adeline) for(Attacker a:all) if(a.name.startsWith("Adeline,")) adeline=true;
         for(Defender d:seats) {
             if(d.life<=0) continue;liveSeats++;baselineEnemy+=d.visibleCrackbackPower;
-            List<Attacker> sent=new ArrayList<Attacker>();double power=0,suppression=0;
-            for(Attacker a:all) if(d.id.equals(attacks.get(a.id))) {sent.add(a);power+=a.power;}
-            // Every blocker suppresses its largest legal attacker. Duplicate suppression
-            // deliberately overestimates defense, giving a lower damage estimate for swarms.
-            for(Blocker b:d.blockers) {int max=0;for(Attacker a:sent) if(b.blockableAttackerIds.contains(a.id)) max=Math.max(max,a.power);suppression+=max;}
+            List<Attacker> sent=new ArrayList<Attacker>();double power=0,suppression=0;long blockCapacity=0;boolean hasTrample=false,hasNormal=false;
+            for(Attacker a:all) if(d.id.equals(attacks.get(a.id))) {sent.add(a);power+=effectivePower(a,goreclawBoost);if(hasTrample(a,goreclawBoost))hasTrample=true;else hasNormal=true;}
+            // Give defenders a pessimistic best suppression per blocking slot. Trample
+            // requires assigning lethal toughness, not losing the whole attacker power.
+            // Sent is power-sorted, so first legal match in each keyword category is best.
+            for(Blocker b:d.blockers) {
+                int maxTrample=-1,maxNormal=-1;
+                for(Attacker a:sent) {
+                    if(risks.get(d.id).get(a.id).count<a.minBlockers||!b.blockableAttackerIds.contains(a.id)) continue;
+                    if(hasTrample(a,goreclawBoost)) {if(maxTrample<0)maxTrample=effectivePower(a,goreclawBoost);}
+                    else if(maxNormal<0)maxNormal=effectivePower(a,goreclawBoost);
+                    if((!hasTrample||maxTrample>=0)&&(!hasNormal||maxNormal>=0))break;
+                }
+                int suppressed=Math.max(Math.max(0,maxNormal),Math.min(Math.max(0,maxTrample),b.toughness));
+                suppression+=(double)suppressed*b.maxBlocks;blockCapacity+=b.maxBlocks;
+            }
             double damage=Math.max(0,power-suppression);value+=damage;
             boolean projectedLethal=damage>=d.life;
             if(projectedLethal) value+=35;else enemyPower+=d.visibleCrackbackPower;
+            List<Double> possibleLosses=new ArrayList<Double>();
             for(Attacker a:sent) {
-                int possibleBlockPower=0;boolean blockable=false;
-                for(Blocker b:d.blockers) if(b.blockableAttackerIds.contains(a.id)) {blockable=true;possibleBlockPower+=b.power;}
+                BlockRisk risk=risks.get(d.id).get(a.id);
+                long possibleBlockPower=risk.power;boolean blockable=risk.blockable&&risk.count>=a.minBlockers;
                 // Double-block possibility is charged without assuming opponents will trade badly.
-                if(blockable&&possibleBlockPower>=a.toughness) value-=Math.max(a.value*1.7,a.tapOpportunityCost);
-                if(!blockable&&a.power>0) {
-                    if(a.name.startsWith("Lathril,")) value+=Math.min(12,a.power*1.8);
-                    if(a.name.startsWith("Gishath,")) value+=Math.min(18,a.power*2.0);
+                if(blockable&&possibleBlockPower>=a.toughness+(goreclawBoost&&a.power>=4?1:0)) possibleLosses.add(Math.max(a.value*1.7,a.tapOpportunityCost));
+                long connection=!blockable?effectivePower(a,goreclawBoost)
+                        :hasTrample(a,goreclawBoost)?Math.max(0,effectivePower(a,goreclawBoost)-risk.toughness):0;
+                if(connection>0) {
+                    if(a.name.startsWith("Lathril,")) value+=Math.min(12,connection*1.8);
+                    if(a.name.startsWith("Gishath,")) value+=Math.min(18,connection*2.0);
                 }
             }
+            // A blocker cannot kill the entire swarm one creature at a time. Charge the
+            // worst exposed losses, up to actual total blocking capacity. Double blocks
+            // still overestimate casualties here, deliberately conservative.
+            Collections.sort(possibleLosses,Collections.reverseOrder());
+            for(int i=0;i<possibleLosses.size()&&i<blockCapacity;i++) value-=possibleLosses.get(i);
         }
         if(adeline) value+=Math.min(6,liveSeats*1.5); // Trigger value, not invented damage.
         if(goreclaw) value+=Math.min(6,bigAttackers*0.7); // No assumption trample connects.
         double baselineExposure=Math.max(0,baselineEnemy-baselineDefense);
         double exposure=Math.max(0,enemyPower-remainingDefense);
-        value-=2.5*Math.max(0,exposure-baselineExposure);
+        // The same counterattack is less costly with a large life cushion. A fixed
+        // 2.5x penalty previously vetoed safe 40-life attacks and stalled lifegain decks.
+        // All opponents still contribute; newly lethal exposure retains its hard veto.
+        double riskWeight=0.5+1.5*Math.min(1.0,exposure/Math.max(1,selfLife));
+        value-=riskWeight*Math.max(0,exposure-baselineExposure);
         if(enemyPower>0 && exposure>=selfLife && exposure>baselineExposure) value-=10000;
         return value;
     }

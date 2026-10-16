@@ -53,6 +53,14 @@ public final class CommanderPolicyTest {
   Action pumpIdle=new Action("a-idle","Get a Leg Up","",1,false,false,true,Arrays.asList("idle"),ActionKind.SPELL,boost,"buff");
   check("z-attacker".equals(p.choose(combat,Arrays.asList(pumpIdle,pumpAttacker),1000000000L).actionId),"Pump current attacker instead of idle owned engine");
   check(p.choose(combat,Arrays.asList(pumpIdle),1000000000L).actionId==null,"Do not waste combat pump on idle own creature");
-  System.out.println("CommanderPolicyTest: 21 assertions passed");
+  Observation pressure=new Observation("self","Aesi, Tyrant of Gyre Strait","PRECOMBAT_MAIN",true,10,Collections.<CardView>emptyList(),Arrays.asList(self,low),Collections.<CardView>emptyList(),Collections.<ManaView>emptyList(),true);
+  Action developmentLand=new Action("land","Forest","",0,true,false,false,Collections.<String>emptyList());
+  Action multiLand=action("ramp","Skyshroud Claim","Search for two Forest cards");
+  check(p.choose(pressure,Arrays.asList(developmentLand,multiLand),1000000000L).actionId==null,"Ready threatening army advances to combat before single or multiple landfall development");
+  Observation noPressure=new Observation("self","Aesi, Tyrant of Gyre Strait","PRECOMBAT_MAIN",true,10,Collections.<CardView>emptyList(),pressure.seats);
+  check("land".equals(p.choose(noPressure,Arrays.asList(developmentLand),1000000000L).actionId),"No attack projection means no blanket land suppression");
+  Observation afterCombat=new Observation("self","Aesi, Tyrant of Gyre Strait","POSTCOMBAT_MAIN",true,10,Collections.<CardView>emptyList(),pressure.seats,Collections.<CardView>emptyList(),Collections.<ManaView>emptyList(),true);
+  check("land".equals(p.choose(afterCombat,Arrays.asList(developmentLand),1000000000L).actionId),"Combat-first preference does not permanently disable land drops");
+  System.out.println("CommanderPolicyTest: 24 assertions passed");
  }
 }

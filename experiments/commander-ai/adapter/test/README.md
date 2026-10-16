@@ -38,6 +38,12 @@ The optional second argument is an exact runtime classpath **file**, not a Maven
 - Regeneration: Golgari Charm selects regeneration against Murder, but is held against exile.
 - Optional costs: Tender Wildguide casts normally with two mana and produces its offspring with four; Smuggler’s Surprise rejects unaffordable Spree and resolves an affordable protective mode.
 - Failed payment: a real cast triggers completed engine rollback, restores hand/stack, and clears transient activation/payment context on the current player. This fork restores players in place.
+- Costed producers: Nykthos reserves its own tap while paying two input mana, rejects insufficient input, and chooses productive devotion for generic costs. Command Tower plus Forest pays Growth Spiral GU; Simic Growth Chamber remains valid.
+- Escalate: Collective Effort pays distinct tap costs for two/three modes, including summoning-sick creatures; admission does not double-commit a required mana dork or one body to multiple costs.
+- Variable permanent targets: Curse of the Swine caps X at one/two opposing creatures, pays XUU, exiles them and makes the correct Boars without filling targets with an own creature.
+- Optional draw: actual Aesi landfall declines an empty-library draw and still draws when stocked.
+- Work avoidance: empty-hand/no-action priority constructs no observation; actual counter and protection scenarios remain covered. Aesi’s large Scute army projection distinguishes ready creatures from tapped or summoning-sick creatures.
+- Combat keywords: actual Ghalta/Gishath trample attacks through a lone small blocker but avoids two lethal blockers; Lathril menace attacks past one blocker but respects two.
 - Observation: actual Elf/non-Elf/changeling subtypes; opponent hand count without card identity.
 
 `FourthSeatAdditionalCostContractTest` adds 27 checks for typed mode-cost and offspring preparation: exact totals, source immutability, independent copies, no repeated cost accumulation, and no mana-pool mutation.
@@ -46,6 +52,6 @@ These are adapter regression checks, **not** full coverage of every card, every 
 
 ## Verified validation
 
-On 16 October 2026, the complete suite compiled and ran with the exact Maven-generated runtime classpath: **92 real-engine scenarios passed, 0 failed**, plus **27 additional-cost contract checks passed**, combined process exit 0 (10:59 UTC, following the coherent 10:57:56 adapter build). See `results/latest.txt` and `results/source-sha256.txt` for the corresponding run and source snapshot.
+On 16 October 2026, the complete suite compiled and ran with the exact Maven-generated runtime classpath: **117 real-engine scenarios passed, 0 failed**, plus **27 additional-cost contract checks passed**, combined process exit 0 (11:22 UTC, following the coherent 11:22:26 adapter build). See `results/latest.txt` and `results/source-sha256.txt` for the corresponding run and source snapshot.
 
 The suite exposed and then verified corrections to Krenko sequencing, Aesi sequencing, Torbran targeting, counter conservation, repeated equipment/animation, Lathril effect classification, keyed creature-type choices, Gwenna multi-colour payment, modal effect/target preservation, sacrifice selection, X announcements, source-tap reservation, conditional and dependent mana, alternative/optional payments, colour choices, regeneration modes and rollback context. A passing fixture suite does not replace the separate full-deck soak report or the owner’s pre-activation review.

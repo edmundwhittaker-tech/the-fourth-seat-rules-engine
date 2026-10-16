@@ -21,10 +21,12 @@ def validate_results(batches, expected):
         if not isinstance(batch, list) or len(batch) != 3:
             raise ValueError('Each batch must contain three pods')
         for pod in batch:
-            if not {'status', 'completedTurns', 'activationFailures', 'caughtPriorityFailures', 'errorLines', 'seats'} <= set(pod):
+            if not {'status', 'completedTurns', 'activationFailures', 'caughtPriorityFailures', 'errorLines', 'seats', 'runtimeMs'} <= set(pod):
                 raise ValueError('Incomplete soak evidence')
-            if pod.get('status') != 'FINISHED' or pod.get('completedTurns', 0) <= 0:
-                raise ValueError('Incomplete soak pod')
+            if pod.get('status') != 'FINISHED' or not 0 < pod.get('completedTurns', 0) <= 120:
+                raise ValueError('Incomplete soak pod or exceeded 120-turn bound')
+            if pod['runtimeMs'] is None or not 0 <= pod['runtimeMs'] <= 300000:
+                raise ValueError('Soak exceeded 300-second bound')
             if any(pod.get(k) for k in ('activationFailures', 'caughtPriorityFailures', 'errorLines')):
                 raise ValueError('Soak contains activation failures or errors')
             seats = pod.get('seats', [])
@@ -94,7 +96,7 @@ def main():
                 'xmageServerForkCommit': PIN, 'createdUtc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 'poolSha256': frozen['poolSha256'], 'policyTests': policy_summary,
                 'realEngineFixturesPassed': int(result[1]), 'additionalCostContractChecksPassed': int(cost_result[1]),
-                'completedSoakGames': 9,
+                'completedSoakGames': 9, 'maximumTurnsPerGame': 120, 'maximumSecondsPerGame': 300,
                 'commanderGameCoverage': coverage,
                 'limits': ['Heuristic beta, not proof of human-level strength or all-card mastery',
                            'No production activation, server configuration or gateway changes included',

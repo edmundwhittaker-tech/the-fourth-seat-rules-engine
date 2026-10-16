@@ -15,7 +15,8 @@ import mage.game.Game;
 import mage.game.permanent.Permanent;
 import mage.players.Player;
 import mage.target.Target;
-import mage.target.common.TargetArtifactPermanent;
+import mage.target.TargetPermanent;
+import mage.constants.Outcome;
 import mage.target.targetadjustment.XTargetsCountAdjuster;
 
 /** Isolated announcement helper, not an auto-payment implementation. Engine resolves payment.
@@ -39,7 +40,7 @@ public final class FourthSeatVariableManaPolicy {
             instances+=variable.getXInstancesCount();
         }
         if(instances<=0) return min;
-        int cap=Math.min(max,artifactTargetCap(source,game,player,instances));
+        int cap=Math.min(max,permanentTargetCap(source,game,player,instances));
         if(cap<min) return min; // API requires the engine-declared minimum; it may reject payment.
         ManaOptions available=player.getManaAvailable(game);
         Mana restricted=restrictedManaUpperBound(player,game);
@@ -63,18 +64,25 @@ public final class FourthSeatVariableManaPolicy {
         }
         return Math.min(max,Math.max(min,result));
     }
-    private static int artifactTargetCap(Ability source,Game game,Player player,int instances) {
+    private static int permanentTargetCap(Ability source,Game game,Player player,int instances) {
         if(!(source.getTargetAdjuster() instanceof XTargetsCountAdjuster)) return Integer.MAX_VALUE;
         // The engine can clear targets while previewing X=0. Recreate the typed blueprint
         // on an ability copy only; never announce X or modify targets on the real spell.
         Ability probe=source.copy();probe.getManaCostsToPay().setX(1,instances);probe.setCostsTag("X",1);
         probe.getTargetAdjuster().adjustTargets(probe,game);
-        if(probe.getTargets().size()!=1||!(probe.getTargets().get(0) instanceof TargetArtifactPermanent)) return Integer.MAX_VALUE;
+        if(probe.getTargets().size()!=1||!(probe.getTargets().get(0) instanceof TargetPermanent)) return Integer.MAX_VALUE;
         Target target=probe.getTargets().get(0);int count=0;
+        Outcome intent=probe.getEffects().getOutcome(probe);
         Set<UUID> opponents=game.getOpponents(player.getId(),true);
         for(UUID id:target.possibleTargets(player.getId(),probe,game)) {
             Permanent permanent=game.getPermanent(id);
-            if(permanent!=null&&opponents.contains(permanent.getControllerId())) count++;
+            if(permanent==null) continue;
+            // Engine outcomes describe benefit/detriment to the TARGET. This supports
+            // exact-X creature exile (Curse), artifacts (By Force), and beneficial own
+            // permanent effects without selecting our own bodies merely to fill X.
+            if(intent==Outcome.Neutral||intent.anyTargetHasSameValue()
+                    ||(intent.isGood()?player.getId().equals(permanent.getControllerId())
+                    :opponents.contains(permanent.getControllerId()))) count++;
         }
         return count;
     }

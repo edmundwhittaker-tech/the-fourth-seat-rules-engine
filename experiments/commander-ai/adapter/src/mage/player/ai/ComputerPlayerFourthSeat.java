@@ -5,6 +5,8 @@ import fourthseat.ai.DeckPlan;
 import fourthseat.ai.PolicyModel.*;
 import mage.MageObject;
 import mage.Mana;
+import mage.cards.n.NykthosShrineToNyx;
+import mage.abilities.dynamicvalue.common.DevotionCount;
 import mage.ConditionalMana;
 import mage.abilities.mana.ActivatedManaAbilityImpl;
 import mage.abilities.mana.ManaOptions;
@@ -36,6 +38,8 @@ import mage.constants.AbilityType;
 import mage.abilities.effects.Effect;
 import mage.counters.CounterType;
 import mage.abilities.costs.mana.ManaCost;
+import mage.abilities.costs.mana.ManaCosts;
+import mage.constants.ColoredManaSymbol;
 import mage.constants.MultiAmountType;
 import mage.util.MultiAmountMessage;
 import mage.game.Game;
@@ -64,6 +68,11 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
     private transient ActivatedAbility activatingAbility;
     private transient boolean prefundingMana;
     private transient boolean optionalCostProbe;
+    // Scoped to one getPlayable call; deliberately NOT copied into simulation players.
+    private transient boolean capturePlayableMana;
+    private transient ManaOptions capturedPlayableMana;
+    private transient Set<UUID> pendingTapReservations = Collections.emptySet();
+    transient long observationBuildCount; // diagnostics only, never used by policy or copied
 
     public ComputerPlayerFourthSeat(String name, RangeOfInfluence range, int skill) {
         super(name, range);
@@ -87,6 +96,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
         activatingAbility = other.activatingAbility == null ? null : other.activatingAbility.copy();
         prefundingMana = other.prefundingMana;
         optionalCostProbe = other.optionalCostProbe;
+        pendingTapReservations = other.pendingTapReservations == null ? Collections.<UUID>emptySet() : new HashSet<UUID>(other.pendingTapReservations);
     }
 
     @Override public ComputerPlayerFourthSeat copy() { return new ComputerPlayerFourthSeat(this); }
@@ -105,12 +115,24 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
         activatingAbility = null;
         prefundingMana = false;
         optionalCostProbe = false;
+        capturePlayableMana = false;
+        capturedPlayableMana = null;
+        pendingTapReservations = Collections.emptySet();
+        observationBuildCount = 0;
     }
 
     // Engine-only affordability snapshot, never strategic full-state scoring.
     // Restricted outputs are tested BEFORE ManaOptions flattens their conditions.
     private ManaOptions manaAvailableFor(ActivatedAbility ability, Game game) {
+        return manaAvailableFor(ability, game, Collections.<UUID>emptySet());
+    }
+
+    private ManaOptions manaAvailableFor(ActivatedAbility ability, Game game, Set<UUID> tapReservations) {
         Game calculation = game.createSimulationForPlayableCalc();
+        for (UUID id : tapReservations) {
+            Permanent reserved = calculation.getPermanent(id);
+            if (reserved != null) reserved.setTapped(true);
+        }
         Player calculationPlayer = calculation.getPlayer(getId());
         if (ability.getCosts().stream().anyMatch(cost -> cost instanceof TapSourceCost)) {
             Permanent reserved = calculation.getPermanent(ability.getSourceId());
@@ -155,6 +177,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
 
     @Override public boolean chooseUse(Outcome outcome, String message, String secondMessage,
             String trueText, String falseText, Ability source, Game game) {
+        if (outcome == Outcome.DrawCard && getLibrary().size() == 0) return false;
         if (optionalCostProbe) return true;
         if (activatingAbility != null && source instanceof ActivatedAbility
                 && Objects.equals(source.getSourceId(), activatingAbility.getSourceId())
@@ -177,6 +200,42 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
     }
 
     @Override public boolean choose(Outcome outcome, Choice choice, Game game) {
+        if (outcome == Outcome.PutManaInPool && choice instanceof ChoiceColor
+                && activatingAbility instanceof ActivatedManaAbilityImpl
+                && game.getCard(activatingAbility.getSourceId()) instanceof NykthosShrineToNyx) {
+            String[] colors = {"White", "Blue", "Black", "Red", "Green"};
+            DevotionCount[] counts = {DevotionCount.W, DevotionCount.U, DevotionCount.B, DevotionCount.R, DevotionCount.G};
+            Mana demand = currentUnpaid == null ? new Mana() : currentUnpaid.getMana();
+            int[] coloredDemand = {demand.getWhite(), demand.getBlue(), demand.getBlack(), demand.getRed(), demand.getGreen()};
+            String best = null; long bestScore = Long.MIN_VALUE;
+            for (int i = 0; i < colors.length; i++) if (choice.getChoices().contains(colors[i])) {
+                int amount = counts[i].calculate(game, activatingAbility, null);
+                if (amount <= 0) continue;
+                long score = 1000L * Math.min(amount, coloredDemand[i]) + amount;
+                if (score > bestScore) { best = colors[i]; bestScore = score; }
+            }
+            if (best != null) { choice.setChoice(best); return true; }
+            return false; // No productive permitted color, do not invent mana.
+        }
+        if (outcome == Outcome.PutManaInPool && choice.isManaColorChoice() && currentUnpaid != null) {
+            // Match ComputerPlayer.playManaHandling's actual next cost, not its whole
+            // unpaid bundle: e.g. Tower must produce U for GU when a Forest pays G.
+            ManaCost next = currentUnpaid;
+            if (currentUnpaid instanceof ManaCosts) {
+                ManaCosts<?> costs = (ManaCosts<?>) currentUnpaid;
+                if (!costs.isEmpty()) next = costs.get(costs.size() - 1);
+            }
+            String[] colors = {"White", "Blue", "Black", "Red", "Green"};
+            ColoredManaSymbol[] symbols = {ColoredManaSymbol.W, ColoredManaSymbol.U,
+                    ColoredManaSymbol.B, ColoredManaSymbol.R, ColoredManaSymbol.G};
+            for (int i = 0; i < colors.length; i++)
+                if (next.containsColor(symbols[i]) && choice.getChoices().contains(colors[i])) {
+                    choice.setChoice(colors[i]); return true;
+                }
+            if (next.getMana().getColorless() > 0 && choice.getChoices().contains("Colorless")) {
+                choice.setChoice("Colorless"); return true;
+            }
+        }
         // Pinned AbilityImpl uses an untyped keyed dialog for alternative costs.
         // Bind its exact protocol to the current activation, not arbitrary card text.
         if (activatingAbility != null && activatingAbility.getAbilityType() == AbilityType.SPELL
@@ -265,10 +324,25 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                 LOG.debug("fourth-seat guard=STEP_ACTION_LIMIT turn=" + actionTurn + " step=" + actionStep);
                 pass(game); return false;
             }
-            Observation observation = observe(game);
+            List<ActivatedAbility> playable;
+            ManaOptions observationMana;
+            capturePlayableMana = true;
+            capturedPlayableMana = null;
+            try { playable = getPlayable(game, true); }
+            finally { capturePlayableMana = false; }
+            observationMana = capturedPlayableMana;
+            capturedPlayableMana = null;
+            // No strategy or timing shortcut: the engine found no non-mana action.
+            // Keep priority events/timers above, and never bypass a counter/protection.
+            if (playable.stream().noneMatch(ability -> !ability.isManaAbility())) {
+                LOG.debug("fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos="
+                        + (System.nanoTime() - start));
+                pass(game); return false;
+            }
+            Observation observation = observe(game, observationMana);
             List<Action> actions = new ArrayList<Action>();
             Map<String, ActivatedAbility> engineActions = new LinkedHashMap<String, ActivatedAbility>();
-            List<ActivatedAbility> playable = getPlayable(game, true);
+            Map<String, Set<UUID>> tapReservations = new HashMap<String, Set<UUID>>();
             Collections.sort(playable, Comparator.comparingInt((ActivatedAbility ability) -> -urgency(ability, observation))
                     .thenComparing(ComputerPlayerFourthSeat::actionKey));
             for (ActivatedAbility base : playable) {
@@ -304,12 +378,16 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                 for (Ability option : options) {
                     if (actions.size() >= CANDIDATE_LIMIT || sourceOptions >= 8) break;
                     if (!(option instanceof ActivatedAbility)) continue;
-                    if (selectedModes(option).stream().anyMatch(mode -> mode.getCost() != null)) {
-                        ActivatedAbility prepared = FourthSeatAdditionalCostPolicy.prepareModeCost((ActivatedAbility) option);
-                        prepared.adjustX(game);
-                        game.getContinuousEffects().costModification(prepared, game);
+                    Set<UUID> reservedTaps = Collections.emptySet();
+                    if (option.isModal() || selectedModes(option).stream().anyMatch(mode -> mode.getCost() != null)) {
                         Game calculation = game.createSimulationForPlayableCalc();
-                        if (!canPayMinimumManaCost(prepared, manaAvailableFor(prepared, calculation), calculation)) continue;
+                        FourthSeatAdditionalCostPolicy.PreparedCosts prepared = FourthSeatAdditionalCostPolicy
+                                .prepareSelectedCosts((ActivatedAbility) option, calculation);
+                        if (!prepared.distinctTapCostsPayable || !prepared.ability.getCosts().canPay(
+                                prepared.ability, prepared.ability, getId(), calculation)) continue;
+                        if (!canPayMinimumManaCost(prepared.ability,
+                                manaAvailableFor(prepared.ability, calculation, prepared.reservedTapIds), calculation)) continue;
+                        reservedTaps = prepared.reservedTapIds;
                     }
                     if (option instanceof EquipAbility) {
                         Permanent equipment = game.getPermanent(option.getSourceId());
@@ -326,6 +404,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                             actionKind(option), effectOutcomes(option), String.valueOf(option.getSourceId()),
                             effectText(option), sacrifices(option)));
                     engineActions.put(id, (ActivatedAbility) option);
+                    tapReservations.put(id, new HashSet<UUID>(reservedTaps));
                     sourceOptions++;
                 }
             }
@@ -334,7 +413,15 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
             ActivatedAbility chosen = decision.actionId == null ? null : engineActions.get(decision.actionId);
             if (chosen != null) {
                 if (chosen.getManaCosts().manaValue() == 0 && chosen.getCosts().isEmpty()) costlessActions.add(guardKey(chosen));
-                boolean activated = activateAbility(chosen, game);
+                boolean activated;
+                Set<UUID> previousTaps = pendingTapReservations == null ? Collections.<UUID>emptySet() : pendingTapReservations;
+                pendingTapReservations = tapReservations.getOrDefault(decision.actionId, Collections.<UUID>emptySet());
+                try { activated = activateAbility(chosen, game); }
+                finally {
+                    pendingTapReservations = previousTaps;
+                    ComputerPlayerFourthSeat restored = restoredPlayer(game);
+                    if (restored != null && restored != this) restored.pendingTapReservations = new HashSet<UUID>(previousTaps);
+                }
                 LOG.debug("fourth-seat decision=" + decision.reason + " candidates=" + actions.size()
                         + " elapsedNanos=" + (System.nanoTime() - start) + " activated=" + activated);
                 if (activated) {
@@ -358,6 +445,8 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
             pass(game);
             return false;
         } finally {
+            capturePlayableMana = false;
+            capturedPlayableMana = null;
             game.pauseTimer(getTurnControlledBy());
         }
     }
@@ -491,7 +580,16 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
         return cards;
     }
 
-    public Observation observe(Game game) {
+    @Override public ManaOptions getManaAvailable(Game game) {
+        ManaOptions available = super.getManaAvailable(game);
+        if (capturePlayableMana) capturedPlayableMana = available.copy();
+        return available;
+    }
+
+    public Observation observe(Game game) { return observe(game, null); }
+
+    private Observation observe(Game game, ManaOptions alreadyEnumeratedMana) {
+        observationBuildCount++;
         List<Seat> seats = new ArrayList<Seat>();
         for (Player player : game.getPlayers().values()) {
             if (player.hasLeft()) continue;
@@ -509,13 +607,40 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                     ability == null ? Collections.<String>emptyList() : targetIds(ability), false, publicSubtypes(object, game, hidden)));
         }
         List<ManaView> manaOptions = new ArrayList<ManaView>();
-        for (Mana mana : getManaAvailable(game)) {
+        for (Mana mana : alreadyEnumeratedMana == null ? getManaAvailable(game) : alreadyEnumeratedMana) {
             if (manaOptions.size() >= 16) break;
             manaOptions.add(new ManaView(mana.getWhite(), mana.getBlue(), mana.getBlack(), mana.getRed(),
                     mana.getGreen(), mana.getColorless(), mana.getGeneric(), mana.getAny()));
         }
         return new Observation(getId().toString(), commanderName(game), game.getTurnStepType().name(),
-                game.isActivePlayer(getId()), game.getTurnNum(), ownHand(game), seats, stack, manaOptions);
+                game.isActivePlayer(getId()), game.getTurnNum(), ownHand(game), seats, stack, manaOptions, combatBeforeDevelopment(game));
+    }
+
+    // A public, conservative attack projection, not a lethal proof or game rollout.
+    private boolean combatBeforeDevelopment(Game game) {
+        if (!game.isActivePlayer(getId()) || !"PRECOMBAT_MAIN".equals(game.getTurnStepType().name())
+                || !game.getStack().isEmpty() || !"Aesi, Tyrant of Gyre Strait".equals(commanderName(game))) return false;
+        List<Permanent> own = game.getBattlefield().getAllActivePermanents(getId());
+        int scutes = 0;
+        for (Permanent permanent : own) if (!permanent.isFaceDown(game)
+                && "Scute Swarm".equals(permanent.getName())) scutes++;
+        if (scutes < 16) return false;
+        for (UUID opponentId : game.getOpponents(getId(), true)) {
+            Player opponent = game.getPlayer(opponentId);
+            if (opponent == null || opponent.hasLost() || opponent.hasLeft()) continue;
+            int attackers = 0, largest = 0, blockers = 0;
+            long power = 0;
+            for (Permanent permanent : own) if (permanent.isCreature(game) && permanent.canAttack(opponentId, game)) {
+                attackers++;
+                int value = Math.max(0, permanent.getPower().getValue());
+                power += value; largest = Math.max(largest, value);
+            }
+            if (attackers < 16) continue;
+            for (Permanent permanent : game.getBattlefield().getAllActivePermanents(opponentId))
+                if (permanent.isCreature(game) && !permanent.isTapped()) blockers++;
+            if (power - (long) blockers * largest >= opponent.getLife()) return true;
+        }
+        return false;
     }
 
     private CardView view(Card card, Game game) {
@@ -576,7 +701,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
         ManaCost previous = currentUnpaid;
         UUID previousReserved = reservedTapSource;
         currentUnpaid = unpaid.copy();
-        if (!ability.isManaAbility() && ability.getCosts().stream().anyMatch(cost -> cost instanceof TapSourceCost))
+        if (ability.getCosts().stream().anyMatch(cost -> cost instanceof TapSourceCost))
             reservedTapSource = ability.getSourceId();
         try {
             // Fund positive-net input-cost mana engines before spending their input
@@ -619,13 +744,15 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
 
     @Override public List<MageObject> getAvailableManaProducers(Game game) {
         List<MageObject> result = new ArrayList<MageObject>(super.getAvailableManaProducers(game));
-        if (reservedTapSource != null) result.removeIf(object -> reservedTapSource.equals(object.getId()));
+        result.removeIf(object -> (reservedTapSource != null && reservedTapSource.equals(object.getId()))
+                || (pendingTapReservations != null && pendingTapReservations.contains(object.getId())));
         return result;
     }
 
     @Override public List<Permanent> getAvailableManaProducersWithCost(Game game) {
         List<Permanent> result = new ArrayList<Permanent>(super.getAvailableManaProducersWithCost(game));
-        if (reservedTapSource != null) result.removeIf(object -> reservedTapSource.equals(object.getId()));
+        result.removeIf(object -> (reservedTapSource != null && reservedTapSource.equals(object.getId()))
+                || (pendingTapReservations != null && pendingTapReservations.contains(object.getId())));
         return result;
     }
 

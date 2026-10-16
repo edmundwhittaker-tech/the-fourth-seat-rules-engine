@@ -59,6 +59,37 @@ public final class CombatPolicyTest {
         Attacker giada=new Attacker("j","Giada, Font of Hope",2,2,8,true,set("A"),3);
         check(plan(40,Arrays.asList(giada),d("A",40,0)).attacks.size()==1,"Giada vigilance safely retains mana tap");
         check(plan(40,Arrays.asList(giada),d("A",40,0,new Blocker("enemy",2,2,set("j")))).attacks.isEmpty(),"Giada does not trade mana engine for no damage");
+        Attacker tramplingGhalta=new Attacker("gh","Ghalta, Primal Hunger",12,12,10,false,set("A"),0,"trample",true,1,false);
+        check(plan(40,Arrays.asList(tramplingGhalta),d("A",40,0,new Blocker("bear",2,2,set("gh")))).attacks.size()==1,"Ghalta tramples over a chump");
+        check(plan(40,Arrays.asList(tramplingGhalta),d("A",40,0,new Blocker("g1",10,10,set("gh")),new Blocker("g2",10,10,set("gh")))).attacks.isEmpty(),"Ghalta does not assume damage through two giant blockers");
+        Defender bearA=d("A",40,2,new Blocker("bearA",2,2,set("gh")));
+        Defender bearB=d("B",40,2,new Blocker("bearB",2,2,set("gh")));
+        Defender bearC=d("C",40,2,new Blocker("bearC",2,2,set("gh")));
+        check(plan(40,Arrays.asList(tramplingGhalta),bearA,bearB,bearC).attacks.size()==1,"40-life Ghalta accepts safe six-power total crackback for ten damage");
+        check(plan(5,Arrays.asList(tramplingGhalta),bearA,bearB,bearC).attacks.isEmpty(),"Low-life Ghalta preserves defense against aggregate lethal crackback");
+        check(plan(5,Arrays.asList(tramplingGhalta),bearA).attacks.size()==1,"Single nonlethal foe differs from all-seat lethal risk");
+        Attacker tramplingGishath=new Attacker("gs","Gishath, Sun's Avatar",7,6,10,true,set("A"),0,"trample",true,1,false);
+        Plan tramplingHit=plan(40,Arrays.asList(tramplingGishath),d("A",40,0,new Blocker("bear",2,2,set("gs"))));
+        check(tramplingHit.attacks.size()==1&&tramplingHit.score>5,"Gishath trample connection includes real hit payoff");
+        check(plan(40,Arrays.asList(tramplingGishath),d("A",40,0,new Blocker("g1",10,10,set("gs")),new Blocker("g2",10,10,set("gs")))).attacks.isEmpty(),"Gishath avoids lethal wall with no projected connection");
+        Attacker menace=new Attacker("lm","Lathril, Blade of the Elves",2,3,6,false,set("A"),0,"menace",false,2,false);
+        check(plan(40,Arrays.asList(menace),d("A",40,0,new Blocker("giant",10,10,set("lm")))).attacks.size()==1,"One legal blocker cannot block Lathril menace");
+        check(plan(40,Arrays.asList(menace),d("A",40,0,new Blocker("giant",10,10,set("lm"),100))).attacks.size()==1,"One multi-blocking creature is not two distinct menace blockers");
+        check(plan(40,Arrays.asList(menace),d("A",40,0,new Blocker("g1",10,10,set("lm")),new Blocker("g2",10,10,set("lm")))).attacks.isEmpty(),"Two legal blockers can contain Lathril");
+        Defender giantA=d("A",40,10,new Blocker("ga",10,10,set("lm")));
+        Defender giantB=d("B",40,10,new Blocker("gb",10,10,set("lm")));
+        Defender giantC=d("C",40,10,new Blocker("gc",10,10,set("lm")));
+        check(plan(40,Arrays.asList(menace),giantA,giantB,giantC).attacks.size()==1,"40-life Lathril can accept a safe menace hit despite marginal lost reserve");
+        check(plan(20,Arrays.asList(menace),giantA,giantB,giantC).attacks.isEmpty(),"Low-life Lathril does not worsen lethal all-seat exposure");
+        check(plan(31,Arrays.asList(menace),giantA,giantB,giantC).attacks.isEmpty(),"Near-lethal exposure still carries more weight than a large cushion");
+        Attacker goreTrigger=new Attacker("gc","Goreclaw, Terror of Qal Sisma",4,3,3,false,set("A"),0,"trigger",false,1,true);
+        Attacker beast=new Attacker("beast","Beast",6,6,4,false,set("A"));
+        Plan goreHit=plan(40,Arrays.asList(goreTrigger,beast),d("A",40,0,new Blocker("block",3,3,set("gc","beast"))));
+        check(goreHit.attacks.size()==2&&goreHit.score>8,"Attacking Goreclaw projects own boost and granted trample");
+        Attacker goreHome=new Attacker("gc","Goreclaw, Terror of Qal Sisma",4,3,3,false,set(),0,"trigger",false,1,true);
+        check(plan(40,Arrays.asList(goreHome,beast),d("A",40,0,new Blocker("block",1,1,set("beast")))).attacks.isEmpty(),"Goreclaw staying home grants no invented trample");
+        check(!CombatPolicy.samePublicCombatGroup(tramplingGhalta,new Attacker("other","Ghalta, Primal Hunger",12,12,10,false,set("A"),0,"trample",false,1,false),Collections.<Defender>emptyList()),"Trample difference prevents grouping");
+        check(!CombatPolicy.samePublicCombatGroup(menace,new Attacker("other","Lathril, Blade of the Elves",2,3,6,false,set("A"),0,"menace",false,1,false),Collections.<Defender>emptyList()),"Minimum blocker difference prevents grouping");
         List<Attacker> swarm=new ArrayList<Attacker>();Set<String> swarmIds=new HashSet<String>();
         for(int i=0;i<12;i++) {String id="t"+i;swarm.add(new Attacker(id,"Token",1,1,0.1,false,set("A")));swarmIds.add(id);}
         Plan wide=plan(40,swarm,d("A",8,0,new Blocker("wall",1,8,swarmIds)));
@@ -66,8 +97,42 @@ public final class CombatPolicyTest {
         Collections.reverse(swarm);check(plan(40,swarm,d("A",8,0,new Blocker("wall",1,8,swarmIds))).attacks.equals(wide.attacks),"Attacker order invariant");
         List<Attacker> large=new ArrayList<Attacker>();for(int i=0;i<200;i++) large.add(a("n"+i,"Token",1,1,false,"A","B","C"));
         Plan bounded=plan(40,large,d("A",40,0),d("B",40,0),d("C",40,0));
-        check(bounded.attacks.size()<=CombatPolicy.MAX_ATTACKERS,"Large-board attack cap");
+        check(bounded.attacks.size()>CombatPolicy.MAX_ATTACKERS,"Equivalent surplus is not stranded by optimization cap");
         check(bounded.evaluations<=CombatPolicy.MAX_EVALUATIONS,"Decision evaluation budget");
+        List<Attacker> scutes=new ArrayList<Attacker>();Set<String> scuteIds=new HashSet<String>();
+        for(int i=0;i<500;i++) {String id=String.format("scute%04d",i);scuteIds.add(id);scutes.add(new Attacker(id,"Scute Swarm",1,1,1.3,false,set("A"),0,"Scute public rules"));}
+        Plan scutePlan=plan(40,scutes,d("A",40,0,new Blocker("wall",4,4,scuteIds)));
+        check(scutePlan.attacks.size()>32,"500 realistic-value Scutes attack past one blocker");
+        check(scutePlan.evaluations<=CombatPolicy.MAX_EVALUATIONS,"Overflow preserves evaluation bound");
+        List<Blocker> manyWalls=new ArrayList<Blocker>();for(int i=0;i<40;i++)manyWalls.add(new Blocker("wall"+i,4,4,scuteIds));
+        Plan overwhelm=CombatPolicy.plan("",40,scutes,Arrays.asList(new Defender("A",40,manyWalls,0)));
+        check(overwhelm.attacks.size()>32,"Bulk seed finds army attack even when all sampled attackers can be blocked");
+        Collections.reverse(scutes);
+        check(plan(40,scutes,d("A",40,0,new Blocker("wall",4,4,scuteIds))).attacks.equals(scutePlan.attacks),"Overflow invariant to creature order");
+        check(plan(40,scutes,d("A",40,0,new Blocker("multi",4,4,scuteIds,500))).attacks.isEmpty(),"Actual multi-block capacity can contain swarm");
+        // These sort after the sampled 32. They must not borrow an eligible token's plan.
+        scutes.add(new Attacker("zzTapped","Scute Swarm",1,0,1.3,false,set(),0,"Scute public rules"));
+        scutes.add(new Attacker("zzSick","Scute Swarm",1,1,1.3,false,set(),0,"Scute public rules"));
+        scutes.add(new Attacker("zzOtherSeat","Scute Swarm",1,1,1.3,false,set("B"),0,"Scute public rules"));
+        scutes.add(new Attacker("zzTapEngine","Scute Swarm",1,1,1.3,false,set("A"),1000,"Scute public rules"));
+        scutes.add(new Attacker("zzAttached","Scute Swarm",1,1,1.3,false,set("A"),0,"individual:zzAttached"));
+        scutes.add(new Attacker("zzCounter","Scute Swarm",1,1,1.3,false,set("A"),0,"individual:zzCounter"));
+        scutes.add(new Attacker("zzDifferentRules","Scute Swarm",1,1,1.3,false,set("A"),0,"Different public rules"));
+        scutes.add(new Attacker("zzDifferentBlockEdge","Scute Swarm",1,1,1.3,false,set("A"),0,"Scute public rules"));
+        Plan restricted=plan(40,scutes,d("A",40,0,new Blocker("wall",4,4,scuteIds)),d("B",40,0));
+        for(String id:Arrays.asList("zzTapped","zzSick","zzTapEngine"))
+            check(!restricted.attacks.containsKey(id),"Overflow does not inherit eligibility/features: "+id);
+        check(!"A".equals(restricted.attacks.get("zzOtherSeat")),"Whole-army seed still honors each creature's legal seat");
+        Attacker normal=scutes.get(0);
+        for(Attacker modified:scutes) if(modified.id.startsWith("zz"))
+            check(!CombatPolicy.samePublicCombatGroup(normal,modified,Arrays.asList(d("A",40,0,new Blocker("wall",4,4,scuteIds)))),"Differing public feature/block edge cannot join equivalent overflow: "+modified.id);
+        List<Attacker> distinctArmy=new ArrayList<Attacker>();
+        for(int i=0;i<70;i++)distinctArmy.add(new Attacker("angel"+i,"Angel",4,4,5,true,set("A"),0,"individual:angel"+i));
+        check(plan(40,distinctArmy,d("A",100,0)).attacks.size()>32,"Individually legal modified army can use separate whole-army seed");
+        // Sending every equivalent token would expose lethal crackback; rescoring must
+        // preserve a useful reserve rather than blindly expanding the sample.
+        Plan reserve=plan(5,scutes,d("A",1000,100));
+        check(reserve.attacks.size()<500,"Overflow is rescored against lost blocking reserve");
         boolean immutable=false;try {bounded.attacks.clear();}catch(UnsupportedOperationException e){immutable=true;}
         check(immutable,"Immutable result");
         System.out.println("CombatPolicyTest: "+checks+" checks passed");

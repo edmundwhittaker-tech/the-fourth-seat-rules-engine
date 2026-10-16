@@ -44,6 +44,14 @@ public final class CommanderPolicy {
             }
             for(String sacrifice:a.sacrifices)for(CardView c:observation.self().battlefield)
                 if(c.id.equals(sacrifice))value-=plan.cardValue(c)*0.6;
+            // Engine-supplied public legal attack projection: use an established Scute army
+            // before gratuitous landfall multiplication. Never suppress stack interaction.
+            if(observation.combatBeforeDevelopment && observation.active && observation.stack.isEmpty()
+                    && observation.step.equals("PRECOMBAT_MAIN")) {
+                DeckPlan.Role role=plan.role(a.sourceName);
+                if(a.land || role==DeckPlan.Role.RAMP || role==DeckPlan.Role.ENGINE
+                        || a.outcomes.contains("PutLandInPlay")) value=-1000;
+            }
             // Do not spend Aesi's land drop before an already-affordable commander resolves.
             if(a.land && observation.commander.equals("Aesi, Tyrant of Gyre Strait")) {
                 for(Action option:legalActions) if(option.sourceName.equals(observation.commander) && !option.mana && !option.land) {

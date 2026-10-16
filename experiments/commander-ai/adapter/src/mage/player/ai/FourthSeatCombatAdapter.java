@@ -4,6 +4,10 @@ import fourthseat.ai.CombatPolicy;
 import java.util.*;
 import mage.abilities.Ability;
 import mage.abilities.ActivatedAbility;
+import mage.abilities.common.AttacksTriggeredAbility;
+import mage.abilities.effects.Effect;
+import mage.abilities.effects.common.continuous.BoostControlledEffect;
+import mage.abilities.effects.common.continuous.GainAbilityControlledEffect;
 import mage.abilities.costs.Cost;
 import mage.abilities.costs.common.TapSourceCost;
 import mage.constants.SubType;
@@ -25,6 +29,25 @@ public final class FourthSeatCombatAdapter {
         Collections.sort(result,Comparator.comparing(p->p.getId().toString()));return result;
     }
     private static String publicName(Permanent p,Game game) {return p.isFaceDown(game)?"Face-down creature":p.getName();}
+    /** Modified or tap-engine creatures are never grouped with surplus tokens, even
+     * when their displayed power/toughness happens to match. Individually sampled
+     * modified creatures may still attack if the engine permits it. */
+    private static String publicCombatKey(Permanent p,Game game) {
+        boolean unique=p.isTapped()||p.hasSummoningSickness()||p.isFaceDown(game)
+                ||!p.getAttachments().isEmpty()||!p.getCounters(game).isEmpty()||p.getDamage()>0;
+        for(Ability ability:p.getAbilities()) if(ability instanceof ActivatedAbility)
+            for(Cost cost:ability.getCosts()) if(cost instanceof TapSourceCost) unique=true;
+        return unique?"individual:"+p.getId():String.join(" ",p.getRules(game));
+    }
+    private static boolean goreclawAttackTrigger(Permanent p,Game game) {
+        if(!publicName(p,game).equals("Goreclaw, Terror of Qal Sisma")) return false;
+        for(Ability ability:p.getAbilities(game)) if(ability instanceof AttacksTriggeredAbility) {
+            boolean boost=false,gain=false;
+            for(Effect effect:ability.getEffects()) {boost|=effect instanceof BoostControlledEffect;gain|=effect instanceof GainAbilityControlledEffect;}
+            if(boost&&gain) return true;
+        }
+        return false;
+    }
     private static boolean usableTapAbility(Permanent p,Game game) {
         for(Ability a:p.getAbilities()) if(a instanceof ActivatedAbility) {
             boolean tap=false;for(Cost c:a.getCosts()) if(c instanceof TapSourceCost) tap=true;
@@ -66,7 +89,7 @@ public final class FourthSeatCombatAdapter {
             Set<String> legal=new HashSet<String>();
             for(UUID id:opponents) if(p.canAttack(id,game)) legal.add(id.toString());
             attackers.add(new CombatPolicy.Attacker(p.getId().toString(),publicName(p,game),p.getPower().getValue(),
-                    p.isTapped()?0:p.getToughness().getValue(),value(p)+(tapCosts.containsKey(p.getId())?6:0),p.hasAbility(VigilanceAbility.getInstance(),game),legal,tapCosts.getOrDefault(p.getId(),0.0)));
+                    p.isTapped()?0:p.getToughness().getValue(),value(p)+(tapCosts.containsKey(p.getId())?6:0),p.hasAbility(VigilanceAbility.getInstance(),game),legal,tapCosts.getOrDefault(p.getId(),0.0),publicCombatKey(p,game),p.hasAbility(TrampleAbility.getInstance(),game),p.getMinBlockedBy(),goreclawAttackTrigger(p,game)));
         }
         List<CombatPolicy.Defender> defenders=new ArrayList<CombatPolicy.Defender>();
         for(UUID id:opponents) {
@@ -76,7 +99,7 @@ public final class FourthSeatCombatAdapter {
                 // Include tapped enemy creatures: they can untap before their next attack.
                 crackback+=Math.max(0,p.getPower().getValue());Set<String> canBlock=new HashSet<String>();
                 for(Permanent a:own) if(p.canBlock(a.getId(),game)) canBlock.add(a.getId().toString());
-                if(!canBlock.isEmpty()) blockers.add(new CombatPolicy.Blocker(p.getId().toString(),p.getPower().getValue(),p.getToughness().getValue(),canBlock));
+                if(!canBlock.isEmpty()) blockers.add(new CombatPolicy.Blocker(p.getId().toString(),p.getPower().getValue(),p.getToughness().getValue(),canBlock,p.getMaxBlocks()));
             }
             defenders.add(new CombatPolicy.Defender(id.toString(),opponent.getLife(),blockers,crackback));
         }

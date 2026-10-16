@@ -14,6 +14,15 @@ for p in sorted(root.glob('pod-*.log')):
   activations=[l for l in plain.splitlines() if l.startswith(prefix+'activates: ')]
   seats.append({'commander':name,'landPlays':sum(l.startswith(prefix+'plays ') for l in plain.splitlines()),'spellCasts':len(casts),'activatedAbilities':len(activations),'commanderCasts':sum(l.startswith(prefix+'casts '+name+' [') for l in casts),'commanderActivations':sum((' from '+name+' [') in l for l in activations),'attackDeclarations':sum(l.startswith(prefix+'attacks ') for l in plain.splitlines()),'failures':sum('decision=PLAN:'+name+':' in l and 'activated=false' in l for l in s.splitlines())})
  row['seats']=seats
+ observed=[int(x) for x in re.findall(r'elapsedMs=(\d+)',s)]
+ row['observedRuntimeMs']=max(observed) if observed else None
+ row['runtimeMeasuredToCompletion']=bool(result)
+ previous=0; intervals=[]
+ for turn,elapsed in turns:
+  elapsed=int(elapsed);intervals.append({'completedTurn':int(turn),'intervalMs':max(0,elapsed-previous)});previous=elapsed
+ row['largestCompletedTurnIntervalMs']=max((i['intervalMs'] for i in intervals),default=None)
+ row['largestObservedProgressGapMs']=max([i['intervalMs'] for i in intervals]+[max(0,(row['observedRuntimeMs'] or 0)-previous)])
+ row['slowestCompletedTurnIntervals']=sorted(intervals,key=lambda i:i['intervalMs'],reverse=True)[:5]
  row['failedActionSources']=dict(collections.Counter(re.findall(r'activation-failed source=(.*?) rule=',s)))
  row['guardReasons']=dict(collections.Counter(re.findall(r'fourth-seat guard=(\S+)',s)))
  rows.append(row)

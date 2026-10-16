@@ -1,3 +1,5 @@
+Note: /tmp/fourth-seat-ai-isolated/experiments/commander-ai/adapter/test/mage/player/ai/FourthSeatRealGameTest.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
 PASS Giada, Font of Hope actual own-hand spell extraction and paid cast
 PASS Giada, Font of Hope actual command-zone cast
 PASS Giada, Font of Hope unaffordable cast excluded
@@ -91,7 +93,32 @@ PASS Smuggler's Surprise pays only an affordable Spree mode with 2 mana
 PASS Selvala dependent commander-tax recast is rejected when short
 PASS Selvala dependent commander-tax recast succeeds when funded
 PASS Failed real spell payment restores transient context on rollback player
+PASS Nykthos paid activation with 1 other mana sources
+PASS Nykthos paid activation with 2 other mana sources
+PASS Nykthos chooses productive devotion for generic artifact
+PASS Aesi optional landfall draw with empty library
+PASS Aesi optional landfall draw with nonempty library
+PASS Aesi Scute combat-development observation with ready
+PASS Aesi Scute combat-development observation with tapped
+PASS Aesi Scute combat-development observation with sick
+PASS Empty-hand no-action priority skips observation construction
+PASS Curse of the Swine caps X at 1 opponent creatures
+PASS Curse of the Swine caps X at 2 opponent creatures
+PASS Collective Effort actual distinct Escalate taps with 1 bodies sick=false
+PASS Collective Effort actual distinct Escalate taps with 2 bodies sick=false
+PASS Collective Effort actual distinct Escalate taps with 1 bodies sick=true
+PASS Collective Effort actual distinct Escalate taps with 2 bodies sick=true
+PASS Collective Effort does not reuse required mana dork for Escalate
+PASS Growth Spiral GU paid by Command Tower and Forest
+PASS Growth Spiral GU paid by Simic Growth Chamber
+PASS Ghalta, Primal Hunger trample combat versus one small blocker
+PASS Ghalta, Primal Hunger trample combat versus two lethal blockers
+PASS Gishath, Sun's Avatar trample combat versus one small blocker
+PASS Gishath, Sun's Avatar trample combat versus two lethal blockers
+PASS Lathril menace versus 1 large blockers per seat
+PASS Lathril menace versus 2 large blockers per seat
+PASS Collective Effort one body admits affordable modes without retry
 PASS Observation uses actual subtype and changeling rules
 PASS Observation excludes opponent hand identity
-RESULT: 92 passed, 0 failed real-engine checks
+RESULT: 117 passed, 0 failed real-engine checks
 FourthSeatAdditionalCostContractTest: 27 checks passed

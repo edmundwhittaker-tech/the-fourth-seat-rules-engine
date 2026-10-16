@@ -466,6 +466,74 @@ public final class FourthSeatRealGameTest {
                 check(name.equals("prefundingMana")?Boolean.FALSE.equals(value):value==null,"Stale rollback context: "+name+"="+value);
             }
         });
+        for(final int lands:new int[]{1,2}) test("Nykthos paid activation with "+lands+" other mana sources",()->{
+            Fixture f=new Fixture(); f.game.initializeRollbackOrder(); PermanentCard nyk=f.board("n.NykthosShrineToNyx","Nykthos, Shrine to Nyx");
+            f.board("a.ArchangelOfTithes","Archangel of Tithes"); f.board("b.BaneslayerAngel","Baneslayer Angel");
+            for(int i=0;i<lands;i++)f.board("basiclands.Plains","Plains");
+            Card spell=f.hand("a.ArchangelOfThune","Archangel of Thune");int before=TRACE.failures;
+            boolean acted=f.bot.priority(f.game);check(acted==(lands==2),"Incorrect Nykthos input affordability");
+            check(TRACE.failures==before,"Nykthos attempted an unpayable or self-tapping activation");
+            check(f.game.getState().getZone(spell.getId())==(lands==2?Zone.STACK:Zone.HAND),"Wrong actual spell zone");
+            if(lands==2)check(f.game.getPermanent(nyk.getId()).isTapped(),"Nykthos output not paid");
+        });
+        test("Nykthos chooses productive devotion for generic artifact",()->{
+            Fixture f=new Fixture(); f.game.initializeRollbackOrder(); f.board("n.NykthosShrineToNyx","Nykthos, Shrine to Nyx");f.board("a.ArchangelOfTithes","Archangel of Tithes");f.board("b.BaneslayerAngel","Baneslayer Angel");
+            f.board("basiclands.Plains","Plains");f.board("basiclands.Plains","Plains"); Card spell=f.hand("c.CoatOfArms","Coat of Arms"); int before=TRACE.failures;
+            check(f.bot.priority(f.game),"Generic artifact failed despite five white devotion"); check(TRACE.failures==before,"Generic Nykthos selected unproductive color or self tap");check(f.game.getState().getZone(spell.getId())==Zone.STACK,"Artifact not stacked");
+        });
+        for(final boolean stocked:new boolean[]{false,true}) test("Aesi optional landfall draw with "+(stocked?"nonempty":"empty")+" library",()->{
+            Fixture f=new Fixture();PermanentCard aesi=f.board("a.AesiTyrantOfGyreStrait","Aesi, Tyrant of Gyre Strait"); f.bot.getCommandersIds().add(aesi.getId());
+            if(stocked){Card top=f.card("g.GrizzlyBears","Grizzly Bears");f.bot.getLibrary().putOnTop(top,f.game);}
+            Card land=f.hand("basiclands.Forest","Forest");check(f.bot.priority(f.game),"Land not played");f.game.checkStateAndTriggered();check(!f.game.getStack().isEmpty(),"Actual landfall trigger absent");
+            f.game.getStack().resolve(f.game); f.game.checkStateAndTriggered();check(!f.bot.hasLost(),"Voluntary empty-library draw lost game"); check(f.bot.getHand().size()==(stocked?1:0),"Optional draw decision incorrect");
+        });
+        for(final String condition:new String[]{"ready","tapped","sick"}) test("Aesi Scute combat-development observation with "+condition,()->{
+            boolean ready=condition.equals("ready");
+            Fixture f=new Fixture();PermanentCard aesi=f.board("a.AesiTyrantOfGyreStrait","Aesi, Tyrant of Gyre Strait");f.bot.getCommandersIds().add(aesi.getId());aesi.setTapped(true);
+            for(int i=0;i<16;i++){Card card=f.card("s.ScuteSwarm","Scute Swarm");PermanentCard scute=new PermanentCard(card,f.bot.getId(),f.game);f.game.addPermanent(scute,0);f.game.getState().setZone(card.getId(),Zone.BATTLEFIELD);if(!condition.equals("sick"))scute.removeSummoningSickness();if(condition.equals("tapped"))scute.setTapped(true);}
+            f.foes[0].setLife(16,f.game,null);
+            java.lang.reflect.Field flag=Observation.class.getField("combatBeforeDevelopment");check(flag.getBoolean(f.bot.observe(f.game))==ready,"Combat-ready public projection incorrect");
+        });
+        test("Empty-hand no-action priority skips observation construction",()->{
+            Fixture f=new Fixture();java.lang.reflect.Field count=ComputerPlayerFourthSeat.class.getDeclaredField("observationBuildCount");count.setAccessible(true);long before=count.getLong(f.bot);
+            check(!f.bot.priority(f.game),"No-action player did not pass");check(count.getLong(f.bot)==before,"Fast pass built an unnecessary observation");
+        });
+        for(final int count:new int[]{1,2}) test("Curse of the Swine caps X at "+count+" opponent creatures",()->{
+            Fixture f=new Fixture(); f.game.initializeRollbackOrder(); PermanentCard own=f.board("g.GrizzlyBears","Grizzly Bears");List<UUID> victims=new ArrayList<>();for(int i=0;i<count;i++)victims.add(f.enemyBoard(0,"r.RumblingBaloth","Rumbling Baloth").getId());
+            Card spell=f.hand("c.CurseOfTheSwine","Curse of the Swine");f.bot.getManaPool().addMana(Mana.BlueMana(8),f.game,spell.getSpellAbility());int before=TRACE.failures;
+            check(f.bot.priority(f.game),"Curse failed despite sufficient mana");check(TRACE.failures==before,"Curse attempted more X targets than legal creatures");check(f.bot.getManaPool().getMana().count()==6-count,"Curse paid incorrect XUU");f.game.getStack().resolve(f.game);f.game.applyEffects();
+            check(f.game.getPermanent(own.getId())!=null,"Curse filled X with own creature");for(UUID id:victims)check(f.game.getState().getZone(id)==Zone.EXILED,"Curse victim not exiled");int boars=0;for(mage.game.permanent.Permanent p:f.game.getBattlefield().getAllActivePermanents(f.foes[0].getId()))if(p.hasSubtype(SubType.BOAR,f.game))boars++;check(boars==count,"Curse Boar tokens missing");
+        });
+        for(final boolean sick:new boolean[]{false,true}) for(final int bodies:new int[]{1,2}) test("Collective Effort actual distinct Escalate taps with "+bodies+" bodies sick="+sick,()->{
+            Fixture f=new Fixture();f.game.initializeRollbackOrder();List<UUID> bodyIds=new ArrayList<>();for(int i=0;i<bodies;i++){Card body=f.card("g.GrizzlyBears","Grizzly Bears");PermanentCard p=new PermanentCard(body,f.bot.getId(),f.game);f.game.addPermanent(p,0);f.game.getState().setZone(p.getId(),Zone.BATTLEFIELD);if(!sick)p.removeSummoningSickness();bodyIds.add(p.getId());}
+            for(int i=0;i<3;i++)f.board("basiclands.Plains","Plains");PermanentCard victim=f.enemyBoard(0,"r.RumblingBaloth","Rumbling Baloth");PermanentCard enchantment=f.enemyBoard(0,"g.GloriousAnthem","Glorious Anthem");Card card=f.hand("c.CollectiveEffort","Collective Effort");
+            mage.abilities.SpellAbility spell=card.getSpellAbility().copy();List<mage.abilities.Mode> modes=new ArrayList<>(spell.getModes().values());spell.getModes().clearSelectedModes();
+            modes.get(0).getTargets().get(0).addTarget(victim.getId(),spell,f.game);modes.get(1).getTargets().get(0).addTarget(enchantment.getId(),spell,f.game);modes.get(2).getTargets().get(0).addTarget(f.bot.getId(),spell,f.game);
+            for(int i=0;i<bodies+1;i++)spell.getModes().addSelectedMode(modes.get(i).getId());spell.getModes().setPreselected(true);
+            check(f.bot.activateAbility(spell,f.game),"Affordable Escalate cast failed");int tapped=0;for(UUID id:bodyIds)if(f.game.getPermanent(id).isTapped())tapped++;check(tapped==bodies,"Escalate did not tap distinct bodies exactly once");check(f.game.getStack().getFirst().getStackAbility().getModes().getSelectedModes().size()==bodies+1,"Selected mode count changed");
+        });
+        test("Collective Effort does not reuse required mana dork for Escalate",()->{
+            Fixture f=new Fixture();f.game.initializeRollbackOrder();PermanentCard bird=f.board("b.BirdsOfParadise","Birds of Paradise");f.board("basiclands.Plains","Plains");f.board("basiclands.Plains","Plains");f.enemyBoard(0,"r.RumblingBaloth","Rumbling Baloth");f.enemyBoard(0,"g.GloriousAnthem","Glorious Anthem");Card card=f.hand("c.CollectiveEffort","Collective Effort");int before=TRACE.failures;
+            check(f.bot.priority(f.game),"Affordable single-mode spell not cast");check(TRACE.failures==before,"Mana dork was double committed to Escalate");check(f.game.getState().getZone(card.getId())==Zone.STACK,"Collective Effort not stacked");check(f.game.getStack().getFirst().getStackAbility().getModes().getSelectedModes().size()==1,"Mana dork incorrectly available for additional mode");check(f.game.getPermanent(bird.getId()).isTapped(),"Mana dork did not fund normal spell");
+        });
+        for(final boolean tower:new boolean[]{true,false}) test("Growth Spiral GU paid by "+(tower?"Command Tower and Forest":"Simic Growth Chamber"),()->{
+            Fixture f=new Fixture();f.game.initializeRollbackOrder();f.command("a.AesiTyrantOfGyreStrait","Aesi, Tyrant of Gyre Strait");
+            if(tower){f.board("c.CommandTower","Command Tower");f.board("basiclands.Forest","Forest");}else f.board("s.SimicGrowthChamber","Simic Growth Chamber");
+            Card spell=f.hand("g.GrowthSpiral","Growth Spiral");int before=TRACE.failures;
+            check(f.bot.priority(f.game),"Growth Spiral failed actual GU payment");check(TRACE.failures==before,"Dual-color payment attempted wrong colors");check(f.game.getState().getZone(spell.getId())==Zone.STACK,"Growth Spiral not on stack");
+        });
+        for(final String[] commander:new String[][]{{"g.GhaltaPrimalHunger","Ghalta, Primal Hunger"},{"g.GishathSunsAvatar","Gishath, Sun's Avatar"}}) for(final boolean small:new boolean[]{true,false}) test(commander[1]+" trample combat versus "+(small?"one small blocker":"two lethal blockers"),()->{
+            Fixture f=new Fixture();PermanentCard attacker=f.board(commander[0],commander[1]);f.bot.getCommandersIds().add(attacker.getId());for(int seat=0;seat<3;seat++){f.enemyBoard(seat,small?"g.GrizzlyBears":"g.Gigantosaurus",small?"Grizzly Bears":"Gigantosaurus");if(!small)f.enemyBoard(seat,"g.Gigantosaurus","Gigantosaurus");}f.combat();f.bot.selectAttackers(f.game,f.bot.getId());
+            check(f.game.getCombat().getAttackers().contains(attacker.getId())==small,"Trample attack decision ignored meaningful overflow or lethal blockers");
+        });
+        for(final int blockers:new int[]{1,2}) test("Lathril menace versus "+blockers+" large blockers per seat",()->{
+            Fixture f=new Fixture();PermanentCard attacker=f.board("l.LathrilBladeOfTheElves","Lathril, Blade of the Elves");f.bot.getCommandersIds().add(attacker.getId());for(int seat=0;seat<3;seat++)for(int i=0;i<blockers;i++)f.enemyBoard(seat,"g.Gigantosaurus","Gigantosaurus");f.combat();f.bot.selectAttackers(f.game,f.bot.getId());
+            check(f.game.getCombat().getAttackers().contains(attacker.getId())==(blockers==1),"Menace ignored minimum two legal blockers");
+        });
+        test("Collective Effort one body admits affordable modes without retry",()->{
+            Fixture f=new Fixture();f.game.initializeRollbackOrder();f.board("g.GrizzlyBears","Grizzly Bears");for(int i=0;i<3;i++)f.board("basiclands.Plains","Plains");f.enemyBoard(0,"r.RumblingBaloth","Rumbling Baloth");f.enemyBoard(0,"g.GloriousAnthem","Glorious Anthem");Card spell=f.hand("c.CollectiveEffort","Collective Effort");int before=TRACE.failures;
+            check(f.bot.priority(f.game),"Affordable Collective Effort was not cast");check(TRACE.failures==before,"Impossible three-mode Escalate was attempted");check(f.game.getState().getZone(spell.getId())==Zone.STACK,"Collective Effort not on stack");check(f.game.getStack().getFirst().getStackAbility().getModes().getSelectedModes().size()<=2,"One body paid two distinct taps");
+        });
         test("Observation uses actual subtype and changeling rules",()->{
             Fixture f=new Fixture(); PermanentCard elf=f.board("l.LlanowarElves","Llanowar Elves"); PermanentCard bear=f.board("g.GrizzlyBears","Grizzly Bears"); PermanentCard changeling=f.board("c.ChangelingOutcast","Changeling Outcast");
             Observation o=f.bot.observe(f.game); int checked=0;
