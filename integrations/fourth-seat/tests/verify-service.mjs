@@ -1,0 +1,83 @@
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { randomBytes } from 'node:crypto';
+import path from 'node:path';
+import WebSocket from '../gateway/node_modules/ws/wrapper.mjs';
+import { startGateway } from '../gateway/server.mjs';
+import { emptyEngineState, reduceEngineFrame, records } from '../client/session.ts';
+
+const out=path.resolve('build/nexus/fourth-seat');await mkdir(out,{recursive:true});
+const secret=randomBytes(32).toString('hex'),origin='https://thefourthseat.net';
+const gateway=await startGateway({secret,origin,port:8080,dataDir:path.join(out,'data')});
+const checks=[],clients=[];
+const check=(name,condition)=>{assert.ok(condition,name);checks.push({name,passed:true});console.log('PASS '+name);};
+const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function wait(fn,label){const deadline=Date.now()+90_000;while(Date.now()<deadline){const result=fn();if(result)return result;await delay(100);}throw new Error('Timed out: '+label);}
+async function api(key,operation,args={}){
+  const response=await fetch('http://127.0.0.1:8080/api',{method:'POST',headers:{Authorization:'Bearer '+secret,'Content-Type':'application/json'},body:JSON.stringify({browserKey:key,operation,...args})});
+  const data=await response.json();if(!response.ok)throw new Error(data.error);return data;
+}
+async function attach(key){
+  const session=await api(key,'session'),socket=new WebSocket('ws://127.0.0.1:8080/play',{origin});
+  const client={key,socket,state:emptyEngineState(),pending:new Map(),counter:0};clients.push(client);
+  const ready=new Promise((resolve,reject)=>{socket.on('error',reject);client.resolveReady=resolve;});
+  socket.on('open',()=>socket.send(JSON.stringify({ticket:session.ticket})));
+  socket.on('message',raw=>{
+    const frame=JSON.parse(String(raw));if(frame.type==='ready')client.resolveReady();
+    if(frame.type==='result'&&client.pending.has(frame.requestId)){client.pending.get(frame.requestId)(frame);client.pending.delete(frame.requestId);}
+    client.state=reduceEngineFrame(client.state,frame);
+  });
+  client.send=(action,args)=>new Promise((resolve,reject)=>{
+    const requestId='test-'+ ++client.counter,timer=setTimeout(()=>{client.pending.delete(requestId);reject(new Error('No action acknowledgement'));},30_000);
+    client.pending.set(requestId,frame=>{clearTimeout(timer);frame.ok?resolve(frame):reject(new Error(frame.error));});
+    socket.send(JSON.stringify({action,args,requestId}));
+  });
+  await ready;return client;
+}
+let failure;
+try{
+  const key1=randomBytes(32).toString('hex'),key2=randomBytes(32).toString('hex');
+  const host=await attach(key1),friend=await attach(key2);
+  const deck={name:'Cloud Commander verification',cards:[{cardName:'Mountain',amount:99}],commanders:[{cardName:'Krenko, Mob Boss',amount:1}]};
+  const created=await api(key1,'create',{displayName:'HostPilot',humanSeats:2,deck});
+  const code=created.room.code;
+  await api(key2,'join',{displayName:'FriendPilot',code,deck});
+  const room=(await api(key1,'room',{code})).room;
+  check('two human accounts and two native AI fill an engine room',room.players.filter(p=>p.kind==='human').length===2&&room.players.filter(p=>p.kind==='ai').length===2);
+  check('room responses omit private table passwords',room.password===undefined&&room.tableId===undefined);
+  await api(key1,'start',{code});
+  await wait(()=>host.state.game?.players?.length===4&&friend.state.game?.players?.length===4,'both private game views');
+  check('the real server starts four Commander seats at 40 life',host.state.game.players.every(p=>p.life===40));
+  check('server player types identify two native AI',host.state.game.players.filter(p=>!p.isHuman).length===2);
+  check('human accounts control distinct server players',host.state.game.players.find(p=>p.controlled).playerId!==friend.state.game.players.find(p=>p.controlled).playerId);
+  const handled=new Map();let landPlayer;
+  const deadline=Date.now()+180_000;
+  while(Date.now()<deadline&&!landPlayer){
+    for(const client of [host,friend]){
+      const state=client.state,prompt=state.prompt;if(!prompt||handled.get(client)===state.promptKey)continue;handled.set(client,state.promptKey);
+      const gameId=state.gameId;
+      if(prompt.isStartingPlayer){const target=host.state.game.players.find(p=>p.controlled).playerId;await client.send('sendPlayerUUID',{gameId,value:prompt.options.find(p=>p.value===target)?.value??prompt.options[0].value});}
+      else if(prompt.isMulligan)await client.send('sendPlayerBoolean',{gameId,value:false});
+      else if(prompt.method==='GAME_SELECT'){
+        const me=state.game.players.find(p=>p.controlled),land=records(state.game.myHand).find(c=>c.name==='Mountain'&&state.selectable.includes(c.id));
+        if(land&&state.game.activePlayerId===me.playerId){await client.send('sendPlayerUUID',{gameId,value:land.id});landPlayer=client;}
+        else await client.send('sendPlayerBoolean',{gameId,value:false});
+      }else throw new Error('Unexpected opening prompt: '+prompt.method);
+    }
+    await delay(100);
+  }
+  check('a human can submit a legal land play through the public gateway',!!landPlayer);
+  await wait(()=>[host,friend].every(c=>c.state.game.players.some(p=>records(p.battlefield).some(card=>card.name==='Mountain'))),'authoritative land update in both sessions');
+  check('both sessions receive the accepted rules state',true);
+  check('opponent hand names remain private',[host,friend].every(c=>records(c.state.game.opponentHands).every(h=>records(h).every(card=>!card.name))));
+  landPlayer.socket.close();await delay(100);
+  const restored=await attach(landPlayer.key);
+  await wait(()=>restored.state.game?.players?.some(p=>p.controlled&&records(p.battlefield).some(c=>c.name==='Mountain')),'private reconnect cache');
+  check('reconnect restores the same game without replaying an action',restored.state.gameId===landPlayer.state.gameId);
+  const unauthorized=await fetch('http://127.0.0.1:8080/api',{method:'POST',body:'{}'});
+  check('the public gateway rejects unauthenticated API requests',unauthorized.status===401);
+}catch(error){failure=error;throw error;}
+finally{
+  await writeFile(path.join(out,'result.json'),JSON.stringify({passed:!failure,checks,failure:failure?.message,publicServerUsed:false,simEnabled:false,serverTestMode:false,interfaceSourceIncluded:false,integrationCommit:process.env.GITHUB_SHA},null,2));
+  for(const client of clients)client.socket.terminate();await gateway.close();
+}

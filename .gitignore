@@ -1,3 +1,8 @@
 node_modules/
 .DS_Store
 *.log
+.codespace-engine/
+.upstream/
+.reused-xmage/
+build/
+__pycache__/
