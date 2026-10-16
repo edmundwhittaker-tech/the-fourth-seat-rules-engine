@@ -1,0 +1,37 @@
+name: Isolated Commander AI tests
+on:
+  push:
+    branches: [feature/commander-ai-policy-v1]
+    paths:
+      - 'experiments/commander-ai/**'
+      - '.github/workflows/commander-ai-experiment.yml'
+permissions:
+  contents: read
+jobs:
+  isolated-ai:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Deterministic policy scenarios
+        run: |
+          python3 experiments/commander-ai/scripts/verify-deck-pool.py
+          bash experiments/commander-ai/test.sh
+      - name: Fetch exact XMage source
+        run: |
+          git init "$RUNNER_TEMP/xmage-source"
+          git -C "$RUNNER_TEMP/xmage-source" remote add origin https://github.com/Adamychen/xmage-nexus.git
+          git -C "$RUNNER_TEMP/xmage-source" fetch --depth 1 origin 825d1205acca114825f235c6993f1e5a6a6db9fa
+          git -C "$RUNNER_TEMP/xmage-source" checkout --detach FETCH_HEAD
+      - name: Compile actual engine adapter, without registering or deploying
+        env:
+          MAVEN_OPTS: -Xmx4g
+        run: bash experiments/commander-ai/scripts/build-adapter.sh "$RUNNER_TEMP/xmage-source" "$RUNNER_TEMP/xmage-build"
+      - name: Real-engine decision and payment scenarios
+        run: bash experiments/commander-ai/adapter/test/run-real-engine-tests.sh "$RUNNER_TEMP/xmage-build" "$RUNNER_TEMP/xmage-build/.m2"
