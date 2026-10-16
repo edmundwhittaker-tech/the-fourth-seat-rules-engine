@@ -47,7 +47,7 @@ export async function startGateway(options = {}) {
     const existing = clients.get(user);
     if (existing) { existing.touched = Date.now(); await existing.ready; return existing; }
     if (clients.size >= 32) throw new Problem('The engine is at capacity. Please try again shortly.', 503);
-    const client = { socket: new WebSocket(nexusUrl, { maxPayload: 8 * 1024 * 1024 }), pending: new Map(), browsers: new Set(), counter: 0, touched: Date.now(), gameId: null };
+    const client = { socket: new WebSocket(nexusUrl, { maxPayload: 8 * 1024 * 1024 }), pending: new Map(), browsers: new Set(), counter: 0, touched: Date.now(), gameId: null, retiredGames: new Set() };
     clients.set(user, client);
     client.call = (action, args = {}) => new Promise((resolve, reject) => {
       const requestId = 'gateway-' + ++client.counter;
@@ -60,6 +60,12 @@ export async function startGateway(options = {}) {
       try { message = JSON.parse(String(raw)); } catch { return; }
       const pending = client.pending.get(message.requestId);
       if (pending) { client.pending.delete(message.requestId); pending(message); return; }
+      if (message.type === 'event') {
+        const room = roomFor(user), eventGameId = message.method === 'START_GAME' ? message.data?.gameId ?? message.objectId : message.objectId;
+        if (room?.ending || client.retiredGames.has(eventGameId)) return;
+        if (/^(GAME_|END_GAME_INFO)/.test(message.method ?? '') && (!room?.gameId || eventGameId && eventGameId !== room.gameId)) return;
+        if (message.method === 'START_GAME' && !['starting', 'game'].includes(room?.status)) return;
+      }
       if (message.type === 'event' && message.method === 'START_GAME') {
         client.gameId = message.data?.gameId ?? message.objectId;
         const room = roomFor(user);
@@ -193,6 +199,31 @@ export async function startGateway(options = {}) {
         room.players = players;
         await persist(); return { room: publicRoom(room, user) };
       }
+      if (body.operation === 'end') {
+        if (room.host !== user) throw new Problem('Only the host can end the game for everyone.', 403);
+        if (room.status === 'lobby') return { room: publicRoom(room, user) };
+        const endedGameId = room.gameId;
+        room.ending = true;
+        try {
+          // Use the native owner's removal path: XMage ends and removes the live game.
+          if (room.tableId) await client.call('removeTable', { tableId: room.tableId });
+        } finally { delete room.ending; }
+        room.status = 'lobby'; room.gameId = null; room.tableId = null;
+        for (const player of room.players) {
+          delete player.conceded;
+          const member = clients.get(player.user);
+          if (member) {
+            if (endedGameId) member.retiredGames.add(endedGameId);
+            member.gameId = null;
+          }
+        }
+        await persist();
+        for (const player of room.players) {
+          const member = clients.get(player.user);
+          if (member) broadcast(member, { type: 'roomReset', endedGameId, room: publicRoom(room, player.user) });
+        }
+        return { room: publicRoom(room, user) };
+      }
       if (body.operation === 'start') {
         if (room.host !== user) throw new Problem('Only the host can start this game.', 403);
         if (room.status !== 'lobby' || room.players.length !== 4) throw new Problem('Wait for every human seat to be filled.', 409);
@@ -202,7 +233,7 @@ export async function startGateway(options = {}) {
           const created = await client.call('createTable', { name: 'Fourth Seat ' + room.code, password: room.password,
             gameType: 'Commander Free For All', deckType: 'Variant Magic - Commander', winsNeeded: 1,
             playerTypes: players.map(p => p.kind === 'ai' ? 'COMPUTER_MAD' : 'HUMAN'),
-            attackOption: 'MULTIPLE', range: 'ALL', skipInitShuffling: false, skipStartingPlayerChoice: false });
+            attackOption: 'MULTIPLE', range: 'ALL', freeMulligans: 1, mulliganType: 'LONDON', skipInitShuffling: false, skipStartingPlayerChoice: false });
           if (!created?.tableId) throw new Problem('The engine did not create a table.', 502);
           room.tableId = created.tableId;
           for (const player of players) {

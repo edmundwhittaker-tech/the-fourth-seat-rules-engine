@@ -26,6 +26,7 @@ async function attach(key){
   socket.on('open',()=>socket.send(JSON.stringify({ticket:session.ticket})));
   socket.on('message',raw=>{
     const frame=JSON.parse(String(raw));if(frame.type==='ready')client.resolveReady();
+    if(frame.type==='roomReset'){client.reset=frame;client.state=emptyEngineState();return;}
     if(frame.type==='result'&&client.pending.has(frame.requestId)){client.pending.get(frame.requestId)(frame);client.pending.delete(frame.requestId);}
     client.state=reduceEngineFrame(client.state,frame);
   });
@@ -104,14 +105,25 @@ try{
   check('the real server starts four Commander seats at 40 life',host.state.game.players.every(p=>p.life===40));
   check('server player types identify two native AI',host.state.game.players.filter(p=>!p.isHuman).length===2);
   check('human accounts control distinct server players',host.state.game.players.find(p=>p.controlled).playerId!==friend.state.game.players.find(p=>p.controlled).playerId);
-  const handled=new Map();let landPlayer;
+  const handled=new Map(),mulligans=new Map(),bottomed=new Map();let landPlayer;
   const deadline=Date.now()+180_000;
   while(Date.now()<deadline&&!landPlayer){
     for(const client of [host,friend]){
       const state=client.state,prompt=state.prompt;if(!prompt||handled.get(client)===state.promptKey)continue;handled.set(client,state.promptKey);
       const gameId=state.gameId;
       if(prompt.isStartingPlayer){const target=host.state.game.players.find(p=>p.controlled).playerId;await client.send('sendPlayerUUID',{gameId,value:prompt.options.find(p=>p.value===target)?.value??prompt.options[0].value});}
-      else if(prompt.isMulligan)await client.send('sendPlayerBoolean',{gameId,value:false});
+      else if(prompt.isMulligan){
+        const count=mulligans.get(client)??0;
+        if(count===1)check('first mulligan redraws seven for '+(client===host?'host':'friend'),records(state.game.myHand).length===7);
+        const again=count<(client===host?2:1);
+        if(again)mulligans.set(client,count+1);
+        else if(client===host)check('second mulligan keeps six after one card goes to the bottom',records(state.game.myHand).length===6&&bottomed.get(client)===1);
+        await client.send('sendPlayerBoolean',{gameId,value:again});
+      }
+      else if(prompt.isMulliganLondon){
+        bottomed.set(client,(bottomed.get(client)??0)+1);
+        await client.send('sendPlayerUUID',{gameId,value:prompt.options[0].value});
+      }
       else if(prompt.method==='GAME_SELECT'){
         const me=state.game.players.find(p=>p.controlled),land=records(state.game.myHand).find(c=>c.name==='Mountain'&&state.selectable.includes(c.id));
         if(land&&state.game.activePlayerId===me.playerId){await client.send('sendPlayerUUID',{gameId,value:land.id});landPlayer=client;}
@@ -128,6 +140,19 @@ try{
   const restored=await attach(landPlayer.key);
   await wait(()=>restored.state.game?.players?.some(p=>p.controlled&&records(p.battlefield).some(c=>c.name==='Mountain')),'private reconnect cache');
   check('reconnect restores the same game without replaying an action',restored.state.gameId===landPlayer.state.gameId);
+  await assert.rejects(api(key2,'end',{code}),/Only the host/);
+  const previousGame=restored.state.gameId;
+  const reset=(await api(key1,'end',{code})).room;
+  await wait(()=>friend.reset&&restored.reset,'reset broadcast to both humans');
+  check('host ends the native game and returns every human to the same editable lobby',reset.status==='lobby'&&!reset.gameId&&reset.code===code&&reset.players.length===4&&friend.reset.room.status==='lobby'&&restored.reset.room.status==='lobby');
+  check('seats and decks survive ending the game',JSON.stringify(reset.players)===JSON.stringify(room.players));
+  check('reconnect resumes the lobby after game end',(await api(key2,'session')).room.status==='lobby');
+  await api(key1,'end',{code}); // idempotent duplicate
+  await api(key1,'start',{code});
+  await wait(()=>friend.state.gameId&&friend.state.gameId!==previousGame,'fresh rematch');
+  check('the retained room starts a different native game',friend.state.gameId!==previousGame);
+  await api(key1,'end',{code});
+  await api(key2,'leave',{code});await api(key1,'leave',{code});
   const unauthorized=await fetch('http://127.0.0.1:8080/api',{method:'POST',body:'{}'});
   check('the public gateway rejects unauthenticated API requests',unauthorized.status===401);
 }catch(error){failure=error;throw error;}

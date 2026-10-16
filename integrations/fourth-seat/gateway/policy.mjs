@@ -34,7 +34,7 @@ export function authorizeAction(message, gameId) {
 export function publicRoom(room, user) {
   if (!room.players.some(p => p.user === user && p.kind === 'human')) throw new Problem('Join this engine table first.', 403);
   return { code: room.code, status: room.status, humanSeats: room.humanSeats, gameId: room.gameId, isHost: room.host === user,
-    lobbyEditable: true,
+    lobbyEditable: true, canEndGame: true, freeMulligans: 1,
     aiDecks: aiDeckPool.map(entry => ({ id: entry.id, name: entry.deck.name, commander: entry.deck.commanders[0].cardName, sourceUrl: entry.source.url })),
     players: room.players.map(({ user: id, name, kind, commander, deckName, seat, aiDeckId: deckId }) => ({ id, name, kind, commander, deckName, seat, deckId })) };
 }
