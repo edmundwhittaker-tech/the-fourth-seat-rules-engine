@@ -1,0 +1,523 @@
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+DEBUG 2026-10-17 15:34:28,842 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=108045759 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Giada, Font of Hope actual own-hand spell extraction and paid cast
+DEBUG 2026-10-17 15:34:28,870 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=19940600 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Giada, Font of Hope actual command-zone cast
+DEBUG 2026-10-17 15:34:28,875 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=2388664              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Giada, Font of Hope unaffordable cast excluded
+DEBUG 2026-10-17 15:34:28,894 fourth-seat decision=PLAN:Krenko, Mob Boss:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=8147981 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Krenko, Mob Boss actual own-hand spell extraction and paid cast
+DEBUG 2026-10-17 15:34:28,905 fourth-seat decision=PLAN:Krenko, Mob Boss:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=8302435 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Krenko, Mob Boss actual command-zone cast
+DEBUG 2026-10-17 15:34:28,908 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=1877582              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Krenko, Mob Boss unaffordable cast excluded
+DEBUG 2026-10-17 15:34:28,927 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=8348775 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Lathril, Blade of the Elves actual own-hand spell extraction and paid cast
+DEBUG 2026-10-17 15:34:28,936 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=7729100 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Lathril, Blade of the Elves actual command-zone cast
+DEBUG 2026-10-17 15:34:28,939 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=1248804              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Lathril, Blade of the Elves unaffordable cast excluded
+DEBUG 2026-10-17 15:34:28,966 fourth-seat decision=PLAN:Ghalta, Primal Hunger:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=6519341 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Ghalta, Primal Hunger actual own-hand spell extraction and paid cast
+DEBUG 2026-10-17 15:34:28,981 fourth-seat decision=PLAN:Ghalta, Primal Hunger:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=11685885 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Ghalta, Primal Hunger actual command-zone cast
+DEBUG 2026-10-17 15:34:28,983 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=1101962              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Ghalta, Primal Hunger unaffordable cast excluded
+DEBUG 2026-10-17 15:34:28,999 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=5861373 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Goreclaw, Terror of Qal Sisma actual own-hand spell extraction and paid cast
+DEBUG 2026-10-17 15:34:29,006 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=5439847 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Goreclaw, Terror of Qal Sisma actual command-zone cast
+DEBUG 2026-10-17 15:34:29,008 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=993649               =>[main] ComputerPlayerFourthSeat.priority 
+PASS Goreclaw, Terror of Qal Sisma unaffordable cast excluded
+DEBUG 2026-10-17 15:34:29,016 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=4130282 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Torbran, Thane of Red Fell actual own-hand spell extraction and paid cast
+DEBUG 2026-10-17 15:34:29,023 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=6023578 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Torbran, Thane of Red Fell actual command-zone cast
+DEBUG 2026-10-17 15:34:29,025 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=853317               =>[main] ComputerPlayerFourthSeat.priority 
+PASS Torbran, Thane of Red Fell unaffordable cast excluded
+DEBUG 2026-10-17 15:34:29,034 fourth-seat decision=PLAN:Talrand, Sky Summoner:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=4827634 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Talrand, Sky Summoner actual own-hand spell extraction and paid cast
+DEBUG 2026-10-17 15:34:29,042 fourth-seat decision=PLAN:Talrand, Sky Summoner:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=6470332 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Talrand, Sky Summoner actual command-zone cast
+DEBUG 2026-10-17 15:34:29,044 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=992848               =>[main] ComputerPlayerFourthSeat.priority 
+PASS Talrand, Sky Summoner unaffordable cast excluded
+DEBUG 2026-10-17 15:34:29,055 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=5687451 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Aesi, Tyrant of Gyre Strait actual own-hand spell extraction and paid cast
+DEBUG 2026-10-17 15:34:29,068 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=11033777 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Aesi, Tyrant of Gyre Strait actual command-zone cast
+DEBUG 2026-10-17 15:34:29,071 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=1543849              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Aesi, Tyrant of Gyre Strait unaffordable cast excluded
+DEBUG 2026-10-17 15:34:29,078 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=3521043 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Gishath, Sun's Avatar actual own-hand spell extraction and paid cast
+DEBUG 2026-10-17 15:34:29,083 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=3916509 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Gishath, Sun's Avatar actual command-zone cast
+DEBUG 2026-10-17 15:34:29,084 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=637963               =>[main] ComputerPlayerFourthSeat.priority 
+PASS Gishath, Sun's Avatar unaffordable cast excluded
+DEBUG 2026-10-17 15:34:29,093 fourth-seat decision=PLAN:Adeline, Resplendent Cathar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=3533882 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Adeline, Resplendent Cathar actual own-hand spell extraction and paid cast
+DEBUG 2026-10-17 15:34:29,098 fourth-seat decision=PLAN:Adeline, Resplendent Cathar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=4015237 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Adeline, Resplendent Cathar actual command-zone cast
+DEBUG 2026-10-17 15:34:29,100 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=691062               =>[main] ComputerPlayerFourthSeat.priority 
+PASS Adeline, Resplendent Cathar unaffordable cast excluded
+DEBUG 2026-10-17 15:34:29,105 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=3599161 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:29,118 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=4109069              =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:29,125 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=6854712 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Commander tax is enforced on an actual second command-zone cast
+DEBUG 2026-10-17 15:34:29,134 fourth-seat decision=PLAN:Krenko, Mob Boss:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=7125511 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Krenko real legal tap activation
+DEBUG 2026-10-17 15:34:29,143 fourth-seat decision=PLAN:Krenko, Mob Boss:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=6506467 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Krenko casts a token maker before multiplying goblins
+DEBUG 2026-10-17 15:34:29,151 fourth-seat decision=PLAN:Krenko, Mob Boss:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=5945991 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:29,154 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=1 elapsedNanos=2725782         =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:29,218 fourth-seat decision=PLAN:Krenko, Mob Boss:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=3841701 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Krenko allows own token spell to resolve before multiplication
+DEBUG 2026-10-17 15:34:29,221 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=578973               =>[main] ComputerPlayerFourthSeat.priority 
+PASS Krenko tapped cannot activate
+DEBUG 2026-10-17 15:34:29,265 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=37558326 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Lathril ten untapped elves permits actual drain activation
+DEBUG 2026-10-17 15:34:29,283 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=7755641              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Lathril fewer than ten other elves cannot drain
+DEBUG 2026-10-17 15:34:29,290 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=2743469              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Talrand does not counter an empty stack
+DEBUG 2026-10-17 15:34:29,310 fourth-seat decision=PLAN:Talrand, Sky Summoner:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=14618435 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Talrand counters a threat while at two life
+DEBUG 2026-10-17 15:34:29,318 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=1 elapsedNanos=4692670         =>[main] ComputerPlayerFourthSeat.priority 
+PASS Talrand preserves counter for a harmless opposing Bear
+DEBUG 2026-10-17 15:34:29,325 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=1 elapsedNanos=3398928         =>[main] ComputerPlayerFourthSeat.priority 
+PASS Talrand never counters its own spell
+DEBUG 2026-10-17 15:34:29,329 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=1 elapsedNanos=2143925         =>[main] ComputerPlayerFourthSeat.priority 
+PASS Talrand reserves UU rather than main-phase cantrip
+DEBUG 2026-10-17 15:34:29,335 fourth-seat decision=PLAN:Talrand, Sky Summoner:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=4186021 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Talrand uses cantrip at opponent end step
+DEBUG 2026-10-17 15:34:29,345 fourth-seat decision=PLAN:Ghalta, Primal Hunger:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=7501758 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Ghalta actual power discount makes two-green cast legal
+PASS Lathril combat preserves a live ten-elf drain
+PASS Ghalta combat chooses available lethal opponent
+DEBUG 2026-10-17 15:34:29,374 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=5841834 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Giada is established before a follow-up Angel
+DEBUG 2026-10-17 15:34:29,389 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=1 elapsedNanos=9991585         =>[main] ComputerPlayerFourthSeat.priority 
+PASS Giada preserves untargeted protection
+DEBUG 2026-10-17 15:34:29,409 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=10597664 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Goreclaw develops rather than casting a postcombat finisher
+DEBUG 2026-10-17 15:34:29,426 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=5 candidates=5 elapsedNanos=11690117 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Torbran amplified Bolt selects a lethal opponent
+DEBUG 2026-10-17 15:34:29,434 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=5563564 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Aesi precedes land when already funded
+DEBUG 2026-10-17 15:34:29,441 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=4979433 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Aesi still plays land when commander is not payable
+DEBUG 2026-10-17 15:34:29,448 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=4 elapsedNanos=4265085         =>[main] ComputerPlayerFourthSeat.priority 
+PASS Torbran does not assume five damage without commander on board
+PASS Gishath attacks the unblocked opponent
+PASS Adeline can trigger while staying back
+DEBUG 2026-10-17 15:34:29,472 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=9275534 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:29,478 fourth-seat guard=ACTIVATION_REPEAT_LIMIT source=Kamahl, Heart of Krosa limit=1            =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:29,479 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=3186017              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Kamahl animates a land once rather than repeatedly paying for no change
+DEBUG 2026-10-17 15:34:29,506 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=19746853 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Gwenna restricted mana pays Kamahl creature activation
+DEBUG 2026-10-17 15:34:29,520 fourth-seat decision=PLAN:Ghalta, Primal Hunger:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=11004142 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Gwenna supplies both green pips for a real double-green creature
+DEBUG 2026-10-17 15:34:29,535 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=6705287 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:29,539 fourth-seat guard=ACTIVATION_REPEAT_LIMIT source=Swiftfoot Boots limit=1                   =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:29,539 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=2240410              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Swiftfoot Boots does not re-equip its existing wearer
+DEBUG 2026-10-17 15:34:29,548 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=4533200 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Giada names Angel when actual Banner resolves
+DEBUG 2026-10-17 15:34:29,576 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=6 candidates=6 elapsedNanos=15332994 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Boros Charm chooses indestructible and survives an actual Wrath
+DEBUG 2026-10-17 15:34:29,597 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=14510983 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Tyvar's Stand protects the threatened Elf, not another own creature
+DEBUG 2026-10-17 15:34:29,614 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=3 candidates=3 elapsedNanos=7902232 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Get a Leg Up buffs own attacker rather than enemy Giada
+DEBUG 2026-10-17 15:34:29,623 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=2 elapsedNanos=7855021         =>[main] ComputerPlayerFourthSeat.priority 
+PASS Get a Leg Up is not wasted during upkeep
+DEBUG 2026-10-17 15:34:29,640 fourth-seat decision=PLAN:Krenko, Mob Boss:COMPLETE:EVALUATED=8 candidates=8 elapsedNanos=10210334 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Goblin Grenade sacrifices expendable Goblin, not Krenko
+DEBUG 2026-10-17 15:34:29,651 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=6063689 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS By Force pays affordable X for 1 actual artifact targets
+DEBUG 2026-10-17 15:34:29,665 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=8862442 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS By Force pays affordable X for 2 actual artifact targets
+DEBUG 2026-10-17 15:34:29,679 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=8539774 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Entreat the Angels pays XX plus WWW and produces two Angels
+DEBUG 2026-10-17 15:34:29,703 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=14716604 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Castle Embereth reserves its own tap while other lands pay
+DEBUG 2026-10-17 15:34:29,755 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=42919194 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Myriad Landscape pays from other lands and resolves real search
+DEBUG 2026-10-17 15:34:29,783 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=6468239 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Entreat chooses X one with five white mana
+DEBUG 2026-10-17 15:34:29,787 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=931145               =>[main] ComputerPlayerFourthSeat.priority 
+PASS Entreat cannot substitute colorless for WWW
+DEBUG 2026-10-17 15:34:29,808 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=17510989 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Entreat uses a multi-mana producer without double counting
+DEBUG 2026-10-17 15:34:29,824 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=6645907 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Flare of Fortitude can pay normal mana to preserve its creatures
+DEBUG 2026-10-17 15:34:29,830 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=3286359              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Myriad with only one other land is rejected without failed activation
+DEBUG 2026-10-17 15:34:29,838 fourth-seat decision=PLAN:Adeline, Resplendent Cathar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=4667923 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Adeline, Resplendent Cathar chooses correct Heraldic Banner color
+DEBUG 2026-10-17 15:34:29,844 fourth-seat decision=PLAN:Talrand, Sky Summoner:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=3463997 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Talrand, Sky Summoner chooses correct Heraldic Banner color
+DEBUG 2026-10-17 15:34:29,861 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=12168589 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Flare without mana sacrifices expendable white creature
+DEBUG 2026-10-17 15:34:29,865 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=1107290              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Giada restricted mana does not fund a non-Angel artifact
+DEBUG 2026-10-17 15:34:29,873 fourth-seat decision=PLAN:Giada, Font of Hope:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=5658747 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Giada restricted white mana pays an actual Angel spell
+DEBUG 2026-10-17 15:34:29,887 fourth-seat mana-plan=FEEDER                                                               =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:29,898 fourth-seat mana-plan=POOL_INPUT                                                           =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:29,909 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=5112563 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Selvala dependent mana preserves activation green to cast commander
+DEBUG 2026-10-17 15:34:29,925 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=10520653 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Golgari Charm regenerates Lathril through actual Murder
+DEBUG 2026-10-17 15:34:29,939 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=2 elapsedNanos=6481399         =>[main] ComputerPlayerFourthSeat.priority 
+PASS Golgari Charm does not pretend regeneration stops exile
+DEBUG 2026-10-17 15:34:29,951 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=5742124 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Tender Wildguide chooses affordable Offspring with 2 mana
+DEBUG 2026-10-17 15:34:29,957 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=3893494 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Tender Wildguide chooses affordable Offspring with 4 mana
+DEBUG 2026-10-17 15:34:29,993 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=24741498             =>[main] ComputerPlayerFourthSeat.priority 
+PASS Smuggler's Surprise pays only an affordable Spree mode with 1 mana
+DEBUG 2026-10-17 15:34:30,026 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=30195868 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Smuggler's Surprise pays only an affordable Spree mode with 2 mana
+DEBUG 2026-10-17 15:34:30,032 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=3328792 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:30,036 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=1845845              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Selvala dependent commander-tax recast is rejected when short
+DEBUG 2026-10-17 15:34:30,041 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=3309023 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:30,053 fourth-seat mana-plan=FEEDER                                                               =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:30,063 fourth-seat mana-plan=POOL_INPUT                                                           =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:30,076 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=7437762 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Selvala dependent commander-tax recast succeeds when funded
+PASS Failed real spell payment restores transient context on rollback player
+DEBUG 2026-10-17 15:34:30,094 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=3013858              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Nykthos paid activation with 1 other mana sources
+DEBUG 2026-10-17 15:34:30,107 fourth-seat mana-plan=TWO_FEEDERS                                                          =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:30,117 fourth-seat mana-plan=FEEDER                                                               =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:30,124 fourth-seat mana-plan=POOL_INPUT                                                           =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:30,129 fourth-seat decision=PLAN::COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=4452097 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Nykthos paid activation with 2 other mana sources
+DEBUG 2026-10-17 15:34:30,140 fourth-seat mana-plan=TWO_FEEDERS                                                          =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:30,148 fourth-seat mana-plan=FEEDER                                                               =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:30,155 fourth-seat mana-plan=POOL_INPUT                                                           =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:30,160 fourth-seat decision=PLAN::COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=3985453 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Nykthos chooses productive devotion for generic artifact
+DEBUG 2026-10-17 15:34:30,163 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=2085897 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Aesi optional landfall draw with empty library
+DEBUG 2026-10-17 15:34:30,168 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=2663789 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Aesi optional landfall draw with nonempty library
+PASS Aesi Scute combat-development observation with ready
+PASS Aesi Scute combat-development observation with tapped
+PASS Aesi Scute combat-development observation with sick
+DEBUG 2026-10-17 15:34:30,183 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=227102               =>[main] ComputerPlayerFourthSeat.priority 
+PASS Empty-hand no-action priority skips observation construction
+DEBUG 2026-10-17 15:34:30,191 fourth-seat decision=PLAN::COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=5815134 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Curse of the Swine caps X at 1 opponent creatures
+DEBUG 2026-10-17 15:34:30,200 fourth-seat decision=PLAN::COMPLETE:EVALUATED=3 candidates=3 elapsedNanos=5317834 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Curse of the Swine caps X at 2 opponent creatures
+PASS Collective Effort actual distinct Escalate taps with 1 bodies sick=false
+PASS Collective Effort actual distinct Escalate taps with 2 bodies sick=false
+PASS Collective Effort actual distinct Escalate taps with 1 bodies sick=true
+PASS Collective Effort actual distinct Escalate taps with 2 bodies sick=true
+DEBUG 2026-10-17 15:34:30,288 fourth-seat decision=PLAN::COMPLETE:EVALUATED=6 candidates=6 elapsedNanos=53168868 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Collective Effort does not reuse required mana dork for Escalate
+DEBUG 2026-10-17 15:34:30,303 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=8997505 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Growth Spiral GU paid by Command Tower and Forest
+DEBUG 2026-10-17 15:34:30,311 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=4589074 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Growth Spiral GU paid by Simic Growth Chamber
+PASS Ghalta, Primal Hunger trample combat versus one small blocker
+PASS Ghalta, Primal Hunger trample combat versus two lethal blockers
+PASS Gishath, Sun's Avatar trample combat versus one small blocker
+PASS Gishath, Sun's Avatar trample combat versus two lethal blockers
+PASS Lathril menace versus 1 large blockers per seat
+PASS Lathril menace versus 2 large blockers per seat
+DEBUG 2026-10-17 15:34:30,345 fourth-seat decision=PLAN::COMPLETE:EVALUATED=8 candidates=8 elapsedNanos=22437042 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Collective Effort one body admits affordable modes without retry
+PASS Observation uses actual subtype and changeling rules
+PASS Observation excludes opponent hand identity
+RESULT: 117 passed, 0 failed real-engine checks
+FourthSeatAdditionalCostContractTest: 27 checks passed
+DEBUG 2026-10-17 15:34:31,271 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=32052349             =>[main] ComputerPlayerFourthSeat.priority 
+PASS Uro actual escape other grave count=4
+DEBUG 2026-10-17 15:34:31,377 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=100713931 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Uro actual escape other grave count=5
+DEBUG 2026-10-17 15:34:31,430 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=16080321 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Uro actual escape other grave count=6
+PASS Escape normalization copy preserves complete=false
+PASS Escape normalization copy preserves complete=true
+DEBUG 2026-10-17 15:34:31,501 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=26619302 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Demonic Embrace dynamic conjunction grave
+DEBUG 2026-10-17 15:34:31,525 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=9368384 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Demonic Embrace dynamic conjunction hand
+DEBUG 2026-10-17 15:34:31,540 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=5171763              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Demonic Embrace dynamic conjunction no-mana
+DEBUG 2026-10-17 15:34:31,552 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=8146872              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Demonic Embrace dynamic conjunction no-discard
+DEBUG 2026-10-17 15:34:31,561 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=3858861              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Demonic Embrace dynamic conjunction life2
+DEBUG 2026-10-17 15:34:31,575 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=7361557 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Demonic Embrace dynamic conjunction stale-hand
+DEBUG 2026-10-17 15:34:31,588 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=1997283              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Demonic Embrace dynamic conjunction stale-unfunded
+DEBUG 2026-10-17 15:34:31,609 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=6316390              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Pyrokinesis source exclusion spare=none mana=0
+DEBUG 2026-10-17 15:34:31,623 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=9884243 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Pyrokinesis source exclusion spare=none mana=5
+DEBUG 2026-10-17 15:34:31,653 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=9 candidates=9 elapsedNanos=28663225 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Pyrokinesis source exclusion spare=none mana=6
+DEBUG 2026-10-17 15:34:31,670 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=6011019 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Pyrokinesis source exclusion spare=nonred mana=0
+DEBUG 2026-10-17 15:34:31,684 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=9593264 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Pyrokinesis source exclusion spare=nonred mana=5
+DEBUG 2026-10-17 15:34:31,709 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=10 candidates=10 elapsedNanos=22975534 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:31,732 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=9 candidates=9 elapsedNanos=22581700 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Pyrokinesis source exclusion spare=nonred mana=6
+DEBUG 2026-10-17 15:34:31,832 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=8 candidates=8 elapsedNanos=92240186 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Pyrokinesis source exclusion spare=red mana=0
+DEBUG 2026-10-17 15:34:31,930 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=10 candidates=10 elapsedNanos=91960895 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Pyrokinesis source exclusion spare=red mana=5
+DEBUG 2026-10-17 15:34:31,950 fourth-seat decision=PLAN:Torbran, Thane of Red Fell:COMPLETE:EVALUATED=10 candidates=10 elapsedNanos=15762532 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Pyrokinesis source exclusion spare=red mana=6
+RECOVERED_COSTS RESULT: 21 passed, 0 failed real-engine checks
+DEBUG 2026-10-17 15:34:32,435 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=38289088             =>[main] ComputerPlayerFourthSeat.priority 
+PASS Floating input Selvala then real outer cast input=false
+DEBUG 2026-10-17 15:34:32,512 fourth-seat mana-plan=POOL_INPUT                                                           =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:32,538 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=25235494 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Floating input Selvala then real outer cast input=true
+DEBUG 2026-10-17 15:34:32,588 fourth-seat mana-plan=FEEDER                                                               =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:32,607 fourth-seat mana-plan=POOL_INPUT                                                           =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:32,638 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=30120955 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Two-stage Ring Nykthos conversion funds hybrid creature
+DEBUG 2026-10-17 15:34:32,665 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=9721462              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Restricted Gwenna mana cannot fund Nykthos input
+DEBUG 2026-10-17 15:34:32,703 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=27914115 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory restricted output actual payment variant 0
+DEBUG 2026-10-17 15:34:32,726 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=20511366 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory restricted output actual payment variant 1
+DEBUG 2026-10-17 15:34:32,747 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=18185337 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory restricted output actual payment variant 2
+DEBUG 2026-10-17 15:34:32,767 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=17519613 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory restricted output actual payment variant 3
+DEBUG 2026-10-17 15:34:32,788 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=19153077 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory restricted output actual payment variant 4
+DEBUG 2026-10-17 15:34:32,806 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=15520106 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory restricted output actual payment variant 5
+DEBUG 2026-10-17 15:34:32,824 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=15285001 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory restricted output actual payment variant 6
+DEBUG 2026-10-17 15:34:32,843 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=16570330 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory restricted output actual payment variant 7
+DEBUG 2026-10-17 15:34:32,862 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=16962952 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory restricted output actual payment variant 8
+DEBUG 2026-10-17 15:34:32,879 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=14244071 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory restricted output actual payment variant 9
+DEBUG 2026-10-17 15:34:32,894 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=12814504 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory restricted output actual payment variant 10
+DEBUG 2026-10-17 15:34:32,909 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=12958230 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory restricted output actual payment variant 11
+DEBUG 2026-10-17 15:34:32,921 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=7377821 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory preserves output boundary dinosaur
+DEBUG 2026-10-17 15:34:32,929 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=6426215 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory preserves output boundary colorless
+DEBUG 2026-10-17 15:34:32,937 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=3650878              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Territory preserves output boundary invalid-green
+DEBUG 2026-10-17 15:34:32,964 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=18636197 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Castle cannot starve ordinary payment c.Cultivate
+DEBUG 2026-10-17 15:34:32,994 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=21296050 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Castle cannot starve ordinary payment t.TrailtrackerScout
+DEBUG 2026-10-17 15:34:33,015 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=13770747 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Castle cannot starve ordinary payment w.WhispererOfTheWilds
+DEBUG 2026-10-17 15:34:33,037 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=15590673 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Castle cannot starve ordinary payment i.IntrepidPaleontologist
+DEBUG 2026-10-17 15:34:33,051 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=5039543              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Castle compound input Apex affordability enough=false
+DEBUG 2026-10-17 15:34:33,063 fourth-seat mana-plan=FEEDER                                                               =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:33,073 fourth-seat mana-plan=POOL_INPUT                                                           =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:33,086 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=12028798 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Castle compound input Apex affordability enough=true
+DEBUG 2026-10-17 15:34:33,102 fourth-seat mana-plan=TWO_FEEDERS                                                          =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:33,112 fourth-seat mana-plan=FEEDER                                                               =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:33,121 fourth-seat mana-plan=POOL_INPUT                                                           =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:33,131 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=8429958 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Two distinct feeders before Castle reduced Apex
+PASS War Room real nested reservation devotion=2
+PASS War Room real nested reservation devotion=3
+PASS Fanatic actual same-source dominance large
+PASS Fanatic actual same-source dominance large-haste
+PASS Fanatic actual same-source dominance small
+PASS Fanatic actual same-source dominance no-ferocious
+RECOVERED_MANA RESULT: 32 passed, 0 failed real-engine checks
+PASS Fresh32 future reserve projected=false
+PASS Fresh32 future reserve projected=true
+PASS Initial Scute proof rejects 31
+PASS Initial Scute proof rejects tapped
+PASS Initial Scute proof rejects short-hand
+PASS Initial Scute proof rejects missing-blue
+PASS Initial Scute proof rejects short-mana
+PASS Real useful cast preserves same-turn hand5 to4 proof
+PASS Actual attack commitment holds postcombat Myriad
+PASS Prior proof invalidation turn
+PASS Prior proof invalidation offturn
+PASS Prior proof invalidation count
+PASS Prior proof invalidation wipe
+PASS Prior proof invalidation resources
+PASS Prior proof invalidation arbitrary-tap
+PASS Copied proof still rechecks live resources
+PASS Pending opponent stack cannot reopen Harrow growth
+PASS Ashaya creature development hold only with validated Scute reserve=false
+PASS Ashaya creature development hold only with validated Scute reserve=true
+DEBUG 2026-10-17 15:34:34,921 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=89976000 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Reserve preserves actual protection
+PASS Springheart real paid-copy boundary normal
+PASS Springheart real paid-copy boundary projected
+PASS Springheart real paid-copy boundary early
+PASS Springheart real paid-copy boundary short-hand
+PASS Springheart real paid-copy boundary short-army
+PASS Springheart real paid-copy boundary missing-blue
+PASS Springheart real paid-copy boundary short-mana
+PASS Springheart real paid-copy boundary unattached
+PASS Springheart real paid-copy boundary effect-removed
+PASS Springheart real paid-copy boundary other-commander
+PASS Natural Springheart landfall drains into mandatory Insects
+RECOVERED_GROWTH RESULT: 31 passed, 0 failed real-engine checks
+DEBUG 2026-10-17 15:34:35,983 fourth-seat optional-chain=BOUNDED_FINITE_PROGRESS_REFUSAL                                 =>[main] ComputerPlayerFourthSeat.chooseUse 
+PASS Natural finite chain survives real detector and drains
+DEBUG 2026-10-17 15:34:36,013 fourth-seat optional-chain=BOUNDED_FINITE_PROGRESS_REFUSAL                                 =>[main] ComputerPlayerFourthSeat.chooseUse 
+PASS Known progress permits one refusal and optional drain only
+PASS No-progress and unknown protocol preserve confirmation
+DEBUG 2026-10-17 15:34:36,037 fourth-seat optional-chain=BOUNDED_FINITE_PROGRESS_REFUSAL                                 =>[main] ComputerPlayerFourthSeat.chooseUse 
+PASS Empty stack resets finite chain recovery
+DEBUG 2026-10-17 15:34:36,104 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=28205384             =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:36,127 fourth-seat decision=PLAN:Goreclaw, Terror of Qal Sisma:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=18479501 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Own pending work holds proactive flash body then resolves and casts
+DEBUG 2026-10-17 15:34:36,150 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=9511881 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Own pending work still permits actual reactive protection
+DEBUG 2026-10-17 15:34:36,177 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=5404634              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Regal triggered color actual path monarch=false territory=false
+DEBUG 2026-10-17 15:34:36,207 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=20838429             =>[main] ComputerPlayerFourthSeat.priority 
+PASS Regal triggered color actual path monarch=false territory=true
+DEBUG 2026-10-17 15:34:36,234 fourth-seat mana-plan=TRIGGERED_MANA                                                       =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:36,249 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=14260956 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Regal triggered color actual path monarch=true territory=false
+DEBUG 2026-10-17 15:34:36,275 fourth-seat mana-plan=TRIGGERED_MANA                                                       =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:36,289 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=13035397 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Regal triggered color actual path monarch=true territory=true
+DEBUG 2026-10-17 15:34:36,326 fourth-seat mana-plan=POOL_INPUT                                                           =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:36,346 fourth-seat decision=PLAN:Ghalta, Primal Hunger:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=20073987 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Lair X demand preserves conversion input extraForest=false
+DEBUG 2026-10-17 15:34:36,373 fourth-seat mana-plan=POOL_INPUT                                                           =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:36,389 fourth-seat decision=PLAN:Ghalta, Primal Hunger:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=15855952 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Lair X demand preserves conversion input extraForest=true
+DEBUG 2026-10-17 15:34:36,405 fourth-seat mana-plan=TRIGGERED_MANA                                                       =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:36,415 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=9311573 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Produced Regal bonus survives loss but stale capacity does not empty=false
+DEBUG 2026-10-17 15:34:36,430 fourth-seat mana-plan=TRIGGERED_MANA                                                       =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:36,438 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=1972736              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Produced Regal bonus survives loss but stale capacity does not empty=true
+DEBUG 2026-10-17 15:34:36,454 fourth-seat optional-chain=BOUNDED_FINITE_PROGRESS_REFUSAL                                 =>[main] ComputerPlayerFourthSeat.chooseUse 
+PASS Finite drain ownership and mandatory draw remain engine controlled
+DEBUG 2026-10-17 15:34:36,494 fourth-seat mana-plan=TWO_TRIGGERED_SOURCES                                                =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:36,511 fourth-seat mana-plan=TRIGGERED_MANA                                                       =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:36,523 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=11465479 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS World War Hulk pays3GG through two real monarch land bonuses
+DEBUG 2026-10-17 15:34:36,543 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=2030543              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Two-bonus Hulk rejects missing monarch
+DEBUG 2026-10-17 15:34:36,554 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=2286940              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Two-bonus Hulk rejects missing territory
+DEBUG 2026-10-17 15:34:36,563 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=2417648              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Two-bonus Hulk rejects missing retreat
+DEBUG 2026-10-17 15:34:36,579 fourth-seat mana-plan=TWO_TRIGGERED_SOURCES                                                =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:36,585 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=1823071              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Two-bonus Hulk replans after first real action loses monarch
+DEBUG 2026-10-17 15:34:36,601 fourth-seat mana-plan=TWO_TRIGGERED_SOURCES                                                =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:36,607 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=1611702              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Two-bonus Hulk replans after first real action loses remaining-land
+DEBUG 2026-10-17 15:34:36,623 fourth-seat mana-plan=TWO_TRIGGERED_SOURCES                                                =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:36,630 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=2010624              =>[main] ComputerPlayerFourthSeat.priority 
+PASS Two-bonus Hulk replans after first real action loses regal
+RECOVERED_PROTOCOL RESULT: 22 passed, 0 failed real-engine checks
+DEBUG 2026-10-17 15:34:37,149 fourth-seat pass reason=NO_LEGAL_CANDIDATES candidates=0 elapsedNanos=43207867             =>[main] ComputerPlayerFourthSeat.priority 
+PASS Group tap cannot double-count member mana Elf
+DEBUG 2026-10-17 15:34:37,264 fourth-seat mana-plan=GROUP_TAP                                                            =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:37,340 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=8 candidates=8 elapsedNanos=75111378 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Heritage group first then revalidated six-mana cast expiredBudget=false
+DEBUG 2026-10-17 15:34:37,497 fourth-seat mana-plan=GROUP_TAP                                                            =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:37,541 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=8 candidates=8 elapsedNanos=43450084 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Heritage group first then revalidated six-mana cast expiredBudget=true
+DEBUG 2026-10-17 15:34:37,648 fourth-seat mana-plan=GROUP_TAP_THEN_UNTAP                                                 =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:37,707 fourth-seat mana-plan=SELF_UNTAP                                                           =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:37,712 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=1 elapsedNanos=4478087         =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:37,738 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=9 candidates=9 elapsedNanos=22010322 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Devoted group then real untap stack then outer cast
+DEBUG 2026-10-17 15:34:37,750 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=1 elapsedNanos=8391712         =>[main] ComputerPlayerFourthSeat.priority 
+PASS Useful self-untap rejects unsafe or stale state sick
+DEBUG 2026-10-17 15:34:37,765 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=1 elapsedNanos=9765215         =>[main] ComputerPlayerFourthSeat.priority 
+PASS Useful self-untap rejects unsafe or stale state damage
+DEBUG 2026-10-17 15:34:37,776 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=1 elapsedNanos=8162637         =>[main] ComputerPlayerFourthSeat.priority 
+PASS Useful self-untap rejects unsafe or stale state toughness1
+DEBUG 2026-10-17 15:34:37,835 fourth-seat mana-plan=GROUP_TAP_THEN_UNTAP                                                 =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:37,844 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=1 elapsedNanos=6528401         =>[main] ComputerPlayerFourthSeat.priority 
+PASS Useful self-untap rejects unsafe or stale state removed-outer
+DEBUG 2026-10-17 15:34:37,865 fourth-seat mana-plan=GROUP_TAP                                                            =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:37,886 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=8 candidates=8 elapsedNanos=19711374 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Summoning-sick Elves can pay Heritage target tap cost
+DEBUG 2026-10-17 15:34:37,900 fourth-seat pass reason=DELIBERATE_PASS:COMPLETE candidates=1 elapsedNanos=4953565         =>[main] ComputerPlayerFourthSeat.priority 
+PASS Devoted counter recomputes Ghalta GG to1GG generic=false
+DEBUG 2026-10-17 15:34:37,910 fourth-seat mana-plan=SELF_UNTAP                                                           =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:37,920 fourth-seat decision=PLAN:Ghalta, Primal Hunger:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=7776134 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Devoted counter recomputes Ghalta GG to1GG generic=true
+PASS Group plans exclude outer-reserved Elf
+RECOVERED_GROUP RESULT: 12 passed, 0 failed real-engine checks
+PASS Gishath actual sourcewise prevention temple=false sources=2
+PASS Gishath actual sourcewise prevention temple=false sources=6
+PASS Gishath actual sourcewise prevention temple=true sources=2
+PASS Gishath actual sourcewise prevention temple=true sources=6
+PASS Temple unavailable or prevention prohibited removed=false
+PASS Temple unavailable or prevention prohibited removed=true
+PASS Safe blocker attrition requires actually killable blocker=false
+PASS Safe blocker attrition requires actually killable blocker=true
+PASS Large real Goblin army intermediate subset ready
+PASS Large real Goblin army intermediate subset fresh-haste
+PASS Large real Goblin army intermediate subset fresh-sick
+PASS Large real Goblin army intermediate subset lethal-crackback
+RECOVERED_COMBAT RESULT: 12 passed, 0 failed real-engine checks
+PASS Typed Hydra future threat/resource boundary normal
+PASS Typed Hydra future threat/resource boundary sick-tapped
+PASS Typed Hydra future threat/resource boundary small
+PASS Typed Hydra future threat/resource boundary archon
+PASS Typed Hydra future threat/resource boundary no-abilities
+PASS Typed Hydra future threat/resource boundary missing-blue
+PASS Typed Hydra future threat/resource boundary short-mana
+DEBUG 2026-10-17 15:34:40,658 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=16 candidates=16 elapsedNanos=297491738 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+RECOVERY_CACHE_METRICS boundary=normal builds=1 hits=15
+DEBUG 2026-10-17 15:34:40,738 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=29610991             =>[main] ComputerPlayerFourthSeat.priority 
+PASS Large modal retained diversity/cache boundary normal
+DEBUG 2026-10-17 15:34:41,921 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=16 candidates=16 elapsedNanos=729403227 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+RECOVERY_CACHE_METRICS boundary=conditional builds=16 hits=0
+PASS Large modal retained diversity/cache boundary conditional
+DEBUG 2026-10-17 15:34:42,688 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=16 candidates=16 elapsedNanos=394315124 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+RECOVERY_CACHE_METRICS boundary=conditional-pool builds=16 hits=0
+PASS Large modal retained diversity/cache boundary conditional-pool
+DEBUG 2026-10-17 15:34:43,632 fourth-seat decision=PLAN:Lathril, Blade of the Elves:COMPLETE:EVALUATED=16 candidates=16 elapsedNanos=290691893 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+RECOVERY_CACHE_METRICS boundary=triggered builds=16 hits=0
+PASS Large modal retained diversity/cache boundary triggered
+PASS Cache reservation keys are canonical and distinct
+DEBUG 2026-10-17 15:34:43,647 fourth-seat pass reason=NO_NONMANA_PLAYABLE candidates=0 elapsedNanos=915511               =>[main] ComputerPlayerFourthSeat.priority 
+PASS No-action fast pass avoids observation construction
+DEBUG 2026-10-17 15:34:43,805 fourth-seat decision=PLAN:Aesi, Tyrant of Gyre Strait:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=140575990 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Held development cannot starve real payoff after fixed enumeration deadline
+PASS Bounded modal helper preserves original and rejects opponent choice
+RECOVERED_BOUNDARIES RESULT: 15 passed, 0 failed real-engine checks
+DEBUG 2026-10-17 15:34:44,525 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=62006153 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:44,554 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=18310920 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Live stolen Mission permission casts and exiles
+DEBUG 2026-10-17 15:34:44,583 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=2 candidates=2 elapsedNanos=8784505 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+DEBUG 2026-10-17 15:34:44,591 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=7367998 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Stolen Mission permission survives actual owner departure
+DEBUG 2026-10-17 15:34:44,608 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=5087116 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Mission permission expires at cleanup ownerLeft=false
+DEBUG 2026-10-17 15:34:44,624 fourth-seat decision=PLAN:Gishath, Sun's Avatar:COMPLETE:EVALUATED=1 candidates=1 elapsedNanos=7967212 activated=true =>[main] ComputerPlayerFourthSeat.priority 
+PASS Mission permission expires at cleanup ownerLeft=true
+PASS Live approval identity preserves current object reference
+PASS Resolved approval identity remains identical after owner departure
+PASS Once-each-turn watcher retains used identity across source disappearance
+PASS Unknown uncaptured source retains legacy diagnostic
+CORE_COMPAT RESULT: 8 passed, 0 failed real-engine checks

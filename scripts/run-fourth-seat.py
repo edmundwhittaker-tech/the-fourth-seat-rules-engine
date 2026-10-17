@@ -9,15 +9,20 @@ import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
+import sys
 
 root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(root / 'integrations/fourth-seat/hosting'))
+from online_ai import verify_pair, configure_player
 out = root / 'build/nexus'
+verify_pair(out)
 runtime = out / 'runtime'
 runtime.mkdir(parents=True, exist_ok=True)
 with zipfile.ZipFile(out / 'mage-server.zip') as archive:
     assert archive.testzip() is None
     archive.extractall(runtime)
 config = runtime / 'config/config.xml'
+configure_player(config)
 tree = ET.parse(config)
 server = tree.getroot().find('server')
 assert server is not None
@@ -59,10 +64,10 @@ result = {'integrationCommit': os.environ.get('GITHUB_SHA'),
           'publicServerUsed': False, 'simEnabled': False, 'cheatSetupUsed': False,
           'serverTestMode': False, 'passed': False}
 try:
-    own_server = launch('server', ['java', '-Xmx1800m', '-Djava.awt.headless=true', *opens,
+    own_server = launch('server', ['java', '-Xmx1800m', '-Djava.awt.headless=true', '-Dh2.bindAddress=127.0.0.1', f'-Xlog:class+load=info:file={out / "server-classes.log"}', *opens,
         '-jar', str(runtime / 'lib/mage-server-1.4.62.jar')], runtime)
     wait_socket(own_server, 17171)
-    proxy = launch('proxy', ['java', '-Xmx1200m', '-Djava.awt.headless=true', *opens,
+    proxy = launch('proxy', ['java', '-Xmx1200m', '-Djava.awt.headless=true', '-Dh2.bindAddress=127.0.0.1', *opens,
         '-jar', str(out / 'mage-proxy-1.4.62.jar'), '--host', '127.0.0.1',
         '--port', '17171', '--bind', '127.0.0.1', '--wsPort', '8787',
         '--httpPort', '8788', '--sim', 'off', '--restoreIds', 'none'], proxy_dir)
@@ -82,6 +87,10 @@ try:
         raise TimeoutError('Bridge card database did not become ready')
     subprocess.run(['node', str(root / 'integrations/fourth-seat/tests/verify-service.mjs')],
                    cwd=root, check=True, timeout=480)
+    classes = (out / 'server-classes.log').read_text()
+    assert 'mage.player.ai.ComputerPlayerFourthSeat source:' in classes, 'Deck-aware adapter was not loaded by the actual server'
+    assert 'fourthseat.ai.CommanderPolicy source:' in classes, 'Deck-aware policy was not loaded by the actual server'
+    result['aiPlayerClass'] = 'mage.player.ai.ComputerPlayerFourthSeat'
     result['passed'] = True
 except BaseException as error:
     result['failure'] = str(error)

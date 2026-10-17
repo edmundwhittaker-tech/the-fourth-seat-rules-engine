@@ -8,15 +8,18 @@ import time
 import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
+from online_ai import verify_pair, configure_player
 
 if len(os.environ.get('ENGINE_APP_SECRET', '')) < 32:
     raise RuntimeError('Set ENGINE_APP_SECRET to a random value of at least 32 characters.')
+verify_pair('/opt/engine')
 data = Path(os.environ.get('DATA_DIR', '/data'))
 runtime = data / 'server'
 runtime.mkdir(parents=True, exist_ok=True)
 with zipfile.ZipFile('/opt/engine/mage-server.zip') as archive:
     archive.extractall(runtime)
 config = runtime / 'config/config.xml'
+configure_player(config)
 tree = ET.parse(config)
 server = tree.getroot().find('server')
 for key, value in {'serverAddress': '127.0.0.1', 'port': '17171', 'authenticationActivated': 'false', 'maxAiOpponents': '3'}.items():
@@ -53,11 +56,11 @@ def wait_port(child, port):
 for sig in (signal.SIGTERM, signal.SIGINT):
     signal.signal(sig, stop)
 try:
-    java = launch(['java', '-Xmx1800m', '-Djava.awt.headless=true', *opens, '-jar', str(runtime / 'lib/mage-server-1.4.62.jar')], runtime)
+    java = launch(['java', '-Xmx1800m', '-Djava.awt.headless=true', '-Dh2.bindAddress=127.0.0.1', *opens, '-jar', str(runtime / 'lib/mage-server-1.4.62.jar')], runtime)
     wait_port(java, 17171)
     proxy_dir = data / 'proxy'
     proxy_dir.mkdir(exist_ok=True)
-    proxy = launch(['java', '-Xmx1200m', '-Djava.awt.headless=true', *opens, '-jar', '/opt/engine/mage-proxy-1.4.62.jar', '--host', '127.0.0.1', '--port', '17171', '--bind', '127.0.0.1', '--wsPort', '8787', '--httpPort', '8788', '--sim', 'off', '--restoreIds', str(data / 'restore-ids.json')], proxy_dir)
+    proxy = launch(['java', '-Xmx1200m', '-Djava.awt.headless=true', '-Dh2.bindAddress=127.0.0.1', *opens, '-jar', '/opt/engine/mage-proxy-1.4.62.jar', '--host', '127.0.0.1', '--port', '17171', '--bind', '127.0.0.1', '--wsPort', '8787', '--httpPort', '8788', '--sim', 'off', '--restoreIds', str(data / 'restore-ids.json')], proxy_dir)
     wait_port(proxy, 8787)
     deadline = time.monotonic() + 480
     while time.monotonic() < deadline and not stopping:

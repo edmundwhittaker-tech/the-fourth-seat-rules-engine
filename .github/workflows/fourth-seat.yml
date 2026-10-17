@@ -2,13 +2,15 @@ name: Verify Fourth Seat engine integration
 
 on:
   push:
-    branches: [integration/xmage]
+    branches: [integration/xmage, feature/online-commander-ai]
     paths:
       - '.github/workflows/fourth-seat.yml'
       - 'integrations/fourth-seat/**'
       - 'integrations/nexus/browser/reusable-build.json'
       - 'integrations/nexus/upstream.json'
       - 'scripts/build-xmage-bridge.sh'
+      - 'scripts/build-online-commander-ai.sh'
+      - 'experiments/commander-ai/**'
       - 'scripts/run-fourth-seat.py'
       - 'scripts/verify-engine-container.py'
       - '.dockerignore'
@@ -25,9 +27,9 @@ concurrency:
 
 jobs:
   integration:
-    name: Engine gateway with two humans and two native AI
+    name: Deck-aware AI, paired engine and online gateway
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 90
     env:
       MAVEN_OPTS: -Xmx4g -Dfile.encoding=UTF-8
     steps:
@@ -75,26 +77,31 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ steps.pin.outputs.nodeVersion }}
-      - name: Download previously verified pinned build
-        continue-on-error: true
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
-        with:
-          artifact-ids: 12013046299
-          run-id: 38820704551
-          github-token: ${{ github.token }}
-          path: .reused-xmage
-          merge-multiple: true
-      - name: Validate reusable build pins and binary checksums
-        id: reuse
-        run: python3 scripts/reuse-xmage-build.py
-      - name: Compile server and test/package bridge
-        if: steps.reuse.outputs.ready != 'true'
-        run: bash scripts/build-xmage-bridge.sh
+      - name: Build accepted deck-aware AI and matching core/bridge together
+        run: bash scripts/build-online-commander-ai.sh
+      - name: Verify frozen decks and deterministic policy
+        run: |
+          python3 experiments/commander-ai/scripts/verify-deck-pool.py
+          bash experiments/commander-ai/test.sh
+      - name: Verify actual engine costs, choices and compatibility
+        run: bash experiments/commander-ai/adapter/test/run-real-engine-tests.sh build/online-commander-ai/server
+      - name: Complete nine real games with all ten decks
+        timeout-minutes: 46
+        run: |
+          set -euo pipefail
+          export SOAK_ARTIFACT_CP_FILE="$PWD/build/online-commander-ai/artifact-runtime-classpath.txt"
+          for round in 0 1 2; do
+            bash experiments/commander-ai/scripts/run-soak.sh \
+              build/online-commander-ai/server build/online-commander-ai/m2 \
+              "build/commander-soak-$round" "$((20261016 + round * 100))" 120 300 "$((round * 3))"
+          done
       - name: Install gateway dependencies
         working-directory: integrations/fourth-seat/gateway
         run: npm ci --ignore-scripts
       - name: Verify adapter and gateway policies
-        run: node --test integrations/fourth-seat/tests/*.test.mjs
+        run: |
+          node --test integrations/fourth-seat/tests/*.test.mjs
+          python3 -m unittest discover -s integrations/fourth-seat/hosting -p "test_*.py"
       - name: Verify independent engine gateway on our private server
         timeout-minutes: 12
         run: python3 scripts/run-fourth-seat.py
@@ -116,8 +123,16 @@ jobs:
             build/nexus/fourth-seat/container.log
             build/nexus/fourth-seat-runtime-result.json
             build/nexus/browser-runtime-config.xml
-            build/nexus/reused-build.json
+            build/nexus/*manifest*.json
+            build/nexus/*version.txt
+            build/nexus/integration-commit.txt
+            build/nexus/ai-source-sha256.txt
+            build/nexus/upstream.json
+            build/commander-soak-*/results.json
+            build/commander-soak-*/summary.log
+            build/online-commander-ai/bridge/Mage.Proxy/target/surefire-reports/
             build/nexus/server.log
+            build/nexus/server-classes.log
             build/nexus/proxy.log
             build/nexus/web*.log
             build/nexus/*LICENSE.txt

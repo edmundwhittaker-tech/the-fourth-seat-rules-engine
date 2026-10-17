@@ -1,0 +1,3 @@
+<!-- Example only. Never loaded automatically. Replace the existing Computer - mad
+     entry ONLY in the separately reviewed, stopped disposable test server. -->
+<playerType name="Computer - mad" jar="mage-player-ai-1.4.62.jar" className="mage.player.ai.ComputerPlayerFourthSeat"/>
