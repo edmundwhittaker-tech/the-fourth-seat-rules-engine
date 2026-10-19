@@ -10,6 +10,7 @@ import zipfile
 PLAYER_CLASS = 'mage.player.ai.ComputerPlayerFourthSeat'
 PLAYER_JAR = 'mage-player-ai-1.4.62.jar'
 CORE_CLASS = 'mage/ApprovingObject.class'
+MANA_CLASS = 'mage/abilities/mana/ManaOptions.class'
 FILES = ('mage-server.zip', 'mage-proxy-1.4.62.jar')
 MANIFEST = 'commander-ai-manifest.json'
 
@@ -27,15 +28,16 @@ def inspect_pair(directory):
                     raise ValueError('Missing required deck-aware AI class: ' + name)
         with zipfile.ZipFile(io.BytesIO(core)) as jar:
             core_class = jar.read(CORE_CLASS)
+            mana_class = jar.read(MANA_CLASS)
     with zipfile.ZipFile(directory / FILES[1]) as bridge:
-        if bridge.read(CORE_CLASS) != core_class:
+        if bridge.read(CORE_CLASS) != core_class or bridge.read(MANA_CLASS) != mana_class:
             raise ValueError('Bridge and server core do not match')
     return {'schema': 1, 'playerClass': PLAYER_CLASS,
             'serverForkCommit': '825d1205acca114825f235c6993f1e5a6a6db9fa',
             'bridgeCommit': '850411ec4db71ea7c10f4c3869a63084760057c2',
             'files': {name: digest((directory / name).read_bytes()) for name in FILES},
             'pluginSha256': digest(plugin), 'coreSha256': digest(core),
-            'approvingClassSha256': digest(core_class)}
+            'approvingClassSha256': digest(core_class), 'manaOptionsClassSha256': digest(mana_class)}
 
 def verify_pair(directory):
     actual = inspect_pair(directory)

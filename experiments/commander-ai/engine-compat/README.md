@@ -5,3 +5,13 @@ This isolated offline candidate patches the pinned XMage `ApprovingObject` const
 The patch does not remove permissions, suppress a logger, alter costs, extend durations, or avoid particular cards. Mission Briefing stolen by Etali exposed the upstream reference-lifetime defect. Cast permissions and exile replacement effects must remain functional until their normal expiry.
 
 The baseline engine checkout and JAR remain immutable. Build a separate copied Mage module using the pinned root POM and dependency repository, overlay this one source file, and package only that module. Artifact provenance must record the baseline and candidate core hashes, exact AI JAR hash and combined runtime classpath. This source preparation alone is not acceptance evidence; fresh actual lifetime tests and the complete engine suite are required before any new soak.
+
+## Mana forecast compatibility
+
+The online integration also applies `mana-options-trigger-forecast.patch` to
+`ManaOptions.addManaVariation`. Each multi-color output is an alternative
+activation; its forecast triggers must be consumed once before the next output
+is inspected. Otherwise Regal Behemoth bonuses can be counted repeatedly for
+the following land, admitting unaffordable casts. The patch changes forecasting
+only. The pinned preimage is checked by both build scripts, and the online
+manifest verifies matching ManaOptions bytecode in the server and bridge.

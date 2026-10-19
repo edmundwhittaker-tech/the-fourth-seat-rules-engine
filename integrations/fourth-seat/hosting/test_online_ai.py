@@ -22,15 +22,16 @@ class OnlineAIContractTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.addCleanup(self.temp.cleanup)
         self.core = b'paired-core-class'
+        self.mana = b'paired-mana-forecast'
         plugin = jar({
             'mage/player/ai/ComputerPlayerFourthSeat.class': b'adapter',
             'fourthseat/ai/CommanderPolicy.class': b'policy',
             'fourthseat/ai/DeckPlan.class': b'plans'})
         (self.root / 'mage-server.zip').write_bytes(jar({
-            'lib/mage-1.4.62.jar': jar({'mage/ApprovingObject.class': self.core}),
+            'lib/mage-1.4.62.jar': jar({'mage/ApprovingObject.class': self.core, 'mage/abilities/mana/ManaOptions.class': self.mana}),
             'lib/mage-player-ai-1.4.62.jar': plugin}))
         self.bridge = self.root / 'mage-proxy-1.4.62.jar'
-        self.bridge.write_bytes(jar({'mage/ApprovingObject.class': self.core}))
+        self.bridge.write_bytes(jar({'mage/ApprovingObject.class': self.core, 'mage/abilities/mana/ManaOptions.class': self.mana}))
         (self.root / MANIFEST).write_text(json.dumps(inspect_pair(self.root)))
 
     def test_pair_verified(self):
@@ -42,8 +43,13 @@ class OnlineAIContractTests(unittest.TestCase):
             verify_pair(self.root)
 
     def test_artifact_tamper_refused(self):
-        self.bridge.write_bytes(jar({'mage/ApprovingObject.class': self.core, 'extra': b'changed'}))
+        self.bridge.write_bytes(jar({'mage/ApprovingObject.class': self.core, 'mage/abilities/mana/ManaOptions.class': self.mana, 'extra': b'changed'}))
         with self.assertRaisesRegex(ValueError, 'manifest mismatch'):
+            verify_pair(self.root)
+
+    def test_mismatched_mana_forecast_refused(self):
+        self.bridge.write_bytes(jar({'mage/ApprovingObject.class': self.core, 'mage/abilities/mana/ManaOptions.class': b'old-forecast'}))
+        with self.assertRaisesRegex(ValueError, 'do not match'):
             verify_pair(self.root)
 
     def test_manifest_required(self):

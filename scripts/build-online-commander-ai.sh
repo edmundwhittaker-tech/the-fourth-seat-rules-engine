@@ -30,6 +30,8 @@ CORE="$DEST/server/Mage/src/main/java/mage/ApprovingObject.java"
 [[ $(sha256sum "$CORE" | cut -d' ' -f1) == 1222f150168d28a6317efbd920671221ce0fc73f452b53bedf8209b8f186654f ]]
 (cd "$DEST/server" && patch --batch --forward -p1 < "$ROOT/experiments/commander-ai/engine-compat/approving-object-lifetime.patch")
 cmp "$CORE" experiments/commander-ai/engine-compat/src/main/java/mage/ApprovingObject.java
+[[ $(sha256sum "$DEST/server/Mage/src/main/java/mage/abilities/mana/ManaOptions.java" | cut -d' ' -f1) == 92cfbd396b66b6147d700c36843d32d1a5bbb0fced6ce2dadd77b7e87d72e9c7 ]]
+(cd "$DEST/server" && patch --batch --forward -p1 < "$ROOT/experiments/commander-ai/engine-compat/mana-options-trigger-forecast.patch")
 MODULE="$DEST/server/Mage.Server.Plugins/Mage.Player.AI"
 cp -R experiments/commander-ai/src/main/java/fourthseat "$MODULE/src/"
 cp experiments/commander-ai/adapter/src/mage/player/ai/*.java "$MODULE/src/mage/player/ai/"

@@ -11,7 +11,7 @@ Talrand, Aesi, Gishath, and Adeline. See `experiments/commander-ai/DECKS.md`.
 ## Validation gates
 
 The Fourth Seat workflow builds a fresh isolated server/AI and matching bridge,
-checks 291 policy assertions, all ten frozen decks, 272 real-engine scenarios and
+checks 291 policy assertions, all ten frozen decks, 281 real-engine scenarios and
 27 cost contracts, completes nine real games using packaged JARs, tests gateway
 policies, exercises the private service, and boots the actual container under a
 4 GiB limit. A source commit is not a live deployment. Wait for all these gates
@@ -20,7 +20,7 @@ an existing service.
 
 The runtime checks a SHA-256 manifest for both packaged artifacts, requires all
 three policy/adapter marker classes, and verifies that the bridge embeds the
-same ApprovingObject bytecode as the server. Missing/mismatched artifacts fail
+same ApprovingObject and ManaOptions bytecode as the server. Missing/mismatched artifacts fail
 closed. Java services and H2 listen on loopback; gateway authentication is unchanged.
 
 ## Existing Codespace deployment, after CI passes
@@ -92,3 +92,13 @@ policy's cross-candidate adjustments only subtract value. If any option is usefu
 the complete original option set is retained, preserving modal diversity. A real
 conditional-mana fixture checks idle protection skips funding and still answers
 an actual threat. Cache-safety scans are also deferred past the no-action exit.
+
+The final soak also reproduced a native mana-forecast defect with Regal Behemoth,
+Command Tower and Unclaimed Territory: a source with several color alternatives
+left simulated mana triggers queued for the next source. The narrow
+`mana-options-trigger-forecast.patch` consumes those triggers per alternative,
+outside the loop over existing mana totals, and copies the net-mana template.
+The actual production/resolution path is unchanged. Nine real-engine regressions
+cover insufficient floating mana and exact seven-mana payment with three pool
+colors. Both build paths verify the pinned source preimage; startup compares the
+patched ManaOptions bytecode between server and bridge as well as ApprovingObject.

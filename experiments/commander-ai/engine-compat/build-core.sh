@@ -19,6 +19,8 @@ git -C "$SOURCE" archive "$PIN" pom.xml Mage | tar -x -C "$DEST"
 (cd "$DEST" && patch --batch --forward -p1 < "$HERE/approving-object-lifetime.patch")
 cmp "$HERE/src/main/java/mage/ApprovingObject.java" "$DEST/Mage/src/main/java/mage/ApprovingObject.java" \
     || { echo "Unified patch and replacement source disagree" >&2; exit 2; }
+[[ "$(sha256sum "$DEST/Mage/src/main/java/mage/abilities/mana/ManaOptions.java" | cut -d' ' -f1)" == 92cfbd396b66b6147d700c36843d32d1a5bbb0fced6ce2dadd77b7e87d72e9c7 ]] || exit 2
+(cd "$DEST" && patch --batch --forward -p1 < "$HERE/mana-options-trigger-forecast.patch")
 ARGS=("$@")
 if [[ -n "${MAVEN_SETTINGS:-}" ]]; then ARGS=(--settings "$MAVEN_SETTINGS" "${ARGS[@]}"); fi
 "${MAVEN:-mvn}" "${ARGS[@]}" -f "$DEST/Mage/pom.xml" -Dmaven.repo.local="${MAVEN_REPO:-$DEST/.m2}" -DskipTests package
@@ -32,6 +34,7 @@ with zipfile.ZipFile(jar) as z:
  assert data==(out/'Mage/target/classes/mage/ApprovingObject.class').read_bytes()
 r={'engine_pin':sys.argv[3],'preimage_sha256':sys.argv[4],
  'patch_sha256':hashfile(src/'approving-object-lifetime.patch'),
+ 'mana_forecast_patch_sha256':hashfile(src/'mana-options-trigger-forecast.patch'),
  'replacement_source_sha256':hashfile(src/'src/main/java/mage/ApprovingObject.java'),
  'jar':str(jar),'sha256':hashfile(jar),'approving_class_sha256':hashlib.sha256(data).hexdigest(),
  'baseline_modified':False,'opt_in_compatibility_patch':True}
