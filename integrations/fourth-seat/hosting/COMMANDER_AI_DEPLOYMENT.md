@@ -109,3 +109,21 @@ instantiated. The bounded finite-chain recovery also recognizes Garruk's Uprisin
 Outcaster Trailblazer and Vaultborn Tyrant alongside Garruk's Packleader; it
 declines optional Kodama choices after one confirmed library-progress refusal
 while leaving mandatory draws and a second unresolved loop prompt to XMage.
+
+## Known upstream counter-growth performance limit
+
+An additional stress run of the packaged build at
+`95e1605daff503a8f7ea8b25b1d4f9d7fd82c0a5` exceeded the 30-second progress
+bound on an Aesi board with Mossborn Hydra, Ancient Greenwarden, Ashaya and
+repeated land entries. The Hydra reached millions of +1/+1 counters; thread
+samples were inside XMage's `CardImpl.addCounters` / `DoubleCountersSourceEffect`,
+which process individual counters and their events. This is an observed engine
+resolution limit. The frozen decks, actual counter totals and card rules are not
+changed to hide it. Keep the release in the existing admin-only testing mode.
+The next milestone is a dedicated performance fix that preserves replacement
+effects and counter-trigger behavior, with a reproducible large-counter fixture.
+
+The service driver plays a land for each human fixture and handles the server's
+mandatory discard choice, so random seating cannot terminate the verification
+before an AI acts. Its 24 checks include both human and both AI battlefield plays,
+private views, mulligans, reconnect, ending a game, lobby reset and rematch.

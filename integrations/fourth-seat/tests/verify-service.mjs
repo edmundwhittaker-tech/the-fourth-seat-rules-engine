@@ -112,8 +112,9 @@ try{
     const bots=host.state.game?.players?.filter(p=>!p.isHuman)??[];
     return bots.length===2&&bots.every(p=>records(p.battlefield).length>0);
   };
+  const humansPlayed=()=>[host,friend].every(c=>c.state.game?.players?.some(p=>p.controlled&&records(p.battlefield).some(card=>card.name==='Mountain')));
   const deadline=Date.now()+180_000;
-  while(Date.now()<deadline&&(!landPlayer||!aiPlayed())){
+  while(Date.now()<deadline&&(!landPlayer||!aiPlayed()||!humansPlayed())){
     for(const client of [host,friend]){
       const state=client.state,prompt=state.prompt;if(!prompt||handled.get(client)===state.promptKey)continue;handled.set(client,state.promptKey);
       const gameId=state.gameId;
@@ -132,14 +133,19 @@ try{
       }
       else if(prompt.method==='GAME_SELECT'){
         const me=state.game.players.find(p=>p.controlled),land=records(state.game.myHand).find(c=>c.name==='Mountain'&&state.selectable.includes(c.id));
-        if(!landPlayer&&land&&state.game.activePlayerId===me.playerId){await client.send('sendPlayerUUID',{gameId,value:land.id});landPlayer=client;}
+        if(land&&state.game.activePlayerId===me.playerId){await client.send('sendPlayerUUID',{gameId,value:land.id});landPlayer??=client;}
         else await client.send('sendPlayerBoolean',{gameId,value:false});
-      }else throw new Error('Unexpected opening prompt: '+prompt.method);
+      }else if(prompt.method==='GAME_TARGET'&&/discard/i.test(prompt.message)&&prompt.options.length){
+        // The fixture has only identical Mountains; an end-step discard is a
+        // real server choice if another turn starts before both bots have acted.
+        await client.send('sendPlayerUUID',{gameId,value:prompt.options[0].value});
+      }else throw new Error('Unexpected opening prompt: '+prompt.method+' '+prompt.message);
     }
     await delay(100);
   }
   check('a human can submit a legal land play through the public gateway',!!landPlayer);
   check('both native AI make real battlefield plays before lifecycle cleanup',aiPlayed());
+  check('both human accounts make authoritative land plays before lifecycle cleanup',humansPlayed());
   await wait(()=>[host,friend].every(c=>c.state.game.players.some(p=>records(p.battlefield).some(card=>card.name==='Mountain'))),'authoritative land update in both sessions');
   check('both sessions receive the accepted rules state',true);
   check('opponent hand names remain private',[host,friend].every(c=>records(c.state.game.opponentHands).every(h=>records(h).every(card=>!card.name))));
