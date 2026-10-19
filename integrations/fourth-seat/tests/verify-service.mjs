@@ -106,8 +106,14 @@ try{
   check('server player types identify two native AI',host.state.game.players.filter(p=>!p.isHuman).length===2);
   check('human accounts control distinct server players',host.state.game.players.find(p=>p.controlled).playerId!==friend.state.game.players.find(p=>p.controlled).playerId);
   const handled=new Map(),mulligans=new Map(),bottomed=new Map();let landPlayer;
+  // Instantiation alone does not exercise the lazily loaded strategy. Require
+  // both bots to take a real turn before ending the game for lifecycle checks.
+  const aiPlayed=()=>{
+    const bots=host.state.game?.players?.filter(p=>!p.isHuman)??[];
+    return bots.length===2&&bots.every(p=>records(p.battlefield).length>0);
+  };
   const deadline=Date.now()+180_000;
-  while(Date.now()<deadline&&!landPlayer){
+  while(Date.now()<deadline&&(!landPlayer||!aiPlayed())){
     for(const client of [host,friend]){
       const state=client.state,prompt=state.prompt;if(!prompt||handled.get(client)===state.promptKey)continue;handled.set(client,state.promptKey);
       const gameId=state.gameId;
@@ -126,13 +132,14 @@ try{
       }
       else if(prompt.method==='GAME_SELECT'){
         const me=state.game.players.find(p=>p.controlled),land=records(state.game.myHand).find(c=>c.name==='Mountain'&&state.selectable.includes(c.id));
-        if(land&&state.game.activePlayerId===me.playerId){await client.send('sendPlayerUUID',{gameId,value:land.id});landPlayer=client;}
+        if(!landPlayer&&land&&state.game.activePlayerId===me.playerId){await client.send('sendPlayerUUID',{gameId,value:land.id});landPlayer=client;}
         else await client.send('sendPlayerBoolean',{gameId,value:false});
       }else throw new Error('Unexpected opening prompt: '+prompt.method);
     }
     await delay(100);
   }
   check('a human can submit a legal land play through the public gateway',!!landPlayer);
+  check('both native AI make real battlefield plays before lifecycle cleanup',aiPlayed());
   await wait(()=>[host,friend].every(c=>c.state.game.players.some(p=>records(p.battlefield).some(card=>card.name==='Mountain'))),'authoritative land update in both sessions');
   check('both sessions receive the accepted rules state',true);
   check('opponent hand names remain private',[host,friend].every(c=>records(c.state.game.opponentHands).every(h=>records(h).every(card=>!card.name))));
