@@ -1,0 +1,26 @@
+{
+  "sourceCommit": "95e1605daff503a8f7ea8b25b1d4f9d7fd82c0a5",
+  "seed": 20261117,
+  "rotation": 3,
+  "decks": [
+    "7 Aesi, Tyrant of Gyre Strait cards=99 commander=1",
+    "8 Gishath, Sun's Avatar cards=99 commander=1",
+    "9 Adeline, Resplendent Cathar cards=99 commander=1",
+    "0 Giada, Font of Hope cards=99 commander=1"
+  ],
+  "status": "NO_RESULT_TIMEOUT_OR_ERROR",
+  "processExitCode": 124,
+  "largestObservedProgressGapMs": 253501,
+  "observedRuntimeMs": 290476,
+  "logSha256": "699deb2b8eb415cd2e38c624c960b10e7baca509dc455d7968db497de6cf6de6",
+  "gzipSha256": "52b58f114b48264d085891dda679a8dfc8b7519880aa539aa6c5bb7c101d6c36",
+  "observedStack": [
+    "mage.abilities.TriggeredAbilities.checkTriggers",
+    "mage.cards.CardImpl.addCounters",
+    "mage.abilities.effects.common.DoubleCountersSourceEffect.apply"
+  ],
+  "finding": "Native per-counter processing stalls a Mossborn Hydra landfall board at millions of counters. No counter totals, frozen decks or test thresholds were changed. Dedicated performance follow-up required.",
+  "releaseScope": "Admin-only testing; not evidence that every large Commander board is responsive.",
+  "resolutionSourceCommit": "3a680caf0f896e965a635e381bfb7e119fd6e317",
+  "resolution": "Pinned-source callback proofs enable conservative native boost-counter batching. Deterministic actual-engine regressions preserve group replacements/triggers and individual-event fallback, including exact 10000000 to 20000000 native doubling. The finding above records the historical pre-fix build."
+}
