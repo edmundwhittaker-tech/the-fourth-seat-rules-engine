@@ -38,8 +38,9 @@ cp experiments/commander-ai/adapter/src/mage/player/ai/*.java "$MODULE/src/mage/
 MVN=("${MAVEN:-mvn}" --batch-mode --no-transfer-progress "-Dmaven.repo.local=$DEST/m2")
 if [[ -n "${MAVEN_SETTINGS:-}" ]]; then MVN+=(--settings "$MAVEN_SETTINGS"); fi
 "${MVN[@]}" -f "$DEST/server/pom.xml" -pl Mage.Server -am clean install -Dmaven.test.skip=true 2>&1 | tee "$DEST/server-build.log"
-"${MVN[@]}" -f "$DEST/server/pom.xml" -pl Mage.Server package org.apache.maven.plugins:maven-assembly-plugin:3.7.1:single -Dmaven.test.skip=true 2>&1 | tee "$DEST/server-package.log"
 "${MVN[@]}" -f "$MODULE/pom.xml" org.apache.maven.plugins:maven-dependency-plugin:3.6.1:build-classpath -DincludeScope=runtime "-Dmdep.outputFile=$MODULE/target/fourth-seat-runtime-classpath.txt"
+bash experiments/commander-ai/engine-compat/prepare-counter-batching.sh "$DEST/server" "$DEST/m2" 2>&1 | tee "$DEST/counter-core-build.log"
+"${MVN[@]}" -f "$DEST/server/pom.xml" -pl Mage.Server package org.apache.maven.plugins:maven-assembly-plugin:3.7.1:single -Dmaven.test.skip=true 2>&1 | tee "$DEST/server-package.log"
 "${MVN[@]}" -f "$DEST/bridge/Mage.Proxy/pom.xml" clean verify 2>&1 | tee "$DEST/bridge-build.log"
 cp "$DEST/server/Mage.Server/target/mage-server.zip" build/nexus/
 cp "$DEST/bridge/Mage.Proxy/target/mage-proxy-1.4.62.jar" build/nexus/

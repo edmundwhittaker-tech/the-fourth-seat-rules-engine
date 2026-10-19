@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Build only an isolated copy of the pinned Mage framework; never install it.
+# Build the isolated framework and pinned Sets needed for source type checking.
+# Maven writes only to the explicitly selected isolated repository.
 HERE=$(cd "$(dirname "$0")" && pwd)
 PIN=825d1205acca114825f235c6993f1e5a6a6db9fa
 PREIMAGE=1222f150168d28a6317efbd920671221ce0fc73f452b53bedf8209b8f186654f
@@ -14,16 +15,21 @@ ACTUAL=$(git -C "$SOURCE" show "$PIN:Mage/src/main/java/mage/ApprovingObject.jav
 [[ "$ACTUAL" == "$PREIMAGE" ]] || { echo 'Pinned source preimage mismatch' >&2; exit 2; }
 mkdir -p "$DEST"
 DEST=$(cd "$DEST" && pwd)
-git -C "$SOURCE" archive "$PIN" pom.xml Mage | tar -x -C "$DEST"
+git -C "$SOURCE" archive "$PIN" pom.xml Mage Mage.Sets | tar -x -C "$DEST"
 [[ "$(sha256sum "$DEST/Mage/src/main/java/mage/ApprovingObject.java" | cut -d' ' -f1)" == "$PREIMAGE" ]] || exit 2
 (cd "$DEST" && patch --batch --forward -p1 < "$HERE/approving-object-lifetime.patch")
 cmp "$HERE/src/main/java/mage/ApprovingObject.java" "$DEST/Mage/src/main/java/mage/ApprovingObject.java" \
     || { echo "Unified patch and replacement source disagree" >&2; exit 2; }
 [[ "$(sha256sum "$DEST/Mage/src/main/java/mage/abilities/mana/ManaOptions.java" | cut -d' ' -f1)" == 92cfbd396b66b6147d700c36843d32d1a5bbb0fced6ce2dadd77b7e87d72e9c7 ]] || exit 2
 (cd "$DEST" && patch --batch --forward -p1 < "$HERE/mana-options-trigger-forecast.patch")
+RAW_ARGS=("$@")
 ARGS=("$@")
 if [[ -n "${MAVEN_SETTINGS:-}" ]]; then ARGS=(--settings "$MAVEN_SETTINGS" "${ARGS[@]}"); fi
-"${MAVEN:-mvn}" "${ARGS[@]}" -f "$DEST/Mage/pom.xml" -Dmaven.repo.local="${MAVEN_REPO:-$DEST/.m2}" -DskipTests package
+REPO=${MAVEN_REPO:-$DEST/.m2}
+"${MAVEN:-mvn}" "${ARGS[@]}" -N -f "$DEST/pom.xml" -Dmaven.repo.local="$REPO" -Dmaven.test.skip=true install
+"${MAVEN:-mvn}" "${ARGS[@]}" -f "$DEST/Mage/pom.xml" -Dmaven.repo.local="$REPO" -Dmaven.test.skip=true install
+"${MAVEN:-mvn}" "${ARGS[@]}" -f "$DEST/Mage.Sets/pom.xml" -Dmaven.repo.local="$REPO" -Dmaven.test.skip=true package
+bash "$HERE/prepare-counter-batching.sh" "$DEST" "$REPO" "${RAW_ARGS[@]}"
 python3 - "$DEST" "$HERE" "$PIN" "$PREIMAGE" <<'PY'
 import hashlib,json,sys,zipfile
 from pathlib import Path
@@ -35,6 +41,9 @@ with zipfile.ZipFile(jar) as z:
 r={'engine_pin':sys.argv[3],'preimage_sha256':sys.argv[4],
  'patch_sha256':hashfile(src/'approving-object-lifetime.patch'),
  'mana_forecast_patch_sha256':hashfile(src/'mana-options-trigger-forecast.patch'),
+ 'counter_batch_patch_sha256':hashfile(src/'counter-event-batching.patch'),
+ 'counter_observer_audit_sha256':hashfile(src/'tools/AuditCounterObservers.java'),
+ 'counter_registry_source_sha256':hashfile(out/'Mage/src/main/java/mage/counters/CounterObserverRegistry.java'),
  'replacement_source_sha256':hashfile(src/'src/main/java/mage/ApprovingObject.java'),
  'jar':str(jar),'sha256':hashfile(jar),'approving_class_sha256':hashlib.sha256(data).hexdigest(),
  'baseline_modified':False,'opt_in_compatibility_patch':True}

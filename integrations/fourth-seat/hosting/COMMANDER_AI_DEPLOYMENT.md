@@ -1,7 +1,7 @@
 # Ten-deck online AI integration
 
-This change builds the accepted Commander policy, its narrow ApprovingObject
-compatibility patch, and the browser bridge together. It does not change the Site,
+This change builds the accepted Commander policy, its pinned compatibility
+patches, and the browser bridge together. It does not change the Site,
 access controls, broker credentials, published port, or frozen deck lists.
 The existing `Computer - mad` protocol seat label maps to
 `mage.player.ai.ComputerPlayerFourthSeat` in this deployment only. Humans remain
@@ -11,7 +11,7 @@ Talrand, Aesi, Gishath, and Adeline. See `experiments/commander-ai/DECKS.md`.
 ## Validation gates
 
 The Fourth Seat workflow builds a fresh isolated server/AI and matching bridge,
-checks 291 policy assertions, all ten frozen decks, 285 real-engine scenarios and
+checks 291 policy assertions, all ten frozen decks, 303 real-engine scenarios and
 27 cost contracts, completes nine real games using packaged JARs, tests gateway
 policies, exercises the private service, and boots the actual container under a
 4 GiB limit. A source commit is not a live deployment. Wait for all these gates
@@ -20,7 +20,8 @@ an existing service.
 
 The runtime checks a SHA-256 manifest for both packaged artifacts, requires all
 three policy/adapter marker classes, and verifies that the bridge embeds the
-same ApprovingObject and ManaOptions bytecode as the server. Missing/mismatched artifacts fail
+same bytecode for every core class as the server, including the generated counter
+observer proof registry. Missing/mismatched artifacts fail
 closed. Java services and H2 listen on loopback; gateway authentication is unchanged.
 
 ## Existing Codespace deployment, after CI passes
@@ -110,18 +111,28 @@ Outcaster Trailblazer and Vaultborn Tyrant alongside Garruk's Packleader; it
 declines optional Kodama choices after one confirmed library-progress refusal
 while leaving mandatory draws and a second unresolved loop prompt to XMage.
 
-## Known upstream counter-growth performance limit
+## Counter-growth performance compatibility
 
-An additional stress run of the packaged build at
-`95e1605daff503a8f7ea8b25b1d4f9d7fd82c0a5` exceeded the 30-second progress
-bound on an Aesi board with Mossborn Hydra, Ancient Greenwarden, Ashaya and
-repeated land entries. The Hydra reached millions of +1/+1 counters; thread
-samples were inside XMage's `CardImpl.addCounters` / `DoubleCountersSourceEffect`,
-which process individual counters and their events. This is an observed engine
-resolution limit. The frozen decks, actual counter totals and card rules are not
-changed to hide it. Keep the release in the existing admin-only testing mode.
-The next milestone is a dedicated performance fix that preserves replacement
-effects and counter-trigger behavior, with a reproducible large-counter fixture.
+Stress games reproduced a native bottleneck on Aesi boards with Mossborn Hydra,
+Ancient Greenwarden and Ashaya: XMage processed millions of individual counter
+events even when no callback could observe them. The pinned core now batches
+boost counters only when a resolved-Java-source audit proves every active
+watcher, trigger and replacement ignores both individual counter event types.
+The build fails on changed framework preimages. Unknown observers, delayed
+triggers, custom dispatch, enabled integrity checking or unsafe selectors retain
+XMage's original individual-counter loop. No callback is run speculatively.
+
+Group replacements and the aggregate COUNTERS_ADDED event always remain native.
+Twelve real-engine regressions verify exact ten-million-to-twenty-million native
+doubling, Doubling Season, Hardened Scales, Simic Ascendancy, prohibitions,
+maximum bounds and fallback event ordering. Counter totals are never capped and
+the frozen published deck lists are unchanged. Keep the feature admin-only while
+we expand the gameplay coverage.
+
+Celestial Reunion also has six actual cast/resolution regressions. Its optional
+behold cost chooses a creature type shared by two own legal creatures in hand
+and/or on the battlefield, including changelings, then pays the native targets.
+The commander's preferred tribe cannot substitute for an actual legal pair.
 
 The service driver plays a land for each human fixture and handles the server's
 mandatory discard choice, so random seating cannot terminate the verification

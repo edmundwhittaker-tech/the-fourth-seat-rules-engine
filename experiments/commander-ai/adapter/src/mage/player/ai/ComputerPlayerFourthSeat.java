@@ -550,6 +550,9 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
         if (declineRedundantSpringheartCopy(outcome, source, game)) return false;
         if (outcome == Outcome.DrawCard && getLibrary().size() == 0) return false;
         if (optionalCostProbe) return true;
+        if (isCelestialReunionActivation(source, game)
+                && "Choose a creature type and behold two creatures of that type?".equals(message))
+            return celestialBeholdType(null, game) != null;
         if (activatingAbility != null && source instanceof ActivatedAbility
                 && Objects.equals(source.getSourceId(), activatingAbility.getSourceId())
                 && FourthSeatAdditionalCostPolicy.hasOffspring(source, game)) {
@@ -1126,6 +1129,14 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
     }
 
     @Override public boolean choose(Outcome outcome, Cards cards, TargetCard target, Ability source, Game game) {
+        if (isCelestialBeholdPayment(outcome, target, source, game) && target.getZone() == Zone.HAND) {
+            UUID controller = target.getAffectedAbilityControllerId(getId());
+            for (UUID id : new TreeSet<UUID>(cards)) {
+                if (target.getTargets().size() >= target.getMaxNumberOfTargets()) break;
+                if (!target.getTargets().contains(id) && target.canTarget(controller, id, source, cards, game)) target.add(id, game);
+            }
+            return target.isChosen(game);
+        }
         CommanderPolicy.ChoiceKind kind = target.getZone() == Zone.LIBRARY ? CommanderPolicy.ChoiceKind.TUTOR
                 : outcome == Outcome.Discard && target.getZone() == Zone.HAND ? CommanderPolicy.ChoiceKind.DISCARD : null;
         if (kind == null || (kind == CommanderPolicy.ChoiceKind.TUTOR && !target.isNotTarget())) return super.choose(outcome, cards, target, source, game);
@@ -1279,9 +1290,42 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
         else choice.setChoice(type);
     }
 
+    private boolean isCelestialReunionActivation(Ability source, Game game) {
+        return source != null && activatingAbility != null
+                && Objects.equals(source.getSourceId(), activatingAbility.getSourceId())
+                && getId().equals(source.getControllerId())
+                && game.getCard(source.getSourceId()) instanceof mage.cards.c.CelestialReunion;
+    }
+
+    private boolean isCelestialBeholdPayment(Outcome outcome, Target target, Ability source, Game game) {
+        return outcome == Outcome.Neutral && target.isNotTarget() && isCelestialReunionActivation(source, game)
+                && source.getCostsTagMap() != null && source.getCostsTagMap().containsKey("beholdActivation");
+    }
+
+    private String celestialBeholdType(Set<String> offered, Game game) {
+        List<Card> own = new ArrayList<Card>(getHand().getCards(game));
+        own.addAll(game.getBattlefield().getAllActivePermanents(getId()));
+        String best = null; int bestCount = 1;
+        for (SubType type : SubType.getCreatureTypes()) {
+            String name = type.toString();
+            if (offered != null && !offered.contains(name)) continue;
+            int count = 0;
+            for (Card card : own) if (!card.isFaceDown(game) && card.isCreature(game) && card.hasSubtype(type, game)) count++;
+            if (count > bestCount || count == bestCount && best != null && name.compareTo(best) < 0) {
+                best = name; bestCount = count;
+            }
+        }
+        return best;
+    }
+
     @Override protected boolean chooseCreatureType(Outcome outcome, Choice choice, Game game) {
         Set<String> offered = new TreeSet<String>(choice.getChoices());
         offered.addAll(choice.getKeyChoices().keySet());
+        if (activatingAbility != null && isCelestialReunionActivation(activatingAbility, game)) {
+            String type = celestialBeholdType(offered, game);
+            if (type == null) return false;
+            setCreatureTypeChoice(choice, type); return true;
+        }
         String commander = commanderName(game);
         String preferred = commander.startsWith("Giada,") ? "Angel" : commander.startsWith("Krenko,") ? "Goblin"
                 : commander.startsWith("Lathril,") ? "Elf" : commander.startsWith("Gishath,") ? "Dinosaur"
@@ -1313,6 +1357,15 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
     }
 
     @Override public boolean choose(Outcome outcome, Target target, Ability source, Game game, Map<String, Serializable> options) {
+        if (isCelestialBeholdPayment(outcome, target, source, game) && target.getZone() == Zone.BATTLEFIELD) {
+            UUID controller = target.getAffectedAbilityControllerId(getId());
+            for (Permanent permanent : game.getBattlefield().getAllActivePermanents(getId())) {
+                if (target.getTargets().size() >= target.getMaxNumberOfTargets()) break;
+                if (!target.getTargets().contains(permanent.getId()) && target.canTarget(controller, permanent.getId(), source, game))
+                    target.add(permanent.getId(), game);
+            }
+            return target.isChosen(game);
+        }
         if (outcome == Outcome.Discard && target instanceof TargetCard && target.getZone() == Zone.HAND)
             return choose(outcome, getHand(), (TargetCard) target, source, game);
         if (outcome != Outcome.Sacrifice || target.getZone() != Zone.BATTLEFIELD || !target.isNotTarget())

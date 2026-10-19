@@ -145,6 +145,8 @@ jobs:
             build/commander-soak-*/results.json
             build/commander-soak-*/summary.log
             build/commander-soak-*/pod-*.log
+            build/online-commander-ai/counter-core-build.log
+            build/online-commander-ai/server/Mage/src/main/java/mage/counters/CounterObserverRegistry.java
             build/online-commander-ai/bridge/Mage.Proxy/target/surefire-reports/
             build/nexus/server.log
             build/nexus/server-classes.log
