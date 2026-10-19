@@ -280,6 +280,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
     // Restricted outputs are tested BEFORE ManaOptions flattens their conditions.
     transient long manaAvailabilityBuildCount;
     transient long manaAvailabilityCacheHits;
+    transient long candidateFundingCheckCount;
     private transient Map<String, ManaOptions> callbackManaCache;
 
     private ManaOptions manaAvailableFor(ActivatedAbility ability, Game game) {
@@ -335,6 +336,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
     }
 
     private boolean canFundCandidate(ActivatedAbility ability, Game game) {
+        candidateFundingCheckCount++;
         if (ability instanceof PlayLandAbility) return true;
         Game calculation = game.createSimulationForPlayableCalc();
         ComputerPlayerFourthSeat owner = (ComputerPlayerFourthSeat) calculation.getPlayer(getId()).getRealPlayer();
@@ -651,7 +653,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
             game.firePriorityEvent(getId());
             long start = System.nanoTime();
             resetOptionalChainIfEmpty(game);
-            manaAvailabilityBuildCount = manaAvailabilityCacheHits = 0;
+            manaAvailabilityBuildCount = manaAvailabilityCacheHits = candidateFundingCheckCount = 0;
             lastAdmittedModeSignatures.clear(); lastHeldSources.clear(); lastAdmittedSources.clear();
             callbackManaCache = cacheSafe(game) ? new HashMap<String, ManaOptions>() : null;
             String step = String.valueOf(game.getTurnStepType());
@@ -714,7 +716,6 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                         continue;
                     }
                 }
-                if (!canFundCandidate(base, game)) continue;
                 List<Ability> options = FourthSeatBoundedOptions.generate(base, game);
                 boolean bounded = options != null;
                 if (!bounded) { options = getPlayableOptions(base.copy(), game); if (options.isEmpty()) options = Collections.<Ability>singletonList(base); }
@@ -729,6 +730,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                     options = diverse;
                 }
                 int sourceOptions = 0;
+                Boolean baseFunded = null;
                 for (Ability rawOption : options) {
                     Ability option = normalizePartialGraveExileCosts(rawOption);
                     if (actions.size() >= CANDIDATE_LIMIT || sourceOptions >= (bounded ? 16 : 8)) break;
@@ -739,6 +741,12 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                             option.isManaAbility(), option.isUsesStack(), targetIds(option), actionKind(option),
                             effectOutcomes(option), String.valueOf(option.getSourceId()), effectText(option), sacrifices(option), targetOutcomes(option));
                     if (CommanderPolicy.isStrategicallyHeld(observation, semanticAction)) { lastHeldSources.add(option.getSourceId()); continue; }
+                    // Resolve strategic holds before expensive mana simulations. A large
+                    // stack can otherwise repeat the same funding work for spells the
+                    // policy will never cast. Keep the exact selected-mode/target check
+                    // above, and share only this base ability's result within this callback.
+                    if (baseFunded == null) baseFunded = canFundCandidate(base, game);
+                    if (!baseFunded) break;
                     Set<UUID> reservedTaps = Collections.emptySet();
                     {
                         Game calculation = game.createSimulationForPlayableCalc();
