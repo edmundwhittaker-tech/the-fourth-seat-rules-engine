@@ -11,11 +11,11 @@ Talrand, Aesi, Gishath, and Adeline. See `experiments/commander-ai/DECKS.md`.
 ## Validation gates
 
 The Fourth Seat workflow builds a fresh isolated server/AI and matching bridge,
-checks 291 policy assertions, all ten frozen decks, 270 real-engine scenarios and
+checks 291 policy assertions, all ten frozen decks, 272 real-engine scenarios and
 27 cost contracts, completes nine real games using packaged JARs, tests gateway
 policies, exercises the private service, and boots the actual container under a
 4 GiB limit. A source commit is not a live deployment. Wait for all these gates
-on the exact proposed commit before moving the integration branch or replacing
+on the exact proposed commit before replacing
 an existing service.
 
 The runtime checks a SHA-256 manifest for both packaged artifacts, requires all
@@ -37,9 +37,18 @@ create a new secret, publish another port, or paste credentials into chat.
    Do not inspect or print the container environment.
 4. Fetch and check out the exact CI-approved integration commit. Do not overwrite
    a dirty working tree or use an unreviewed moving branch.
-5. Run `python3 scripts/codespace-engine.py build`. The existing service is not
-   replaced by this command. Ensure enough free build memory and disk; the
-   all-source build is heavier than ordinary startup.
+5. Prefer the successful workflow's `fourth-seat-engine-<commit>` artifact, which
+   contains the exact paired binaries tested by CI. With the existing GitHub CLI
+   authentication, download that artifact into `build/nexus` using
+   `gh run download <run-id> --name fourth-seat-engine-<commit> --dir build/nexus`.
+   Require `integration-commit.txt` to equal `git rev-parse HEAD`, compare
+   `ai-source-sha256.txt` with the checkout's accepted source manifest, and run
+   `python3 integrations/fourth-seat/hosting/online_ai.py build/nexus` to verify
+   the binary digests and paired bytecode. Then build the runtime image:
+   `docker build --build-arg BINARIES=artifact --file integrations/fourth-seat/hosting/Dockerfile --tag fourth-seat-engine:codespace .`
+   This does not replace the running service. As an alternative, run
+   `python3 scripts/codespace-engine.py build` to rebuild from pinned sources;
+   that route requires more build memory, disk and time.
 6. Recheck that no games started during the build. Run
    `python3 scripts/codespace-engine.py stop` followed by
    `python3 scripts/codespace-engine.py start`, then
@@ -62,3 +71,24 @@ It uses an isolated Maven repository to avoid mixing core versions. CI records
 source/toolchain pins and artifact hashes. The source Docker build explicitly
 installs its patch tool. Container-only verification uses these same built
 artifacts rather than rebuilding an unrelated baseline.
+
+## Completing Winston's integration
+
+The first online build passed compilation and engine regression tests but failed
+the existing 30-second progress gate: one game had a 93.7-second gap. Stack samples
+showed funding simulations for candidates that the strategy subsequently held.
+Funding is now delayed until after the exact option's strategic hold check, with
+one funding result shared only among that base ability's options in the current
+priority callback. No mana restriction, target, cost, game-length or progress
+threshold is relaxed. A regression fixture checks that held development avoids
+funding simulations and that protection can still respond on the same stack.
+The workflow retains full soak logs for diagnosis and publishes deployment
+binaries only after every validation gate succeeds.
+
+A subsequent cloud run exposed another hot path: repeated funding of idle answers.
+The adapter now checks whether any exact option could receive a positive policy
+score before funding that source. Singleton scores are optimistic because the
+policy's cross-candidate adjustments only subtract value. If any option is useful,
+the complete original option set is retained, preserving modal diversity. A real
+conditional-mana fixture checks idle protection skips funding and still answers
+an actual threat. Cache-safety scans are also deferred past the no-action exit.

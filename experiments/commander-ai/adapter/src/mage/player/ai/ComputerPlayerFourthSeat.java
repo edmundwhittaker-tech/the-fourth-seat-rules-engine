@@ -404,6 +404,29 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
         callbackManaCache.put(key, result.copy()); return result;
     }
 
+    private boolean hasPreferredOption(List<Ability> options, Game game, Observation observation, CommanderPolicy policy) {
+        // Cross-candidate policy adjustments only subtract value. If every exact
+        // option is rejected even alone, none can win the final choice. Avoid
+        // funding idle answers/unsupported activations on every priority callback.
+        // When ANY option is worthwhile, retain the entire original option set,
+        // including its modal diversity, for the final engine-validated choice.
+        for (Ability raw : options) {
+            Ability option = normalizePartialGraveExileCosts(raw);
+            if (!(option instanceof ActivatedAbility)) continue;
+            MageObject source = game.getObject(option.getSourceId());
+            Action action = new Action("preview", source == null ? "" : source.getName(),
+                    option.getRule(), option.getManaCosts().manaValue(), option instanceof PlayLandAbility,
+                    option.isManaAbility(), option.isUsesStack(), targetIds(option), actionKind(option),
+                    effectOutcomes(option), String.valueOf(option.getSourceId()), effectText(option),
+                    sacrifices(option), targetOutcomes(option));
+            if (CommanderPolicy.isStrategicallyHeld(observation, action)) {
+                lastHeldSources.add(option.getSourceId()); continue;
+            }
+            if (policy.choose(observation, Collections.singletonList(action), Long.MAX_VALUE).actionId != null) return true;
+        }
+        return false;
+    }
+
     private ActivatedAbility previewVariableCost(ActivatedAbility raw, Game game) {
         ActivatedAbility copy = raw.copy();
         List<mage.abilities.costs.mana.VariableManaCost> variable = new ArrayList<mage.abilities.costs.mana.VariableManaCost>();
@@ -655,7 +678,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
             resetOptionalChainIfEmpty(game);
             manaAvailabilityBuildCount = manaAvailabilityCacheHits = candidateFundingCheckCount = 0;
             lastAdmittedModeSignatures.clear(); lastHeldSources.clear(); lastAdmittedSources.clear();
-            callbackManaCache = cacheSafe(game) ? new HashMap<String, ManaOptions>() : null;
+            callbackManaCache = null;
             String step = String.valueOf(game.getTurnStepType());
             if (game.getTurnNum() != actionTurn || !step.equals(actionStep)) {
                 costlessActions.clear();
@@ -687,7 +710,9 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                         + (System.nanoTime() - start));
                 pass(game); return false;
             }
+            callbackManaCache = cacheSafe(game) ? new HashMap<String, ManaOptions>() : null;
             Observation observation = observe(game, observationMana);
+            CommanderPolicy admissionPolicy = new CommanderPolicy();
             List<Action> actions = new ArrayList<Action>();
             Map<String, ActivatedAbility> engineActions = new LinkedHashMap<String, ActivatedAbility>();
             Map<String, Set<UUID>> tapReservations = new HashMap<String, Set<UUID>>();
@@ -729,6 +754,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                     for (Ability option : options) if (!diverse.contains(option)) diverse.add(option);
                     options = diverse;
                 }
+                if (!hasPreferredOption(options, game, observation, admissionPolicy)) continue;
                 int sourceOptions = 0;
                 Boolean baseFunded = null;
                 for (Ability rawOption : options) {

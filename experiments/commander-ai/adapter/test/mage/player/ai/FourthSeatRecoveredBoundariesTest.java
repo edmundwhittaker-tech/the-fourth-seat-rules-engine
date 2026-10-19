@@ -9,6 +9,19 @@ public final class FourthSeatRecoveredBoundariesTest {
   run("Cache reservation keys are canonical and distinct",()->{FourthSeatRealGameTest.Fixture f=fixture("l.LathrilBladeOfTheElves","Lathril, Blade of the Elves");Card c=f.hand("c.CollectiveResistance","Collective Resistance");java.lang.reflect.Method m=ComputerPlayerFourthSeat.class.getDeclaredMethod("availabilityCacheKey",ActivatedAbility.class,Set.class);m.setAccessible(true);UUID a=UUID.randomUUID(),b=UUID.randomUUID();Set<UUID> first=new LinkedHashSet<>(Arrays.asList(a,b)),second=new LinkedHashSet<>(Arrays.asList(b,a));Object one=m.invoke(f.bot,c.getSpellAbility(),first),two=m.invoke(f.bot,c.getSpellAbility(),second),different=m.invoke(f.bot,c.getSpellAbility(),Collections.singleton(a));check(one.equals(two)&&!one.equals(different),"Cache reservation identity incorrect");});
   run("No-action fast pass avoids observation construction",()->{FourthSeatRealGameTest.Fixture f=fixture("a.AesiTyrantOfGyreStrait","Aesi, Tyrant of Gyre Strait");long before=((Number)field(f.bot,"observationBuildCount")).longValue();check(!f.bot.priority(f.game),"Unavailable empty-hand fixture acted");check(((Number)field(f.bot,"observationBuildCount")).longValue()==before,"No-action callback built full observation");});
   run("Held development cannot starve real payoff after fixed enumeration deadline",()->{FourthSeatRealGameTest.Fixture f=FourthSeatRecoveredGrowthTest.army(32,false,false,true,10,5);for(Permanent p:FourthSeatRecoveredGrowthTest.scutes(f))((PermanentCard)p).removeSummoningSickness();Card payoff=f.hand("m.MultaniYavimayasAvatar","Multani, Yavimaya's Avatar"),land=f.hand("basiclands.Forest","Forest");check(FourthSeatRecoveredGrowthTest.reserve(f),"Reserve proof missing");f.game.nextPlayableDelayMillis=100;cast(f,payoff,1);check(f.game.delayedPlayableCalculations==1,"Deterministic delay seam not exercised");Set<?> held=(Set<?>)field(f.bot,"lastHeldSources"),admitted=(Set<?>)field(f.bot,"lastAdmittedSources");check(held.contains(land.getId())&&!admitted.contains(land.getId())&&admitted.contains(payoff.getId()),"Held source consumed actionable admission budget");for(Card c:f.bot.getHand().getCards(f.game))if(c.getName().equals("Growth Spiral"))check(!admitted.contains(c.getId()),"Held Growth consumed admission budget");});
+  run("Idle modal protection avoids funding and still answers a real threat",()->{
+   FourthSeatRealGameTest.Fixture f=fixture("g.GhaltaPrimalHunger","Ghalta, Primal Hunger");
+   f.game.getCard(f.bot.getCommandersIds().iterator().next()).moveToZone(Zone.EXILED,null,f.game,false);
+   Permanent yeva=f.board("y.YevaNaturesHerald","Yeva, Nature's Herald");
+   f.board("g.GwennaEyesOfGaea","Gwenna, Eyes of Gaea");f.board("n.NykthosShrineToNyx","Nykthos, Shrine to Nyx");f.board("s.SolRing","Sol Ring");
+   Card modal=f.hand("c.CollectiveResistance","Collective Resistance");f.mana(modal);
+   check(!f.bot.priority(f.game),"Idle protection should preserve resources");
+   check(((Number)field(f.bot,"candidateFundingCheckCount")).longValue()==0,"Idle answers performed redundant funding simulations");
+   Card murder=f.enemyHand("m.Murder","Murder");murder.getSpellAbility().getTargets().get(0).addTarget(yeva.getId(),murder.getSpellAbility(),f.game);f.castEnemy(murder);
+   check(f.bot.priority(f.game),"Real threat did not re-enable protection");
+   check(f.game.getState().getZone(modal.getId())==Zone.STACK,"No protection spell reached the real stack");
+   drain(f,20);check(f.game.getPermanent(yeva.getId())!=null,"Protected creature was lost");
+  });
   run("Held spells skip funding while protection can still respond",()->{
    FourthSeatRealGameTest.Fixture f=fixture("a.AesiTyrantOfGyreStrait","Aesi, Tyrant of Gyre Strait");
    Permanent yeva=f.board("y.YevaNaturesHerald","Yeva, Nature's Herald");
