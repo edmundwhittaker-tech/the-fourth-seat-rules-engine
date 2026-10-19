@@ -11,7 +11,7 @@ Talrand, Aesi, Gishath, and Adeline. See `experiments/commander-ai/DECKS.md`.
 ## Validation gates
 
 The Fourth Seat workflow builds a fresh isolated server/AI and matching bridge,
-checks 291 policy assertions, all ten frozen decks, 312 real-engine scenarios and
+checks 291 policy assertions, all ten frozen decks, 321 real-engine scenarios and
 27 cost contracts, completes nine real games using packaged JARs, tests gateway
 policies, exercises the private service, and boots the actual container under a
 4 GiB limit. A source commit is not a live deployment. Wait for all these gates
@@ -145,3 +145,17 @@ produce the required white and pay one of the four taps. Costs are copied throug
 the native public typed API without activating shared alternative-cost objects.
 Nine regressions exercise funding conflicts, spare flyers, floating mana, normal
 casting, tax effects and preservation of a granted free-cast alternative.
+
+The native mana payment callback also reuses the bounded trigger certificate for
+an exact remaining cost after the ordinary chooser cannot proceed. This covers
+a colorless land plus Regal Behemoth after an ordinary Treasure was spent during
+the same payment. It activates only a currently legal simple tap mana ability
+certified through native events on a disposable calculation. Six regressions
+cover the mixed GG payment and reject missing monarch, bonus source or land.
+
+For announced X costs, the AI prioritizes unpaid colored/colorless pips before
+an appended generic component, using a copy of the payment demand. Native cost
+assignment and the announced X stay unchanged. Three regressions include twelve
+fresh source-identity orderings for Finale of Devastation's actual X=2 payment
+with Llanowar Wastes, Woodland Cemetery, Bojuka Bog and Unclaimed Territory.
+They also reject the cast when either unrestricted green source is missing.

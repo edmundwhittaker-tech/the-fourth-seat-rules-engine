@@ -1217,6 +1217,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
     }
 
     @Override public boolean playMana(Ability ability, ManaCost unpaid, String promptText, Game game) {
+        unpaid = prioritizeRestrictedPips(unpaid);
         ManaCost previous = currentUnpaid;
         UUID previousReserved = reservedTapSource;
         Set<UUID> previousTaps = pendingTapReservations;
@@ -1253,7 +1254,21 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                     }
                 }
             }
-            return super.playMana(ability, unpaid, promptText, game);
+            if (super.playMana(ability, unpaid, promptText, game)) return true;
+            // Native payment filters on a producer's base output. A colorless
+            // land can still pay a colored pip through a real mana trigger,
+            // especially after an ordinary Treasure was consumed earlier in
+            // this same payment. Reuse the bounded native-trigger certificate
+            // for the exact remaining cost; do not count the Treasure again.
+            if (ability instanceof ActivatedAbility && !ability.isManaAbility()) {
+                ActivatedAbility remaining = ((ActivatedAbility) ability).copy();
+                remaining.clearManaCostsToPay(); remaining.addManaCostsToPay(unpaid.copy());
+                FourthSeatManaDependencyPolicy.ActionPlan plan = FourthSeatManaDependencyPolicy.nextAction(remaining, game, this, null);
+                if (plan != null && ("TRIGGERED_MANA".equals(plan.reason) || "TWO_TRIGGERED_SOURCES".equals(plan.reason))
+                        && plan.ability instanceof ActivatedManaAbilityImpl && pureTapMana((ActivatedManaAbilityImpl) plan.ability)
+                        && plan.ability.canActivate(getId(), game).canActivate()) return activateAbility(plan.ability, game);
+            }
+            return false;
         }
         finally {
             currentUnpaid = previous; reservedTapSource = previousReserved;
@@ -1265,6 +1280,24 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                 restored.pendingTapReservations = new HashSet<UUID>(previousTaps);
             }
         }
+    }
+
+    /** The native chooser funds the last unpaid component. Announced generic X
+     * can be appended after colored pips, so reorder only a disposable demand
+     * copy. The engine's real cost and assignment order are untouched.
+     */
+    private static ManaCost prioritizeRestrictedPips(ManaCost unpaid) {
+        if (!(unpaid instanceof ManaCosts)) return unpaid;
+        ManaCosts<ManaCost> costs = ((ManaCosts<ManaCost>) unpaid).copy();
+        if (costs.isEmpty() || !(costs.get(costs.size()-1) instanceof mage.abilities.costs.mana.GenericManaCost)) return unpaid;
+        int colored = -1, colorless = -1;
+        for (int i=0;i<costs.size();i++) {
+            if (costs.get(i) instanceof mage.abilities.costs.mana.ColoredManaCost) colored=i;
+            if (costs.get(i) instanceof mage.abilities.costs.mana.ColorlessManaCost) colorless=i;
+        }
+        int next = colorless >= 0 ? colorless : colored;
+        if (next >= 0) costs.add(costs.remove(next));
+        return costs;
     }
 
     Set<UUID> reservedTapIdsForPlanning() {
