@@ -138,19 +138,20 @@ try{
   check('opponent hand names remain private',[host,friend].every(c=>records(c.state.game.opponentHands).every(h=>records(h).every(card=>!card.name))));
   landPlayer.socket.close();await delay(100);
   const restored=await attach(landPlayer.key);
+  const other=landPlayer===host?friend:host;
   await wait(()=>restored.state.game?.players?.some(p=>p.controlled&&records(p.battlefield).some(c=>c.name==='Mountain')),'private reconnect cache');
   check('reconnect restores the same game without replaying an action',restored.state.gameId===landPlayer.state.gameId);
   await assert.rejects(api(key2,'end',{code}),/Only the host/);
   const previousGame=restored.state.gameId;
   const reset=(await api(key1,'end',{code})).room;
-  await wait(()=>friend.reset&&restored.reset,'reset broadcast to both humans');
-  check('host ends the native game and returns every human to the same editable lobby',reset.status==='lobby'&&!reset.gameId&&reset.code===code&&reset.players.length===4&&friend.reset.room.status==='lobby'&&restored.reset.room.status==='lobby');
+  await wait(()=>other.reset&&restored.reset,'reset broadcast to both humans');
+  check('host ends the native game and returns every human to the same editable lobby',reset.status==='lobby'&&!reset.gameId&&reset.code===code&&reset.players.length===4&&other.reset.room.status==='lobby'&&restored.reset.room.status==='lobby');
   check('seats and decks survive ending the game',JSON.stringify(reset.players)===JSON.stringify(room.players));
   check('reconnect resumes the lobby after game end',(await api(key2,'session')).room.status==='lobby');
   await api(key1,'end',{code}); // idempotent duplicate
   await api(key1,'start',{code});
-  await wait(()=>friend.state.gameId&&friend.state.gameId!==previousGame,'fresh rematch');
-  check('the retained room starts a different native game',friend.state.gameId!==previousGame);
+  await wait(()=>other.state.gameId&&other.state.gameId!==previousGame,'fresh rematch');
+  check('the retained room starts a different native game',other.state.gameId!==previousGame);
   await api(key1,'end',{code});
   await api(key2,'leave',{code});await api(key1,'leave',{code});
   const unauthorized=await fetch('http://127.0.0.1:8080/api',{method:'POST',body:'{}'});
