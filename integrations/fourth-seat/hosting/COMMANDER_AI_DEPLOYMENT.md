@@ -11,7 +11,7 @@ Talrand, Aesi, Gishath, and Adeline. See `experiments/commander-ai/DECKS.md`.
 ## Validation gates
 
 The Fourth Seat workflow builds a fresh isolated server/AI and matching bridge,
-checks 291 policy assertions, all ten frozen decks, 321 real-engine scenarios and
+checks 291 policy assertions, all ten frozen decks, 331 real-engine scenarios and
 27 cost contracts, completes nine real games using packaged JARs, tests gateway
 policies, exercises the private service, and boots the actual container under a
 4 GiB limit. A source commit is not a live deployment. Wait for all these gates
@@ -159,3 +159,11 @@ assignment and the announced X stay unchanged. Three regressions include twelve
 fresh source-identity orderings for Finale of Devastation's actual X=2 payment
 with Llanowar Wastes, Woodland Cemetery, Bojuka Bog and Unclaimed Territory.
 They also reject the cast when either unrestricted green source is missing.
+
+The established-army resource proof recognizes Crop Rotation's typed additional
+land sacrifice alongside Harrow. A land-search card must not invalidate proof
+that the existing mana already covers the hand, reopening redundant ramp and
+Ashaya creature development into hundreds of extra Scute triggers. Ten native
+regressions keep development available before the resource/army boundary and
+preserve real protection responses. No deck list, token total, queued mandatory
+trigger or progress limit is changed.

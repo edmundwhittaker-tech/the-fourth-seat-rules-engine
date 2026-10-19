@@ -188,15 +188,17 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
         return totals;
     }
 
-    private boolean fixedHandCovered(Game game, ManaOptions available, boolean allowHarrow) {
+    private boolean fixedHandCovered(Game game, ManaOptions available, boolean allowLandSearchSacrifice) {
         for (Card card : getHand().getCards(game)) {
             if (card.isLand(game)) continue;
             mage.abilities.SpellAbility spell = card.getSpellAbility();
             if (spell == null || spell.isModal() || !spell.getManaCosts().getVariableCosts().isEmpty()) return false;
             if (!spell.getCosts().isEmpty()) {
-                boolean harrow = allowHarrow && card instanceof mage.cards.h.Harrow && spell.getCosts().size() == 1
+                boolean landSearch = allowLandSearchSacrifice
+                        && (card instanceof mage.cards.h.Harrow || card instanceof mage.cards.c.CropRotation)
+                        && spell.getCosts().size() == 1
                         && spell.getCosts().get(0) instanceof mage.abilities.costs.common.SacrificeTargetCost;
-                if (!harrow) return false;
+                if (!landSearch) return false;
             }
             boolean funded = false;
             for (Mana cost : spell.getManaCostsToPay().getOptions(false)) {
