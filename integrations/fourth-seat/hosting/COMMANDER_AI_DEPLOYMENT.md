@@ -11,7 +11,7 @@ Talrand, Aesi, Gishath, and Adeline. See `experiments/commander-ai/DECKS.md`.
 ## Validation gates
 
 The Fourth Seat workflow builds a fresh isolated server/AI and matching bridge,
-checks 291 policy assertions, all ten frozen decks, 281 real-engine scenarios and
+checks 291 policy assertions, all ten frozen decks, 285 real-engine scenarios and
 27 cost contracts, completes nine real games using packaged JARs, tests gateway
 policies, exercises the private service, and boots the actual container under a
 4 GiB limit. A source commit is not a live deployment. Wait for all these gates
@@ -102,3 +102,10 @@ The actual production/resolution path is unchanged. Nine real-engine regressions
 cover insufficient floating mana and exact seven-mana payment with three pool
 colors. Both build paths verify the pinned source preimage; startup compares the
 patched ManaOptions bytecode between server and bridge as well as ApprovingObject.
+
+The online service proof requires both native bots to make real battlefield plays
+before lifecycle cleanup, so the strategy class is exercised rather than merely
+instantiated. The bounded finite-chain recovery also recognizes Garruk's Uprising,
+Outcaster Trailblazer and Vaultborn Tyrant alongside Garruk's Packleader; it
+declines optional Kodama choices after one confirmed library-progress refusal
+while leaving mandatory draws and a second unresolved loop prompt to XMage.

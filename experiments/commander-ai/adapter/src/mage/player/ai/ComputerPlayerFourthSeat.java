@@ -265,15 +265,21 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
     }
 
     private boolean ownedFiniteChain(Game game) {
-        boolean kodama = false, baloths = false, packleader = false;
+        boolean kodama = false, baloths = false, drawEngine = false;
         for (Permanent p : game.getBattlefield().getAllActivePermanents(getId())) {
             if (p.isFaceDown(game)) continue;
             Card card = game.getCard(p.getId());
             kodama |= card instanceof mage.cards.k.KodamaOfTheEastTree;
             baloths |= card instanceof mage.cards.r.RampagingBaloths;
-            packleader |= card instanceof mage.cards.g.GarruksPackleader;
+            // These published-deck engines also draw for Baloths tokens. Their
+            // mandatory draws stay engine-controlled; only Kodama's optional
+            // hand-to-battlefield choice is declined while draining the chain.
+            drawEngine |= card instanceof mage.cards.g.GarruksPackleader
+                    || card instanceof mage.cards.g.GarruksUprising
+                    || card instanceof mage.cards.o.OutcasterTrailblazer
+                    || card instanceof mage.cards.v.VaultbornTyrant;
         }
-        return kodama && baloths && packleader;
+        return kodama && baloths && drawEngine;
     }
 
     // Engine-only affordability snapshot, never strategic full-state scoring.
