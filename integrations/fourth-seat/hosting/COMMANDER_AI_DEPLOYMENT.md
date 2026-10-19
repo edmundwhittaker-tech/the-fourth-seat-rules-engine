@@ -11,7 +11,7 @@ Talrand, Aesi, Gishath, and Adeline. See `experiments/commander-ai/DECKS.md`.
 ## Validation gates
 
 The Fourth Seat workflow builds a fresh isolated server/AI and matching bridge,
-checks 291 policy assertions, all ten frozen decks, 303 real-engine scenarios and
+checks 291 policy assertions, all ten frozen decks, 312 real-engine scenarios and
 27 cost contracts, completes nine real games using packaged JARs, tests gateway
 policies, exercises the private service, and boots the actual container under a
 4 GiB limit. A source commit is not a live deployment. Wait for all these gates
@@ -138,3 +138,10 @@ The service driver plays a land for each human fixture and handles the server's
 mandatory discard choice, so random seating cannot terminate the verification
 before an AI acts. Its 24 checks include both human and both AI battlefield plays,
 private views, mulligans, reconnect, ending a game, lobby reset and rematch.
+
+Sephara's native alternative cost is checked as one combined mana/tap payment.
+Four flyers are reserved before forecasting or paying mana, so Giada cannot both
+produce the required white and pay one of the four taps. Costs are copied through
+the native public typed API without activating shared alternative-cost objects.
+Nine regressions exercise funding conflicts, spare flyers, floating mana, normal
+casting, tax effects and preservation of a granted free-cast alternative.

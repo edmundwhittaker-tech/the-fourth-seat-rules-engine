@@ -29,3 +29,5 @@ java -ea -cp "$OUT:$CP" mage.player.ai.FourthSeatCoreCompatTest
 
 java -ea -cp "$OUT:$CP" mage.player.ai.FourthSeatCelestialReunionTest
 java -ea -cp "$OUT:$CP" mage.player.ai.FourthSeatCounterBatchTest
+
+java -ea -cp "$OUT:$CP" mage.player.ai.FourthSeatSepharaTest

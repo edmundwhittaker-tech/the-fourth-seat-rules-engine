@@ -383,6 +383,25 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
         return dependencyPlanFor(ability, game, Collections.<UUID>emptySet()) != null;
     }
 
+    @Override protected boolean canPlayCardByAlternateCost(Card card, ManaOptions available, Ability ability, Game game) {
+        if (card instanceof mage.cards.s.SepharaSkysBlade && ability instanceof ActivatedAbility) {
+            Game snapshot = game.createSimulationForPlayableCalc();
+            if (preparedCostsPayable(FourthSeatAdditionalCostPolicy.prepareSepharaAlternative((ActivatedAbility) ability, snapshot), snapshot)) return true;
+            // Keep native global/granted alternatives. Remove only this intrinsic
+            // alternative from a disposable card copy after its combined cost failed.
+            Card copy = card.copy();
+            copy.getAbilities().removeIf(a -> a.getClass() == mage.abilities.costs.AlternativeCostSourceAbility.class);
+            return super.canPlayCardByAlternateCost(copy, available, ability, game);
+        }
+        return super.canPlayCardByAlternateCost(card, available, ability, game);
+    }
+
+    private boolean preparedCostsPayable(FourthSeatAdditionalCostPolicy.PreparedCosts costs, Game game) {
+        return costs != null && costs.distinctTapCostsPayable
+                && costs.ability.getCosts().canPay(costs.ability, costs.ability, getId(), game)
+                && canPayMinimumManaCost(costs.ability, optionMana(costs.ability, game, costs.reservedTapIds), game);
+    }
+
     static String availabilityCacheKey(ActivatedAbility ability, Set<UUID> reserved) {
         List<String> ids = new ArrayList<String>(); for (UUID id : reserved) ids.add(id.toString()); Collections.sort(ids);
         return ability.getControllerId() + ":" + ability.getSourceId() + ":" + ids;
@@ -484,6 +503,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
 
     @Override public boolean activateAbility(ActivatedAbility ability, Game game) {
         ActivatedAbility previous = activatingAbility;
+        Set<UUID> previousTaps = pendingTapReservations;
         if (ability instanceof ActivatedManaAbilityImpl && previous != null && currentUnpaid != null) {
             Game calculation = game.createSimulationForPlayableCalc();
             for (Mana output : ((ActivatedManaAbilityImpl) ability).getNetMana(calculation))
@@ -495,9 +515,12 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
         try { return super.activateAbility(ability, game); }
         finally {
             activatingAbility = previous;
+            pendingTapReservations = previousTaps;
             ComputerPlayerFourthSeat restored = restoredPlayer(game);
-            if (restored != null && restored != this)
+            if (restored != null && restored != this) {
                 restored.activatingAbility = previous == null ? null : previous.copy();
+                restored.pendingTapReservations = new HashSet<UUID>(previousTaps);
+            }
         }
     }
 
@@ -624,11 +647,28 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
             if (normal != null && canPayMinimumManaCost(adjusted, manaAvailableFor(adjusted, game), game)) {
                 choice.setChoiceByKey(normal); return true;
             }
+            String unfundedSephara = null;
+            if (game.getCard(activatingAbility.getSourceId()) instanceof mage.cards.s.SepharaSkysBlade) {
+                Game snapshot = game.createSimulationForPlayableCalc();
+                FourthSeatAdditionalCostPolicy.PreparedCosts costs = FourthSeatAdditionalCostPolicy.prepareSepharaAlternative(activatingAbility, snapshot);
+                for (Ability ability : game.getCard(activatingAbility.getSourceId()).getAbilities(game))
+                    if (ability.getClass() == mage.abilities.costs.AlternativeCostSourceAbility.class) {
+                        String text = ((mage.abilities.costs.AlternativeCostSourceAbility) ability).getAlternativeCostText(activatingAbility, game);
+                        for (Map.Entry<String,String> entry : choice.getKeyChoices().entrySet()) if (entry.getValue().equals(text)) {
+                            if (preparedCostsPayable(costs, snapshot)) {
+                                pendingTapReservations = reservedTapIdsForPlanning();
+                                pendingTapReservations.addAll(costs.reservedTapIds);
+                                choice.setChoiceByKey(entry.getKey()); return true;
+                            }
+                            unfundedSephara = entry.getKey();
+                        }
+                    }
+            }
             // The engine only offers alternatives after canActivateAlternativeCostsNow.
             // Prefer the first available alternative deterministically, never an unfunded
             // normal cast. Actual costs and sacrifice choices are revalidated by XMage.
             for (String key : new TreeSet<String>(choice.getKeyChoices().keySet())) {
-                if (!key.equals(normal)) { choice.setChoiceByKey(key); return true; }
+                if (!key.equals(normal) && !key.equals(unfundedSephara)) { choice.setChoiceByKey(key); return true; }
             }
             return false;
         }
@@ -787,6 +827,12 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                         Game calculation = game.createSimulationForPlayableCalc();
                         FourthSeatAdditionalCostPolicy.PreparedCosts prepared = FourthSeatAdditionalCostPolicy
                                 .prepareSelectedCosts((ActivatedAbility) option, calculation);
+                        if (calculation.getCard(option.getSourceId()) instanceof mage.cards.s.SepharaSkysBlade
+                                && !preparedCostsPayable(prepared, calculation)) {
+                            FourthSeatAdditionalCostPolicy.PreparedCosts alternative = FourthSeatAdditionalCostPolicy
+                                    .prepareSepharaAlternative((ActivatedAbility) option, calculation);
+                            if (preparedCostsPayable(alternative, calculation)) prepared = alternative;
+                        }
                         if (!prepared.distinctTapCostsPayable || !prepared.ability.getCosts().canPay(
                                 prepared.ability, prepared.ability, getId(), calculation)) continue;
                         if (!canPayMinimumManaCost(prepared.ability,

@@ -64,6 +64,35 @@ public final class FourthSeatAdditionalCostPolicy {
         return reserveTapCosts(prepared,snapshot);
     }
 
+    /** Sephara's native alternative has a simultaneous mana/tap requirement.
+     * Unwrap and copy its public typed costs; do not activate the shared native
+     * AlternativeCost objects during forecasting. The engine applies the chosen
+     * alternative itself during the live cast.
+     */
+    public static PreparedCosts prepareSepharaAlternative(ActivatedAbility candidate,Game snapshot) {
+        Card card=snapshot.getCard(candidate.getSourceId());
+        if(candidate.getAbilityType()!=mage.constants.AbilityType.SPELL
+                || !(card instanceof mage.cards.s.SepharaSkysBlade))return null;
+        for(Ability ability:card.getAbilities(snapshot))
+            if(ability.getClass()==mage.abilities.costs.AlternativeCostSourceAbility.class) {
+                mage.abilities.costs.AlternativeCostSourceAbility alternative=(mage.abilities.costs.AlternativeCostSourceAbility)ability;
+                if(snapshot.getState().getZone(candidate.getSourceId())!=Zone.STACK && candidate instanceof mage.abilities.SpellAbility) {
+                    Set<mage.MageIdentifier> allowed=((mage.abilities.SpellAbility)candidate).spellCanBeActivatedNow(candidate.getControllerId(),snapshot);
+                    if(!allowed.contains(mage.MageIdentifier.Default)&&!allowed.contains(alternative.getIdentifier()))continue;
+                }
+                if(alternative.getDynamicCost()!=null||!alternative.isAvailable(candidate,snapshot)
+                        ||!alternative.canActivateAlternativeCostsNow(candidate,snapshot))continue;
+                ActivatedAbility copy=candidate.copy();copy.clearManaCostsToPay();
+                for(Cost wrapper:alternative.getCosts()) {
+                    if(!(wrapper instanceof mage.abilities.costs.AlternativeCost))return null;
+                    Cost cost=((mage.abilities.costs.AlternativeCost)wrapper).getCost().copy();
+                    if(cost instanceof ManaCost)copy.addManaCostsToPay((ManaCost)cost);else copy.addCost(cost);
+                }
+                return prepareSelectedCosts(copy,snapshot);
+            }
+        return null;
+    }
+
     /** Can also validate already-adjusted costs, without adding mode/effect costs twice. */
     public static PreparedCosts reserveTapCosts(ActivatedAbility prepared,Game snapshot) {
         Set<UUID> reserved=new LinkedHashSet<UUID>();
