@@ -1176,6 +1176,34 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
         return result;
     }
 
+    /** LondonMulligan calls this overload (without Cards), bypassing the normal
+     * own-card chooser. The inherited fallback treats cheap lands as discard fodder.
+     * Restrict opening logic to source-less pregame own-hand discard choices;
+     * spell targets and all in-game choices retain their existing native path.
+     */
+    @Override public boolean chooseTarget(Outcome outcome, Target target, Ability source, Game game) {
+        if (outcome != Outcome.Discard || source != null || game.getTurn().getPhase() != null
+                || !(target instanceof mage.target.common.TargetCardInHand)
+                || !getId().equals(target.getAffectedAbilityControllerId(getId())))
+            return super.chooseTarget(outcome, target, source, game);
+        List<CardView> remaining = new ArrayList<CardView>(ownHand(game));
+        remaining.removeIf(card -> target.getTargets().contains(UUID.fromString(card.id)));
+        while (!target.isChoiceCompleted(getId(), source, game, null)) {
+            List<CardView> eligible = new ArrayList<CardView>();
+            for (CardView card : remaining)
+                if (target.canTarget(getId(), UUID.fromString(card.id), source, game)) eligible.add(card);
+            String selected = DeckPlan.forCommander(commanderName(game)).chooseOpeningBottom(remaining, eligible);
+            if (selected == null) break;
+            UUID id = UUID.fromString(selected);
+            LOG.debug("fourth-seat opening-bottom player=" + getId() + " handSize=" + remaining.size()
+                    + " lands=" + remaining.stream().filter(card -> card.land).count()
+                    + " landChosen=" + game.getCard(id).isLand(game));
+            remaining.removeIf(card -> card.id.equals(selected));
+            if (target.isNotTarget()) target.add(id, game); else target.addTarget(id, source, game);
+        }
+        return target.isChosen(game);
+    }
+
     @Override public boolean choose(Outcome outcome, Cards cards, TargetCard target, Ability source, Game game) {
         if (isCelestialBeholdPayment(outcome, target, source, game) && target.getZone() == Zone.HAND) {
             UUID controller = target.getAffectedAbilityControllerId(getId());

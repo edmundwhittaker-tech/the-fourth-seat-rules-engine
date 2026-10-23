@@ -283,6 +283,33 @@ public final class DeckPlan {
         for (CardView c : o.hand) if (front(c.name).equals(n)) return Math.max(0,c.power);
         return 0;
     }
+    /** Opening bottom choice, using only own cards and engine-filtered eligible IDs.
+     * Recomputed after every native one-card London choice. Preserve up to three
+     * scarce lands and unique known colors; trim flood or expensive payoffs first.
+     * This is an opening heuristic, not a mana-payment or fetch-land oracle.
+     */
+    public String chooseOpeningBottom(List<CardView> hand, List<CardView> eligible) {
+        int lands=0;
+        for(CardView c:hand) if(c.land) lands++;
+        int floor=Math.min(3,Math.max(1,hand.size()-2));
+        CardView best=null;double bestScore=-Double.MAX_VALUE;
+        for(CardView c:eligible) {
+            double score;
+            if(c.land) {
+                score=lands>floor?100:-1000;
+                int otherColors=0;
+                for(CardView other:hand) if(other.land&&!other.id.equals(c.id)) otherColors|=landColors(other);
+                if((landColors(c)&~otherColors)!=0) score-=200;
+            } else {
+                score=Math.max(0,c.manaValue)*3-Math.min(15,cardValue(c));
+                if(role(c.name)==Role.RAMP&&c.manaValue<=3) score-=20;
+                if(c.creature&&c.manaValue<=3) score-=5;
+            }
+            if(best==null||score>bestScore||score==bestScore&&c.id.compareTo(best.id)<0) {best=c;bestScore=score;}
+        }
+        return best==null?null:best.id;
+    }
+
     /** Rough keep heuristic only; cannot infer pips, fetch restrictions or MDFC back-face lands. */
     public boolean keep(List<CardView> hand, int mulligans) {
         int lands = 0, cheap = 0, ramp = 0, colors = 0;

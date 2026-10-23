@@ -83,6 +83,7 @@ jobs:
         run: |
           python3 experiments/commander-ai/scripts/verify-deck-pool.py
           bash experiments/commander-ai/test.sh
+          python3 experiments/commander-ai/adapter/soak/test_reporting.py
       - name: Verify actual engine costs, choices and compatibility
         run: bash experiments/commander-ai/adapter/test/run-real-engine-tests.sh build/online-commander-ai/server
       - name: Complete nine real games with all ten decks

@@ -1,4 +1,5 @@
 from loop_diagnostics import loop_diagnostics
+from activity_diagnostics import activity_diagnostics
 import pathlib,re,json,sys,html,collections
 root=pathlib.Path(sys.argv[1]); rows=[]
 for p in sorted(root.glob('pod-*.log')):
@@ -14,6 +15,7 @@ for p in sorted(root.glob('pod-*.log')):
   casts=[l for l in plain.splitlines() if l.startswith(prefix+'casts ')]
   activations=[l for l in plain.splitlines() if l.startswith(prefix+'activates: ')]
   seats.append({'commander':name,'landPlays':sum(l.startswith(prefix+'plays ') for l in plain.splitlines()),'spellCasts':len(casts),'activatedAbilities':len(activations),'commanderCasts':sum(l.startswith(prefix+'casts '+name+' [') for l in casts),'commanderActivations':sum((' from '+name+' [') in l for l in activations),'attackDeclarations':sum(l.startswith(prefix+'attacks ') for l in plain.splitlines()),'failures':sum('decision=PLAN:'+name+':' in l and 'activated=false' in l for l in s.splitlines())})
+ for seat in seats: seat.update(activity_diagnostics(plain,seat))
  row['seats']=seats
  row.update(loop_diagnostics(plain))
  row['resultCount']=len(re.findall(r'^RESULT status=',s,re.M))

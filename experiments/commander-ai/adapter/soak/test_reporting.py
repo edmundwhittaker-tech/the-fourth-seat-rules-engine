@@ -1,11 +1,27 @@
 """Synthetic reporting contracts only. These are NOT engine acceptance evidence."""
 import copy, json, pathlib, subprocess, sys, tempfile, unittest
 from loop_diagnostics import loop_diagnostics
+from activity_diagnostics import activity_diagnostics
 HERE=pathlib.Path(__file__).parent
 YES='EVENT A has confirmed that the game is a draw because of infinite looping.\n'
 NO='EVENT B has NOT confirmed that the game is a draw because of infinite looping.\n'
 DRAW='EVENT For A the game is a draw.\n'
 class ReportingTests(unittest.TestCase):
+    def test_inactive_seat_in_finished_game_is_visible(self):
+        text=''.join('TEST_ONLY_OWN_HAND turn='+str(t)+' player=Krenko, Mob Boss cards=[Mountain]\n' for t in [4,8,12])+'RESULT status=FINISHED\n'
+        seat=dict(commander='Krenko, Mob Boss',spellCasts=0,landPlays=1)
+        report=activity_diagnostics(text,seat)
+        self.assertEqual(report['ownMainPhasesObserved'],3)
+        self.assertEqual(report['activityReviewFlags'],['NO_SPELLS_AFTER_THREE_TURNS','LOW_LAND_DEVELOPMENT'])
+    def test_activity_flags_require_observed_turns_and_do_not_invent_cause(self):
+        seat=dict(commander='Talrand, Sky Summoner',spellCasts=0,landPlays=4)
+        text='TEST_ONLY_OWN_HAND turn=4 player=Talrand, Sky Summoner cards=[]\n'
+        self.assertEqual(activity_diagnostics(text,seat)['activityReviewFlags'],[])
+        self.assertEqual(activity_diagnostics(text*3,seat)['activityReviewFlags'],[])
+        text += text.replace('turn=4','turn=8') + text.replace('turn=4','turn=12')
+        self.assertEqual(activity_diagnostics(text,seat)['activityReviewFlags'],['NO_SPELLS_AFTER_THREE_TURNS'])
+        seat['spellCasts']=1
+        self.assertEqual(activity_diagnostics(text,seat)['activityReviewFlags'],[])
     def test_loop_accepted(self): self.assertEqual(loop_diagnostics(YES+YES+DRAW)['infiniteLoopDrawEvents'],1)
     def test_loop_refused(self): self.assertEqual(loop_diagnostics(YES+NO+'RESULT status=FINISHED')['infiniteLoopDrawEvents'],0)
     def test_refusal_only(self): self.assertEqual(loop_diagnostics(NO)['infiniteLoopDrawEvents'],0)

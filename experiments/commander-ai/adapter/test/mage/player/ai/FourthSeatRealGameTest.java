@@ -53,12 +53,16 @@ public final class FourthSeatRealGameTest {
         final FixtureGame game = new FixtureGame();
         final ComputerPlayerFourthSeat bot = new ComputerPlayerFourthSeat("Under test", RangeOfInfluence.ALL);
         final ComputerPlayer[] foes = new ComputerPlayer[3];
-        Fixture() {
+        Fixture() { this(false); }
+        Fixture(boolean pregame) {
             game.addPlayer(bot, new Deck()); bot.init(game); bot.setTurnControlledBy(bot.getId());
             for (int i=0;i<foes.length;i++) { foes[i]=new ComputerPlayer("Opponent "+i,RangeOfInfluence.ALL); game.addPlayer(foes[i],new Deck()); foes[i].init(game); }
             bot.updateRange(game); for(ComputerPlayer foe:foes) foe.updateRange(game);
-            game.getState().setTurnNum(4); game.getState().setActivePlayerId(bot.getId()); game.getState().setPriorityPlayerId(bot.getId());
-            PreCombatMainPhase phase = new PreCombatMainPhase(); phase.setStep(new PreCombatMainStep()); game.getTurn().setPhase(phase);
+            game.getState().setActivePlayerId(bot.getId()); game.getState().setPriorityPlayerId(bot.getId());
+            if (!pregame) {
+                game.getState().setTurnNum(4);
+                PreCombatMainPhase phase = new PreCombatMainPhase(); phase.setStep(new PreCombatMainStep()); game.getTurn().setPhase(phase);
+            }
         }
         // Identity-only battlefield fixtures still need real CommanderInfoWatcher registration
         // before engine state-based actions. Command-zone fixtures use full initCommander below.
