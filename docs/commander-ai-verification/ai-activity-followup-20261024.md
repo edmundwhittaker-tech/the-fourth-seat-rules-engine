@@ -2,7 +2,7 @@
 
 Source commit: `532e6e20c2e6ea79ccdf09aec69c0daeddd4383d`.
 
-**Status: supplemental tests pass; independent CI and live deployment pending.**
+**Status: all release gates passed; the exact tested build is deployed and live-verified.**
 
 This follows the earlier [activity audit](ai-activity-audit-20261024.md). That
 candidate was deliberately withheld after a failed progress gate. These changes
@@ -81,9 +81,34 @@ sources and checks the complete server/bridge pair.
 ## Independent release and live verification
 
 GitHub workflow [40048867619](https://github.com/edmundwhittaker-tech/the-fourth-seat-rules-engine/actions/runs/40048867619)
-is the release gate for this exact source. Its result and deployment verification
-will be recorded here before this follow-up is finalized. The previously failed
-workflow `40042506392` remains a failed candidate, not a deployable release.
+passed every release gate for this exact source. Its separate nine games all
+finished naturally: **343 completed turns, zero rejected actions, zero caught
+priority errors**, and a maximum progress gap of **6.756 seconds**. The real
+service proof passed all 24 checks, loaded the accepted AI/policy classes, and the
+actual deployable container passed startup/authenticated-session checks under
+a four-GiB memory limit. The verified deployment artifact is `12542808118`;
+the adjacent JSON records its exact SHA-256 and paired binary manifest.
+The previously failed workflow `40042506392` remains a failed candidate, not a
+deployable release.
+
+The existing Codespace was updated only after its active game had finished and a
+second check found no active/starting games. The exact artifact ZIP digest, source
+manifest, paired binaries and bytecode were verified before building the image.
+The previous image remains tagged `fourth-seat-engine:before-commander-ai`.
+Existing credentials, data volume, public port and Site settings were preserved.
+
+**All 25 live smoke checks passed**, including all three bots making real
+battlefield plays in a one-human game, private hands, the free mulligan, legal
+plays, reconnect, host end-to-lobby, retained seats/decks and a fresh rematch.
+Only the synthetic smoke rooms were ended and removed. The final room count
+contained two expired historical rooms and no active game. Container health and
+the public forwarded `/health` endpoint both reported ready.
+
+This verifies the deployed gateway/websocket service; it does not claim a fresh
+admin browser UI gameplay test. The Site interface and access controls were not
+modified in this update.
+
+![Live engine verification](ai-activity-live-20261024.jpg)
 
 The live smoke driver is a bounded adaptation of the existing service test. It
 uses the already-running gateway and its existing environment credential, creates
