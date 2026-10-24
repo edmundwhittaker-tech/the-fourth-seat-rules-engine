@@ -39,3 +39,5 @@ java -ea -cp "$OUT:$CP" mage.player.ai.FourthSeatFinalePaymentTest
 java -ea -cp "$OUT:$CP" mage.player.ai.FourthSeatCropRotationReserveTest
 
 java -ea -cp "$OUT:$CP" mage.player.ai.FourthSeatOpeningHandTest
+java -ea -cp "$OUT:$CP" mage.player.ai.FourthSeatActivityTest
+java -ea -cp "$OUT:$CP" mage.player.ai.FourthSeatHybridPaymentTest

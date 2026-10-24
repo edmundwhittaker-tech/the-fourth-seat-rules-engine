@@ -15,6 +15,12 @@ import mage.players.Player;
 final class FourthSeatCounterGrowthPolicy {
     private FourthSeatCounterGrowthPolicy() {}
     static boolean hasOverwhelmingMultiplicativeThreat(UUID playerId, Game game) {
+        return hasOverwhelmingMultiplicativeThreat(playerId, game, false);
+    }
+    static boolean hasReadyOverwhelmingMultiplicativeThreat(UUID playerId, Game game) {
+        return hasOverwhelmingMultiplicativeThreat(playerId, game, true);
+    }
+    private static boolean hasOverwhelmingMultiplicativeThreat(UUID playerId, Game game, boolean ready) {
         long opposition = 0;
         for (UUID id : game.getOpponents(playerId, true)) {
             Player opponent = game.getPlayer(id);
@@ -32,6 +38,11 @@ final class FourthSeatCounterGrowthPolicy {
             for (Ability a : p.getAbilities(game)) if (a instanceof LandfallAbility
                     && a.getEffects().stream().anyMatch(e -> e instanceof DoubleCountersSourceEffect)) doubling = true;
             if (!doubling) continue;
+            if (ready) {
+                for (UUID opponent : game.getOpponents(playerId, true))
+                    if (p.canAttack(opponent, game)) return true;
+                continue;
+            }
             PermanentImpl future = (PermanentImpl) p.copy();
             future.removeSummoningSickness();
             boolean connected = true;

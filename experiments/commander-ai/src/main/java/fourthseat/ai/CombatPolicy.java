@@ -284,9 +284,13 @@ public final class CombatPolicy {
                 int suppressed=Math.max(Math.max(0,maxNormal),Math.min(Math.max(0,maxTrample),b.toughness));
                 suppression+=(double)suppressed*b.maxBlocks;blockCapacity+=b.maxBlocks;
             }
-            double damage=Math.max(0,power-suppression);value+=damage;
+            // Damage beyond this player's life total is not another strategic gain.
+            // Unbounded credit sent entire token armies at one already-doomed seat.
+            double damage=Math.max(0,power-suppression);value+=Math.min(damage,d.life);
             boolean projectedLethal=damage>=d.life;
-            if(projectedLethal) value+=35;else enemyPower+=d.visibleCrackbackPower;
+            // Elimination is worth a bounded material trade, including a token
+            // screen breaking through blockers; it must not require overkill credit.
+            if(projectedLethal) value+=100;else enemyPower+=d.visibleCrackbackPower;
             List<Double> possibleLosses=new ArrayList<Double>();double attritionPressure=0;
             for(Attacker a:sent) {
                 BlockRisk risk=risks.get(d.id).get(a.id);

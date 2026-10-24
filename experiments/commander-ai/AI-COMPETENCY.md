@@ -53,3 +53,33 @@ synthetic tests. Live logs and its commander/turn are needed to distinguish this
 opening defect from a disconnected seat, deliberate passing, or an expensive
 token-heavy resolution. Deploy only after the exact-commit service/container CI
 gates pass and after checking there are no active games to interrupt.
+
+## Follow-up corrections (24 October 2026)
+
+The next candidate retains the native mulligan fix and adds regression-backed
+activity improvements. It prefers combat with a ready, overwhelming landfall
+creature, limits redundant ramp with an already enormous funded army, and may
+decline Burgeoning's optional land placement in that state. These are strategic
+choices; mandatory triggers and native cost/target legality remain unchanged.
+
+Combat values damage only up to the defender's remaining life and separately
+values elimination. This keeps reserves instead of sending hundreds of surplus
+tokens at an already defeated opponent, while still accepting useful token
+trades through blockers.
+
+A new full-game failure exposed native HybridManaCost.testPay accepting colorless
+mana for a colored hybrid pip. The adapter chooses a funded branch on a
+disposable mana-producer demand; the actual spell keeps its original hybrid
+costs and native payment. Actual Eclipsed Elf casts using Eclipsed Realms,
+Cavern of Souls, Forests, and Devoted Druid now have regression coverage, including
+insufficient resources and the wrong chosen creature type.
+
+Queued priority for an eliminated player is ignored. Unexpected decision errors
+now include bounded class/stack locations without exception messages or private
+card choices. Slow-turn sampling reserves samples for later turns instead of
+spending its entire allowance on one early stall.
+
+The focused suite now contains **356 real-engine scenarios, 27 cost contracts,
+and 292 policy checks**. Passing these is not a release or a claim of competitive
+strength: the exact source must also pass full-game, gateway, and container gates
+before deployment. Preserve failed-game evidence when evaluating the candidate.

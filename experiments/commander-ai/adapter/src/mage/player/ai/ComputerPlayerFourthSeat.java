@@ -223,13 +223,23 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                 && (scutes[1] >= 32 || reserveAttackCommittedTurn == game.getTurnNum());
         if (previous && !continued) { reserveObservedTurn = -1; reserveAttackCommittedTurn = -1; }
         if (!"Aesi, Tyrant of Gyre Strait".equals(commanderName(game))
-                || (!continued && getHand().size() < 5)
+                || (!continued && getHand().size() < 5 && scutes[1] < 128)
                 || (!continued && scutes[1] < 32 && !FourthSeatCounterGrowthPolicy.hasOverwhelmingMultiplicativeThreat(getId(), game))) return 0;
-        int funding = fixedHandCovered(game, ordinaryResourceOptions(game, false), true) ? 1
-                : fixedHandCovered(game, ordinaryResourceOptions(game, true), true) ? 2 : 0;
+        int funding = developmentResourcesCovered(game, ordinaryResourceOptions(game, false)) ? 1
+                : developmentResourcesCovered(game, ordinaryResourceOptions(game, true)) ? 2 : 0;
         if (funding == 0) { reserveObservedTurn = -1; reserveAttackCommittedTurn = -1; }
         else if (ownTurn && scutes[1] >= 32) reserveObservedTurn = game.getTurnNum();
         return funding;
+    }
+
+    private boolean developmentResourcesCovered(Game game, ManaOptions available) {
+        if (fixedHandCovered(game, available, true)) return true;
+        // A modal/X/sacrifice spell must not demand unlimited ramp on an already
+        // overwhelming board. This is a strategy reserve, not a promise to pay
+        // every spell or arbitrary X: all actual payments still use native checks.
+        Mana reserve = new mage.abilities.costs.mana.ManaCostsImpl<ManaCost>("{8}{G}{G}{U}{U}").getMana();
+        for (Mana option : available) if (reserve.enough(option)) return true;
+        return false;
     }
 
     private boolean developmentSaturated(Game game, boolean credible) {
@@ -573,6 +583,9 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
             }
         }
         if (declineRedundantSpringheartCopy(outcome, source, game)) return false;
+        if (outcome == Outcome.PutCardInPlay && source != null && getId().equals(source.getControllerId())
+                && game.getCard(source.getSourceId()) instanceof mage.cards.b.Burgeoning
+                && reserveGrowthFunding(game) > 0) return false;
         if (outcome == Outcome.DrawCard && getLibrary().size() == 0) return false;
         if (optionalCostProbe) return true;
         if (isCelestialReunionActivation(source, game)
@@ -721,6 +734,9 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
     }
 
     @Override public boolean priority(Game game) {
+        // Native elimination can finish while a queued priority callback remains.
+        Player current = game.getPlayer(getId());
+        if (current == null || current.hasLeft() || current.hasLost()) return false;
         game.resumeTimer(getTurnControlledBy());
         try {
             game.getState().setPriorityPlayerId(getId());
@@ -912,7 +928,12 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
             pass(game);
             return false;
         } catch (RuntimeException failure) {
-            LOG.warn("fourth-seat priority failed; passing: " + failure.getClass().getSimpleName());
+            // Class/location only: exception messages can contain private card choices.
+            StringBuilder location = new StringBuilder();
+            StackTraceElement[] frames = failure.getStackTrace();
+            for (int i = 0; i < Math.min(8, frames.length); i++) location.append(" at ").append(frames[i]);
+            LOG.warn("fourth-seat priority failed; passing: " + failure.getClass().getSimpleName()
+                    + " turn=" + game.getTurnNum() + " step=" + game.getTurnStepType() + location);
             pass(game);
             return false;
         } finally {
@@ -1127,7 +1148,9 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
     private boolean combatBeforeDevelopment(Game game) {
         String step = game.getTurnStepType().name();
         return game.isActivePlayer(getId()) && ("UPKEEP".equals(step) || "DRAW".equals(step) || "PRECOMBAT_MAIN".equals(step))
-                && game.getStack().isEmpty() && credibleScuteArmy(game);
+                && game.getStack().isEmpty() && (credibleScuteArmy(game)
+                || ("Aesi, Tyrant of Gyre Strait".equals(commanderName(game))
+                && FourthSeatCounterGrowthPolicy.hasReadyOverwhelmingMultiplicativeThreat(getId(), game)));
     }
 
     private boolean credibleScuteArmy(Game game) {
@@ -1248,6 +1271,7 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
 
     @Override public boolean playMana(Ability ability, ManaCost unpaid, String promptText, Game game) {
         unpaid = prioritizeRestrictedPips(unpaid);
+        unpaid = exactHybridPaymentDemand(ability, unpaid, game);
         ManaCost previous = currentUnpaid;
         UUID previousReserved = reservedTapSource;
         Set<UUID> previousTaps = pendingTapReservations;
@@ -1310,6 +1334,35 @@ public final class ComputerPlayerFourthSeat extends ComputerPlayer {
                 restored.pendingTapReservations = new HashSet<UUID>(previousTaps);
             }
         }
+    }
+
+    /** Native HybridManaCost.testPay accepts plain colorless even for {B/G}.
+     * Its final assignPayment correctly rejects that mana, after the AI has
+     * already tapped a flexible land for the wrong output. Choose a payable
+     * branch of the remaining hybrid demand on a disposable chooser copy.
+     * The real spell retains its hybrid costs and native payment validation.
+     */
+    private ManaCost exactHybridPaymentDemand(Ability ability, ManaCost unpaid, Game game) {
+        if (!(ability instanceof ActivatedAbility)) return unpaid;
+        ManaCosts<ManaCost> components = new mage.abilities.costs.mana.ManaCostsImpl<ManaCost>();
+        if (unpaid instanceof ManaCosts) components.addAll(((ManaCosts<ManaCost>) unpaid).copy());
+        else components.add(unpaid.copy());
+        if (components.isEmpty()) return unpaid;
+        int last = components.size() - 1;
+        ManaCost hybrid = components.get(last);
+        // Phyrexian and monocolored-hybrid alternatives have different payment rules.
+        if (hybrid.getClass() != mage.abilities.costs.mana.HybridManaCost.class) return unpaid;
+        ManaOptions available = manaAvailableFor((ActivatedAbility) ability, game);
+        for (Mana branch : hybrid.getOptions(false)) {
+            if (branch.count() != 1) continue;
+            ManaCosts<ManaCost> replacement = new mage.abilities.costs.mana.ManaCostsImpl<ManaCost>(branch.toString());
+            if (replacement.size() != 1) continue;
+            ManaCosts<ManaCost> candidate = components.copy();
+            candidate.set(last, replacement.get(0));
+            for (Mana cost : candidate.getOptions(false)) for (Mana capacity : available)
+                if (cost.enough(capacity)) return candidate;
+        }
+        return unpaid;
     }
 
     /** The native chooser funds the last unpaid component. Announced generic X

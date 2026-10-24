@@ -91,13 +91,16 @@ public final class CommanderPolicy {
         for(CardView c:o.hand) if(c.creature&&(c.id.equals(a.sourceId)||c.name.equals(a.sourceName))) ownHandCreature=true;
         boolean development=a.land||role==DeckPlan.Role.RAMP||a.outcomes.contains("PutLandInPlay");
         boolean ashayaGrowth=o.ashayaLandfallDevelopment&&a.kind==ActionKind.SPELL&&ownHandCreature
-            &&(role==DeckPlan.Role.BODY||role==DeckPlan.Role.RAMP||role==DeckPlan.Role.ENGINE||role==DeckPlan.Role.SUPPORT);
-        if(o.reserveGrowthSaturated && !reactive && (development||ashayaGrowth)) return true;
+            &&(role==DeckPlan.Role.BODY||role==DeckPlan.Role.RAMP||role==DeckPlan.Role.ENGINE||role==DeckPlan.Role.SUPPORT||role==DeckPlan.Role.PAYOFF);
+        boolean startsAshayaGrowth=o.reserveGrowthSaturated&&a.kind==ActionKind.SPELL&&a.sourceName.equals("Ashaya, Soul of the Wild");
+        if(o.reserveGrowthSaturated && !reactive && (development||ashayaGrowth||startsAshayaGrowth)) return true;
         if(o.developmentSaturated && o.stack.isEmpty() && !reactive && development) return true;
         String step=o.step.toUpperCase(Locale.ROOT).replace(' ','_');
         boolean precombat=step.equals("UPKEEP")||step.equals("DRAW")||step.equals("PRECOMBAT_MAIN");
+        boolean freshGrowthPayoff=o.commander.equals("Aesi, Tyrant of Gyre Strait")
+            && a.kind==ActionKind.SPELL&&ownHandCreature&&role==DeckPlan.Role.PAYOFF;
         if(o.combatBeforeDevelopment&&o.active&&precombat&&o.stack.isEmpty()&&!reactive
-            &&(development||role==DeckPlan.Role.ENGINE||ashayaGrowth)) return true;
+            &&(development||role==DeckPlan.Role.ENGINE||ashayaGrowth||freshGrowthPayoff)) return true;
         boolean ownPending=false;
         for(CardView spell:o.stack) if(spell.controllerId.equals(o.selfId)) ownPending=true;
         if(ownPending && a.kind==ActionKind.SPELL && !reactive) {

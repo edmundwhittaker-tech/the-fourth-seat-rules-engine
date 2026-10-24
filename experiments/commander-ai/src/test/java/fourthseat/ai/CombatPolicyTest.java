@@ -103,6 +103,7 @@ public final class CombatPolicyTest {
         for(int i=0;i<500;i++) {String id=String.format("scute%04d",i);scuteIds.add(id);scutes.add(new Attacker(id,"Scute Swarm",1,1,1.3,false,set("A"),0,"Scute public rules"));}
         Plan scutePlan=plan(40,scutes,d("A",40,0,new Blocker("wall",4,4,scuteIds)));
         check(scutePlan.attacks.size()>32,"500 realistic-value Scutes attack past one blocker");
+        check(scutePlan.attacks.size()<=45,"Do not send 500 tokens for 40 life behind one blocker");
         check(scutePlan.evaluations<=CombatPolicy.MAX_EVALUATIONS,"Overflow preserves evaluation bound");
         List<Blocker> manyWalls=new ArrayList<Blocker>();for(int i=0;i<40;i++)manyWalls.add(new Blocker("wall"+i,4,4,scuteIds));
         Plan overwhelm=CombatPolicy.plan("",40,scutes,Arrays.asList(new Defender("A",40,manyWalls,0)));
@@ -128,7 +129,7 @@ public final class CombatPolicyTest {
             check(!CombatPolicy.samePublicCombatGroup(normal,modified,Arrays.asList(d("A",40,0,new Blocker("wall",4,4,scuteIds)))),"Differing public feature/block edge cannot join equivalent overflow: "+modified.id);
         List<Attacker> distinctArmy=new ArrayList<Attacker>();
         for(int i=0;i<70;i++)distinctArmy.add(new Attacker("angel"+i,"Angel",4,4,5,true,set("A"),0,"individual:angel"+i));
-        check(plan(40,distinctArmy,d("A",100,0)).attacks.size()>32,"Individually legal modified army can use separate whole-army seed");
+        check(plan(40,distinctArmy,d("A",200,0)).attacks.size()>32,"Individually legal modified army can use separate whole-army seed");
         // Sending every equivalent token would expose lethal crackback; rescoring must
         // preserve a useful reserve rather than blindly expanding the sample.
         Plan reserve=plan(5,scutes,d("A",1000,100));
