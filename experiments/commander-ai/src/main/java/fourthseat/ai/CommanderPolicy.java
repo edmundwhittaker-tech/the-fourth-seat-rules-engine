@@ -96,6 +96,11 @@ public final class CommanderPolicy {
         if(o.reserveGrowthSaturated && !reactive && (development||ashayaGrowth||startsAshayaGrowth)) return true;
         if(o.developmentSaturated && o.stack.isEmpty() && !reactive && development) return true;
         String step=o.step.toUpperCase(Locale.ROOT).replace(' ','_');
+        // Routine instant-speed card draw in our upkeep consumed the mana needed
+        // for Talrand/main-phase development. Wait for the main phase; incoming
+        // stack threats still permit digging for an answer.
+        if(o.active&&(step.equals("UPKEEP")||step.equals("DRAW"))&&o.stack.isEmpty()
+            &&a.kind==ActionKind.SPELL&&role==DeckPlan.Role.ENGINE) return true;
         boolean precombat=step.equals("UPKEEP")||step.equals("DRAW")||step.equals("PRECOMBAT_MAIN");
         boolean freshGrowthPayoff=o.commander.equals("Aesi, Tyrant of Gyre Strait")
             && a.kind==ActionKind.SPELL&&ownHandCreature&&role==DeckPlan.Role.PAYOFF;
@@ -114,7 +119,7 @@ public final class CommanderPolicy {
         return !Collections.disjoint(outcomes,Arrays.asList("DrawCard","BoostCreature","AddAbility","Protect","Untap","GainLife","Regenerate","PreventDamage","Benefit"));
     }
     static boolean harmful(Set<String> outcomes) {
-        return !Collections.disjoint(outcomes,Arrays.asList("Damage","DestroyPermanent","Exile","LoseLife","Removal","UnboostCreature","Detriment","Counter"));
+        return !Collections.disjoint(outcomes,Arrays.asList("Damage","DestroyPermanent","Exile","LoseLife","Removal","ReturnToHand","UnboostCreature","Detriment","Counter"));
     }
     static Set<String> targetOutcomes(Action a,String id) {
         Set<String> result=a.targetOutcomes.get(id); return result==null?a.outcomes:result;

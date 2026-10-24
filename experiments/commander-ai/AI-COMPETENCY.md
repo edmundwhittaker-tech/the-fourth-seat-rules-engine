@@ -79,7 +79,15 @@ now include bounded class/stack locations without exception messages or private
 card choices. Slow-turn sampling reserves samples for later turns instead of
 spending its entire allowance on one early stall.
 
-The focused suite now contains **356 real-engine scenarios, 27 cost contracts,
+The focused suite now contains **364 real-engine scenarios, 27 cost contracts,
 and 292 policy checks**. Passing these is not a release or a claim of competitive
 strength: the exact source must also pass full-game, gateway, and container gates
 before deployment. Preserve failed-game evidence when evaluating the candidate.
+
+A subsequent per-deck review caught Talrand spending its mana on routine instant
+draw during its own upkeep/draw step. Those spells now wait for main phase when
+the stack is empty, while responses to an incoming threat remain available.
+Actual four-Island tests verify that Talrand then casts its commander before
+Think Twice. Native ReturnToHand outcomes are classified as hostile for removal
+spells, so Into the Roil and Blink of an Eye no longer bounce an unthreatened
+own Sol Ring merely because their spell also offers a draw effect.
