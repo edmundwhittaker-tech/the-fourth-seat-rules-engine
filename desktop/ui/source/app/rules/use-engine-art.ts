@@ -4,7 +4,7 @@ import type {CardData,DeckData} from '../../lib/types';
 import type {GameView,CardView} from '../../lib/rules/views';
 import type {FeedbackPrompt} from '../../lib/rules/vendor/feedback/types';
 import {namedCards} from '../../lib/rules/session';
-import {engineArtKey,isTokenArt,matchTokenArt,tokenProfile,type EngineArt} from '../../lib/rules/art';
+import {engineArtKey,knownEngineArtKeys,isTokenArt,matchTokenArt,tokenProfile,type EngineArt} from '../../lib/rules/art';
 export function useEngineArt(game:GameView|null,deck:DeckData|undefined,prompt?:FeedbackPrompt|null){
   const [cards,setCards]=useState<EngineArt[]>([]);
   const attempted=useRef(new Set<string>());
@@ -12,7 +12,7 @@ export function useEngineArt(game:GameView|null,deck:DeckData|undefined,prompt?:
   useEffect(()=>{
     if(!game)return;
     const visible=[...namedCards(game),...(prompt?.cards??[])] as CardView[];
-    const known=new Set([...(deck?.cards??[]).map(c=>'card:'+c.name),...cards.map(c=>c.engineArtKey??'card:'+c.name)]);
+    const known=knownEngineArtKeys(deck,cards);
     const pending=[...new Map(visible.filter(c=>!c.faceDown&&!c.hideInfo&&!c.isAbility&&c.name).map(c=>[engineArtKey(c),c])).entries()].filter(([key])=>!known.has(key)&&!attempted.current.has(key));
     if(!pending.length)return;
     const timer=window.setTimeout(()=>{

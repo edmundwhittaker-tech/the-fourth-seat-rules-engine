@@ -1,6 +1,11 @@
 import type {CardData,DeckData} from '../types';
 import type {CardView,PermanentView} from './views';
 export type EngineArt=CardData & {engineArtKey?:string};
+// Bundled/local decks may contain only names. A card record is not evidence that its image loaded.
+export const hasCardArtwork=(card:CardData)=>typeof card.image==='string'&&card.image.trim().length>0;
+export function knownEngineArtKeys(deck:DeckData|undefined,artwork:EngineArt[]=[]){
+  return new Set([...(deck?.cards??[]).filter(hasCardArtwork).map(c=>'card:'+c.name),...artwork.filter(hasCardArtwork).map(c=>c.engineArtKey??'card:'+c.name)]);
+}
 const plain=(value:string)=>value.replace(/<[^>]*>/g,'').trim();
 const colors=['white','blue','black','red','green'] as const;
 export const engineColors=(card:CardView)=>colors.flatMap((name,i)=>card.color?.[name]?[['W','U','B','R','G'][i]]:[]);
@@ -48,7 +53,7 @@ export function matchTokenArt(card:CardView,candidates:CardData[]):CardData|unde
   return eligible.sort((a,b)=>score(b)-score(a))[0];
 }
 export function createEngineCardResolver(deck:DeckData|undefined,artwork:EngineArt[]=[]){
-  const known=new Map([...artwork.filter(c=>!c.engineArtKey?.startsWith('token:')),...(deck?.cards??[])].map(c=>[c.name,c]));
+  const known=new Map([...artwork.filter(c=>!c.engineArtKey?.startsWith('token:')&&hasCardArtwork(c)),...(deck?.cards??[]).filter(hasCardArtwork)].map(c=>[c.name,c]));
   const tokenArt=new Map(artwork.filter(c=>c.engineArtKey).map(c=>[c.engineArtKey,c]));
   for(const card of [...known.values()])for(const face of card.faces??[])known.set(face.name,{...card,...face});
   return (card:CardView):CardData=>{

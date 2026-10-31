@@ -14,6 +14,10 @@ try{
  processHandle=launch();await wait(async()=>{const r=await fetch(base+'/desktop/status');return(await r.json()).ready;},'native packaged startup',600000);
  cookie=(await fetch(base)).headers.get('set-cookie').split(';')[0];
  check('all ten bundled decks are available offline',(await(await fetch(base+'/api/desktop/decks',{headers:{Cookie:cookie}})).json()).decks.length===10);
+ const art=await post('/api/import',{decklist:'1 Mountain\n1 Sol Ring'});
+ check('card lookup returns real artwork for opening-hand cards',art.cards?.length===2&&art.cards.every(card=>card.image?.startsWith('https://')));
+ const picture=await fetch(base+'/api/card-image?url='+encodeURIComponent(art.cards[0].image),{headers:{Cookie:cookie}});
+ check('local image proxy serves actual image bytes',picture.ok&&picture.headers.get('content-type')?.startsWith('image/')&&(await picture.arrayBuffer()).byteLength>1000);
  check('foreign browser cannot use local API',(await fetch(base+'/api/engine',{headers:{Origin:'https://evil.invalid',Cookie:cookie}})).status===403);
  await new Promise((resolve,reject)=>{const ws=new WebSocket('ws://127.0.0.1:18787',{origin:base});const timer=setTimeout(()=>{ws.terminate();reject(Error('Bridge did not reject browser origin'));},5000);ws.once('message',()=>{clearTimeout(timer);ws.terminate();reject(Error('Raw bridge exposed protocol to browser'));});ws.once('close',code=>{clearTimeout(timer);try{check('raw bridge refuses browser origin before serving commands',code===1008);resolve();}catch(e){reject(e);}});ws.once('unexpected-response',(_req,r)=>{clearTimeout(timer);r.resume();ws.terminate();reject(Error('Unexpected handshake response '+r.statusCode));});ws.on('error',()=>{});});
  const card=(name,quantity)=>({id:name,name,quantity,typeLine:'Creature',oracleText:'',manaCost:'',image:'',colors:[],colorIdentity:[]});

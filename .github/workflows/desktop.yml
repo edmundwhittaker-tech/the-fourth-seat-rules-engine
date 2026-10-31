@@ -45,12 +45,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          tag=desktop-v0.1.0-preview
+          tag=desktop-v0.1.1-preview
           if gh release view "$tag" >/dev/null 2>&1; then
             echo 'An immutable preview already exists. Increment the release version before rebuilding.'
             exit 1
           fi
-          gh release create "$tag" build/release/* --target "$GITHUB_SHA" --prerelease --title 'The Fourth Seat — Windows desktop preview 0.1.0' --notes-file desktop/README.md
+          gh release create "$tag" build/release/* --target "$GITHUB_SHA" --prerelease --title 'The Fourth Seat — Windows desktop preview 0.1.1' --notes-file desktop/README.md
       - name: Preserve diagnostics
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
