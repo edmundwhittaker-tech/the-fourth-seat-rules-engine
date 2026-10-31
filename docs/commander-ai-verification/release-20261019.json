@@ -1,0 +1,1047 @@
+{
+  "sourceCommit": "7633cc66aed5d1bd0fc3978bd3a9a108818c0a3d",
+  "ciRun": 39334033420,
+  "ciJob": 118338924468,
+  "conclusion": "success",
+  "deploymentArtifactId": 12226298217,
+  "deploymentArtifactSha256": "bf2cccb60c1f4f708863b811304727c108b2ae081434126ca3fb2b658edbe521",
+  "manifest": {
+    "schema": 2,
+    "playerClass": "mage.player.ai.ComputerPlayerFourthSeat",
+    "serverForkCommit": "825d1205acca114825f235c6993f1e5a6a6db9fa",
+    "bridgeCommit": "850411ec4db71ea7c10f4c3869a63084760057c2",
+    "files": {
+      "mage-server.zip": "dc72df7ef33ebc2ae7539eaee2be55cc1c29ca78521ed86c8353c7bf311eb77c",
+      "mage-proxy-1.4.62.jar": "78b60e34d1f48e3fd3403022b881b2000585ad043f6d25c0a1d91fc6a7786417"
+    },
+    "pluginSha256": "9e0e975d33b75b026341c9babe77dcbcc9d84bf4c4bb55dd92b53092c3e4c3f9",
+    "coreSha256": "a4d2fb77172b1d369e2438cb46444779e94c5debeed5a41a15fe40c8ccaa64ad",
+    "approvingClassSha256": "4fd12cf61b3e22fd88b1aa74fc2828add8e73db2c4c2a37ce0c552efcbc3f0fe",
+    "manaOptionsClassSha256": "952fda3be507450761a9c7e222c46bcf834d6b31e2db6e9cd150851d56339102",
+    "pairedCoreClassCount": 4505,
+    "pairedCoreClassesSha256": "3b7990d134dda6bc5aea0c542f5811b79954adbca2f69568b1a8d5d9b319d6a5",
+    "counterObserverRegistrySha256": "3ba7a991f7c00b101101f76b9644c1f01cf09a0e8525233286163b8d1242bc47"
+  },
+  "games": [
+    {
+      "pod": "pod-0",
+      "decks": [
+        "0 Giada, Font of Hope cards=99 commander=1",
+        "1 Krenko, Mob Boss cards=99 commander=1",
+        "2 Lathril, Blade of the Elves cards=99 commander=1",
+        "3 Ghalta, Primal Hunger cards=99 commander=1"
+      ],
+      "status": "FINISHED",
+      "completedTurns": 24,
+      "runtimeMs": 20251,
+      "lastCompletedTurn": 24,
+      "castEvents": 26,
+      "activationFailures": 0,
+      "caughtPriorityFailures": [],
+      "errorLines": [],
+      "decisionSamples": 1142,
+      "maxDecisionMs": 157.062,
+      "p95DecisionMs": 67.752,
+      "passesWithCandidates": 0,
+      "seats": [
+        {
+          "commander": "Giada, Font of Hope",
+          "landPlays": 4,
+          "spellCasts": 5,
+          "activatedAbilities": 0,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 2,
+          "failures": 0
+        },
+        {
+          "commander": "Krenko, Mob Boss",
+          "landPlays": 5,
+          "spellCasts": 8,
+          "activatedAbilities": 8,
+          "commanderCasts": 1,
+          "commanderActivations": 5,
+          "attackDeclarations": 5,
+          "failures": 0
+        },
+        {
+          "commander": "Lathril, Blade of the Elves",
+          "landPlays": 5,
+          "spellCasts": 10,
+          "activatedAbilities": 4,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        },
+        {
+          "commander": "Ghalta, Primal Hunger",
+          "landPlays": 4,
+          "spellCasts": 3,
+          "activatedAbilities": 0,
+          "commanderCasts": 0,
+          "commanderActivations": 0,
+          "attackDeclarations": 2,
+          "failures": 0
+        }
+      ],
+      "infiniteLoopDrawEvents": 0,
+      "infiniteLoopDrawConfirmations": 0,
+      "infiniteLoopDrawRefusals": 0,
+      "loopDraws": 0,
+      "resultCount": 1,
+      "processExitCode": 0,
+      "turnEvidenceConsistent": true,
+      "seed": 20261016,
+      "turnLimit": 120,
+      "observedRuntimeMs": 20251,
+      "runtimeMeasuredToCompletion": true,
+      "largestCompletedTurnIntervalMs": 1818,
+      "largestObservedProgressGapMs": 3548,
+      "slowestCompletedTurnIntervals": [
+        {
+          "completedTurn": 20,
+          "intervalMs": 1818
+        },
+        {
+          "completedTurn": 23,
+          "intervalMs": 1647
+        },
+        {
+          "completedTurn": 1,
+          "intervalMs": 1402
+        },
+        {
+          "completedTurn": 11,
+          "intervalMs": 1149
+        },
+        {
+          "completedTurn": 16,
+          "intervalMs": 910
+        }
+      ],
+      "failedActionSources": {},
+      "guardReasons": {}
+    },
+    {
+      "pod": "pod-1",
+      "decks": [
+        "4 Goreclaw, Terror of Qal Sisma cards=99 commander=1",
+        "5 Torbran, Thane of Red Fell cards=99 commander=1",
+        "6 Talrand, Sky Summoner cards=99 commander=1",
+        "7 Aesi, Tyrant of Gyre Strait cards=99 commander=1"
+      ],
+      "status": "FINISHED",
+      "completedTurns": 35,
+      "runtimeMs": 14806,
+      "lastCompletedTurn": 35,
+      "castEvents": 38,
+      "activationFailures": 0,
+      "caughtPriorityFailures": [],
+      "errorLines": [],
+      "decisionSamples": 1388,
+      "maxDecisionMs": 144.943,
+      "p95DecisionMs": 27.359,
+      "passesWithCandidates": 0,
+      "seats": [
+        {
+          "commander": "Goreclaw, Terror of Qal Sisma",
+          "landPlays": 7,
+          "spellCasts": 15,
+          "activatedAbilities": 0,
+          "commanderCasts": 3,
+          "commanderActivations": 0,
+          "attackDeclarations": 4,
+          "failures": 0
+        },
+        {
+          "commander": "Torbran, Thane of Red Fell",
+          "landPlays": 9,
+          "spellCasts": 9,
+          "activatedAbilities": 1,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 2,
+          "failures": 0
+        },
+        {
+          "commander": "Talrand, Sky Summoner",
+          "landPlays": 6,
+          "spellCasts": 6,
+          "activatedAbilities": 0,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        },
+        {
+          "commander": "Aesi, Tyrant of Gyre Strait",
+          "landPlays": 11,
+          "spellCasts": 8,
+          "activatedAbilities": 1,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        }
+      ],
+      "infiniteLoopDrawEvents": 0,
+      "infiniteLoopDrawConfirmations": 0,
+      "infiniteLoopDrawRefusals": 0,
+      "loopDraws": 0,
+      "resultCount": 1,
+      "processExitCode": 0,
+      "turnEvidenceConsistent": true,
+      "seed": 20261017,
+      "turnLimit": 120,
+      "observedRuntimeMs": 14806,
+      "runtimeMeasuredToCompletion": true,
+      "largestCompletedTurnIntervalMs": 1370,
+      "largestObservedProgressGapMs": 1370,
+      "slowestCompletedTurnIntervals": [
+        {
+          "completedTurn": 1,
+          "intervalMs": 1370
+        },
+        {
+          "completedTurn": 29,
+          "intervalMs": 924
+        },
+        {
+          "completedTurn": 28,
+          "intervalMs": 800
+        },
+        {
+          "completedTurn": 25,
+          "intervalMs": 759
+        },
+        {
+          "completedTurn": 23,
+          "intervalMs": 654
+        }
+      ],
+      "failedActionSources": {},
+      "guardReasons": {}
+    },
+    {
+      "pod": "pod-2",
+      "decks": [
+        "8 Gishath, Sun's Avatar cards=99 commander=1",
+        "9 Adeline, Resplendent Cathar cards=99 commander=1",
+        "0 Giada, Font of Hope cards=99 commander=1",
+        "6 Talrand, Sky Summoner cards=99 commander=1"
+      ],
+      "status": "FINISHED",
+      "completedTurns": 29,
+      "runtimeMs": 19501,
+      "lastCompletedTurn": 29,
+      "castEvents": 59,
+      "activationFailures": 0,
+      "caughtPriorityFailures": [],
+      "errorLines": [],
+      "decisionSamples": 1599,
+      "maxDecisionMs": 285.521,
+      "p95DecisionMs": 35.875,
+      "passesWithCandidates": 2,
+      "seats": [
+        {
+          "commander": "Gishath, Sun's Avatar",
+          "landPlays": 11,
+          "spellCasts": 31,
+          "activatedAbilities": 1,
+          "commanderCasts": 2,
+          "commanderActivations": 0,
+          "attackDeclarations": 5,
+          "failures": 0
+        },
+        {
+          "commander": "Adeline, Resplendent Cathar",
+          "landPlays": 5,
+          "spellCasts": 10,
+          "activatedAbilities": 0,
+          "commanderCasts": 3,
+          "commanderActivations": 0,
+          "attackDeclarations": 2,
+          "failures": 0
+        },
+        {
+          "commander": "Giada, Font of Hope",
+          "landPlays": 7,
+          "spellCasts": 7,
+          "activatedAbilities": 1,
+          "commanderCasts": 4,
+          "commanderActivations": 0,
+          "attackDeclarations": 2,
+          "failures": 0
+        },
+        {
+          "commander": "Talrand, Sky Summoner",
+          "landPlays": 6,
+          "spellCasts": 11,
+          "activatedAbilities": 0,
+          "commanderCasts": 0,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        }
+      ],
+      "infiniteLoopDrawEvents": 0,
+      "infiniteLoopDrawConfirmations": 0,
+      "infiniteLoopDrawRefusals": 0,
+      "loopDraws": 0,
+      "resultCount": 1,
+      "processExitCode": 0,
+      "turnEvidenceConsistent": true,
+      "seed": 20261018,
+      "turnLimit": 120,
+      "observedRuntimeMs": 19501,
+      "runtimeMeasuredToCompletion": true,
+      "largestCompletedTurnIntervalMs": 2113,
+      "largestObservedProgressGapMs": 2113,
+      "slowestCompletedTurnIntervals": [
+        {
+          "completedTurn": 25,
+          "intervalMs": 2113
+        },
+        {
+          "completedTurn": 21,
+          "intervalMs": 1339
+        },
+        {
+          "completedTurn": 1,
+          "intervalMs": 1286
+        },
+        {
+          "completedTurn": 17,
+          "intervalMs": 1037
+        },
+        {
+          "completedTurn": 26,
+          "intervalMs": 1019
+        }
+      ],
+      "failedActionSources": {},
+      "guardReasons": {}
+    },
+    {
+      "pod": "pod-0",
+      "decks": [
+        "3 Ghalta, Primal Hunger cards=99 commander=1",
+        "4 Goreclaw, Terror of Qal Sisma cards=99 commander=1",
+        "5 Torbran, Thane of Red Fell cards=99 commander=1",
+        "6 Talrand, Sky Summoner cards=99 commander=1"
+      ],
+      "status": "FINISHED",
+      "completedTurns": 45,
+      "runtimeMs": 45509,
+      "lastCompletedTurn": 45,
+      "castEvents": 124,
+      "activationFailures": 0,
+      "caughtPriorityFailures": [],
+      "errorLines": [],
+      "decisionSamples": 2386,
+      "maxDecisionMs": 1755.411,
+      "p95DecisionMs": 71.169,
+      "passesWithCandidates": 39,
+      "seats": [
+        {
+          "commander": "Ghalta, Primal Hunger",
+          "landPlays": 11,
+          "spellCasts": 28,
+          "activatedAbilities": 6,
+          "commanderCasts": 6,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        },
+        {
+          "commander": "Goreclaw, Terror of Qal Sisma",
+          "landPlays": 11,
+          "spellCasts": 28,
+          "activatedAbilities": 2,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 2,
+          "failures": 0
+        },
+        {
+          "commander": "Torbran, Thane of Red Fell",
+          "landPlays": 7,
+          "spellCasts": 10,
+          "activatedAbilities": 0,
+          "commanderCasts": 3,
+          "commanderActivations": 0,
+          "attackDeclarations": 2,
+          "failures": 0
+        },
+        {
+          "commander": "Talrand, Sky Summoner",
+          "landPlays": 12,
+          "spellCasts": 36,
+          "activatedAbilities": 2,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 1,
+          "failures": 0
+        }
+      ],
+      "infiniteLoopDrawEvents": 0,
+      "infiniteLoopDrawConfirmations": 0,
+      "infiniteLoopDrawRefusals": 0,
+      "loopDraws": 0,
+      "resultCount": 1,
+      "processExitCode": 0,
+      "turnEvidenceConsistent": true,
+      "seed": 20261116,
+      "turnLimit": 120,
+      "observedRuntimeMs": 45509,
+      "runtimeMeasuredToCompletion": true,
+      "largestCompletedTurnIntervalMs": 3473,
+      "largestObservedProgressGapMs": 3473,
+      "slowestCompletedTurnIntervals": [
+        {
+          "completedTurn": 11,
+          "intervalMs": 3473
+        },
+        {
+          "completedTurn": 9,
+          "intervalMs": 2766
+        },
+        {
+          "completedTurn": 23,
+          "intervalMs": 2700
+        },
+        {
+          "completedTurn": 8,
+          "intervalMs": 2612
+        },
+        {
+          "completedTurn": 10,
+          "intervalMs": 2393
+        }
+      ],
+      "failedActionSources": {},
+      "guardReasons": {
+        "ACTIVATION_REPEAT_LIMIT": 35
+      }
+    },
+    {
+      "pod": "pod-1",
+      "decks": [
+        "7 Aesi, Tyrant of Gyre Strait cards=99 commander=1",
+        "8 Gishath, Sun's Avatar cards=99 commander=1",
+        "9 Adeline, Resplendent Cathar cards=99 commander=1",
+        "0 Giada, Font of Hope cards=99 commander=1"
+      ],
+      "status": "FINISHED",
+      "completedTurns": 34,
+      "runtimeMs": 29082,
+      "lastCompletedTurn": 34,
+      "castEvents": 55,
+      "activationFailures": 0,
+      "caughtPriorityFailures": [],
+      "errorLines": [],
+      "decisionSamples": 2451,
+      "maxDecisionMs": 352.294,
+      "p95DecisionMs": 21.0,
+      "passesWithCandidates": 0,
+      "seats": [
+        {
+          "commander": "Aesi, Tyrant of Gyre Strait",
+          "landPlays": 23,
+          "spellCasts": 28,
+          "activatedAbilities": 17,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        },
+        {
+          "commander": "Gishath, Sun's Avatar",
+          "landPlays": 5,
+          "spellCasts": 5,
+          "activatedAbilities": 0,
+          "commanderCasts": 0,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        },
+        {
+          "commander": "Adeline, Resplendent Cathar",
+          "landPlays": 7,
+          "spellCasts": 8,
+          "activatedAbilities": 7,
+          "commanderCasts": 2,
+          "commanderActivations": 0,
+          "attackDeclarations": 6,
+          "failures": 0
+        },
+        {
+          "commander": "Giada, Font of Hope",
+          "landPlays": 7,
+          "spellCasts": 11,
+          "activatedAbilities": 2,
+          "commanderCasts": 2,
+          "commanderActivations": 0,
+          "attackDeclarations": 3,
+          "failures": 0
+        }
+      ],
+      "infiniteLoopDrawEvents": 0,
+      "infiniteLoopDrawConfirmations": 0,
+      "infiniteLoopDrawRefusals": 0,
+      "loopDraws": 0,
+      "resultCount": 1,
+      "processExitCode": 0,
+      "turnEvidenceConsistent": true,
+      "seed": 20261117,
+      "turnLimit": 120,
+      "observedRuntimeMs": 29082,
+      "runtimeMeasuredToCompletion": true,
+      "largestCompletedTurnIntervalMs": 4819,
+      "largestObservedProgressGapMs": 4819,
+      "slowestCompletedTurnIntervals": [
+        {
+          "completedTurn": 30,
+          "intervalMs": 4819
+        },
+        {
+          "completedTurn": 27,
+          "intervalMs": 3404
+        },
+        {
+          "completedTurn": 33,
+          "intervalMs": 1711
+        },
+        {
+          "completedTurn": 24,
+          "intervalMs": 1501
+        },
+        {
+          "completedTurn": 1,
+          "intervalMs": 1327
+        }
+      ],
+      "failedActionSources": {},
+      "guardReasons": {
+        "NO_COUNTERS_TO_DOUBLE": 12,
+        "ACTIVATION_REPEAT_LIMIT": 89
+      }
+    },
+    {
+      "pod": "pod-2",
+      "decks": [
+        "1 Krenko, Mob Boss cards=99 commander=1",
+        "2 Lathril, Blade of the Elves cards=99 commander=1",
+        "3 Ghalta, Primal Hunger cards=99 commander=1",
+        "9 Adeline, Resplendent Cathar cards=99 commander=1"
+      ],
+      "status": "FINISHED",
+      "completedTurns": 41,
+      "runtimeMs": 36257,
+      "lastCompletedTurn": 41,
+      "castEvents": 54,
+      "activationFailures": 0,
+      "caughtPriorityFailures": [],
+      "errorLines": [],
+      "decisionSamples": 2130,
+      "maxDecisionMs": 207.314,
+      "p95DecisionMs": 57.395,
+      "passesWithCandidates": 0,
+      "seats": [
+        {
+          "commander": "Krenko, Mob Boss",
+          "landPlays": 8,
+          "spellCasts": 8,
+          "activatedAbilities": 11,
+          "commanderCasts": 1,
+          "commanderActivations": 5,
+          "attackDeclarations": 2,
+          "failures": 0
+        },
+        {
+          "commander": "Lathril, Blade of the Elves",
+          "landPlays": 12,
+          "spellCasts": 14,
+          "activatedAbilities": 2,
+          "commanderCasts": 1,
+          "commanderActivations": 2,
+          "attackDeclarations": 0,
+          "failures": 0
+        },
+        {
+          "commander": "Ghalta, Primal Hunger",
+          "landPlays": 7,
+          "spellCasts": 16,
+          "activatedAbilities": 13,
+          "commanderCasts": 2,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        },
+        {
+          "commander": "Adeline, Resplendent Cathar",
+          "landPlays": 11,
+          "spellCasts": 16,
+          "activatedAbilities": 25,
+          "commanderCasts": 2,
+          "commanderActivations": 0,
+          "attackDeclarations": 6,
+          "failures": 0
+        }
+      ],
+      "infiniteLoopDrawEvents": 0,
+      "infiniteLoopDrawConfirmations": 0,
+      "infiniteLoopDrawRefusals": 0,
+      "loopDraws": 0,
+      "resultCount": 1,
+      "processExitCode": 0,
+      "turnEvidenceConsistent": true,
+      "seed": 20261118,
+      "turnLimit": 120,
+      "observedRuntimeMs": 36257,
+      "runtimeMeasuredToCompletion": true,
+      "largestCompletedTurnIntervalMs": 3362,
+      "largestObservedProgressGapMs": 3362,
+      "slowestCompletedTurnIntervals": [
+        {
+          "completedTurn": 31,
+          "intervalMs": 3362
+        },
+        {
+          "completedTurn": 30,
+          "intervalMs": 2037
+        },
+        {
+          "completedTurn": 29,
+          "intervalMs": 1669
+        },
+        {
+          "completedTurn": 23,
+          "intervalMs": 1659
+        },
+        {
+          "completedTurn": 1,
+          "intervalMs": 1557
+        }
+      ],
+      "failedActionSources": {},
+      "guardReasons": {
+        "ACTIVATION_REPEAT_LIMIT": 59
+      }
+    },
+    {
+      "pod": "pod-0",
+      "decks": [
+        "6 Talrand, Sky Summoner cards=99 commander=1",
+        "7 Aesi, Tyrant of Gyre Strait cards=99 commander=1",
+        "8 Gishath, Sun's Avatar cards=99 commander=1",
+        "9 Adeline, Resplendent Cathar cards=99 commander=1"
+      ],
+      "status": "FINISHED",
+      "completedTurns": 35,
+      "runtimeMs": 18518,
+      "lastCompletedTurn": 35,
+      "castEvents": 62,
+      "activationFailures": 0,
+      "caughtPriorityFailures": [],
+      "errorLines": [],
+      "decisionSamples": 1762,
+      "maxDecisionMs": 121.864,
+      "p95DecisionMs": 32.267,
+      "passesWithCandidates": 36,
+      "seats": [
+        {
+          "commander": "Talrand, Sky Summoner",
+          "landPlays": 11,
+          "spellCasts": 16,
+          "activatedAbilities": 0,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 2,
+          "failures": 0
+        },
+        {
+          "commander": "Aesi, Tyrant of Gyre Strait",
+          "landPlays": 14,
+          "spellCasts": 19,
+          "activatedAbilities": 7,
+          "commanderCasts": 2,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        },
+        {
+          "commander": "Gishath, Sun's Avatar",
+          "landPlays": 3,
+          "spellCasts": 5,
+          "activatedAbilities": 0,
+          "commanderCasts": 0,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        },
+        {
+          "commander": "Adeline, Resplendent Cathar",
+          "landPlays": 8,
+          "spellCasts": 16,
+          "activatedAbilities": 8,
+          "commanderCasts": 2,
+          "commanderActivations": 0,
+          "attackDeclarations": 7,
+          "failures": 0
+        }
+      ],
+      "infiniteLoopDrawEvents": 0,
+      "infiniteLoopDrawConfirmations": 0,
+      "infiniteLoopDrawRefusals": 0,
+      "loopDraws": 0,
+      "resultCount": 1,
+      "processExitCode": 0,
+      "turnEvidenceConsistent": true,
+      "seed": 20261216,
+      "turnLimit": 120,
+      "observedRuntimeMs": 18518,
+      "runtimeMeasuredToCompletion": true,
+      "largestCompletedTurnIntervalMs": 1881,
+      "largestObservedProgressGapMs": 1881,
+      "slowestCompletedTurnIntervals": [
+        {
+          "completedTurn": 26,
+          "intervalMs": 1881
+        },
+        {
+          "completedTurn": 1,
+          "intervalMs": 1314
+        },
+        {
+          "completedTurn": 29,
+          "intervalMs": 1091
+        },
+        {
+          "completedTurn": 33,
+          "intervalMs": 1036
+        },
+        {
+          "completedTurn": 18,
+          "intervalMs": 739
+        }
+      ],
+      "failedActionSources": {},
+      "guardReasons": {
+        "ACTIVATION_REPEAT_LIMIT": 18
+      }
+    },
+    {
+      "pod": "pod-1",
+      "decks": [
+        "0 Giada, Font of Hope cards=99 commander=1",
+        "1 Krenko, Mob Boss cards=99 commander=1",
+        "2 Lathril, Blade of the Elves cards=99 commander=1",
+        "3 Ghalta, Primal Hunger cards=99 commander=1"
+      ],
+      "status": "FINISHED",
+      "completedTurns": 36,
+      "runtimeMs": 26229,
+      "lastCompletedTurn": 36,
+      "castEvents": 35,
+      "activationFailures": 0,
+      "caughtPriorityFailures": [],
+      "errorLines": [],
+      "decisionSamples": 1678,
+      "maxDecisionMs": 177.31,
+      "p95DecisionMs": 30.029,
+      "passesWithCandidates": 0,
+      "seats": [
+        {
+          "commander": "Giada, Font of Hope",
+          "landPlays": 5,
+          "spellCasts": 10,
+          "activatedAbilities": 0,
+          "commanderCasts": 2,
+          "commanderActivations": 0,
+          "attackDeclarations": 6,
+          "failures": 0
+        },
+        {
+          "commander": "Krenko, Mob Boss",
+          "landPlays": 8,
+          "spellCasts": 9,
+          "activatedAbilities": 13,
+          "commanderCasts": 2,
+          "commanderActivations": 3,
+          "attackDeclarations": 1,
+          "failures": 0
+        },
+        {
+          "commander": "Lathril, Blade of the Elves",
+          "landPlays": 8,
+          "spellCasts": 9,
+          "activatedAbilities": 5,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        },
+        {
+          "commander": "Ghalta, Primal Hunger",
+          "landPlays": 7,
+          "spellCasts": 7,
+          "activatedAbilities": 4,
+          "commanderCasts": 2,
+          "commanderActivations": 0,
+          "attackDeclarations": 3,
+          "failures": 0
+        }
+      ],
+      "infiniteLoopDrawEvents": 0,
+      "infiniteLoopDrawConfirmations": 0,
+      "infiniteLoopDrawRefusals": 0,
+      "loopDraws": 0,
+      "resultCount": 1,
+      "processExitCode": 0,
+      "turnEvidenceConsistent": true,
+      "seed": 20261217,
+      "turnLimit": 120,
+      "observedRuntimeMs": 26229,
+      "runtimeMeasuredToCompletion": true,
+      "largestCompletedTurnIntervalMs": 1808,
+      "largestObservedProgressGapMs": 1808,
+      "slowestCompletedTurnIntervals": [
+        {
+          "completedTurn": 36,
+          "intervalMs": 1808
+        },
+        {
+          "completedTurn": 32,
+          "intervalMs": 1645
+        },
+        {
+          "completedTurn": 1,
+          "intervalMs": 1494
+        },
+        {
+          "completedTurn": 33,
+          "intervalMs": 1259
+        },
+        {
+          "completedTurn": 30,
+          "intervalMs": 943
+        }
+      ],
+      "failedActionSources": {},
+      "guardReasons": {
+        "ACTIVATION_REPEAT_LIMIT": 28
+      }
+    },
+    {
+      "pod": "pod-2",
+      "decks": [
+        "4 Goreclaw, Terror of Qal Sisma cards=99 commander=1",
+        "5 Torbran, Thane of Red Fell cards=99 commander=1",
+        "6 Talrand, Sky Summoner cards=99 commander=1",
+        "2 Lathril, Blade of the Elves cards=99 commander=1"
+      ],
+      "status": "FINISHED",
+      "completedTurns": 32,
+      "runtimeMs": 19136,
+      "lastCompletedTurn": 32,
+      "castEvents": 46,
+      "activationFailures": 0,
+      "caughtPriorityFailures": [],
+      "errorLines": [],
+      "decisionSamples": 1420,
+      "maxDecisionMs": 146.807,
+      "p95DecisionMs": 40.496,
+      "passesWithCandidates": 5,
+      "seats": [
+        {
+          "commander": "Goreclaw, Terror of Qal Sisma",
+          "landPlays": 6,
+          "spellCasts": 16,
+          "activatedAbilities": 1,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 6,
+          "failures": 0
+        },
+        {
+          "commander": "Torbran, Thane of Red Fell",
+          "landPlays": 7,
+          "spellCasts": 6,
+          "activatedAbilities": 0,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        },
+        {
+          "commander": "Talrand, Sky Summoner",
+          "landPlays": 6,
+          "spellCasts": 7,
+          "activatedAbilities": 2,
+          "commanderCasts": 1,
+          "commanderActivations": 0,
+          "attackDeclarations": 0,
+          "failures": 0
+        },
+        {
+          "commander": "Lathril, Blade of the Elves",
+          "landPlays": 8,
+          "spellCasts": 17,
+          "activatedAbilities": 12,
+          "commanderCasts": 2,
+          "commanderActivations": 0,
+          "attackDeclarations": 2,
+          "failures": 0
+        }
+      ],
+      "infiniteLoopDrawEvents": 0,
+      "infiniteLoopDrawConfirmations": 0,
+      "infiniteLoopDrawRefusals": 0,
+      "loopDraws": 0,
+      "resultCount": 1,
+      "processExitCode": 0,
+      "turnEvidenceConsistent": true,
+      "seed": 20261218,
+      "turnLimit": 120,
+      "observedRuntimeMs": 19136,
+      "runtimeMeasuredToCompletion": true,
+      "largestCompletedTurnIntervalMs": 1356,
+      "largestObservedProgressGapMs": 1356,
+      "slowestCompletedTurnIntervals": [
+        {
+          "completedTurn": 1,
+          "intervalMs": 1356
+        },
+        {
+          "completedTurn": 31,
+          "intervalMs": 1305
+        },
+        {
+          "completedTurn": 23,
+          "intervalMs": 1089
+        },
+        {
+          "completedTurn": 24,
+          "intervalMs": 851
+        },
+        {
+          "completedTurn": 21,
+          "intervalMs": 742
+        }
+      ],
+      "failedActionSources": {},
+      "guardReasons": {
+        "ACTIVATION_REPEAT_LIMIT": 5
+      }
+    }
+  ],
+  "privateService": {
+    "integrationCommit": "7633cc66aed5d1bd0fc3978bd3a9a108818c0a3d",
+    "pins": {
+      "repository": "Adamychen/xmage-nexus",
+      "bridgeCommit": "850411ec4db71ea7c10f4c3869a63084760057c2",
+      "serverForkCommit": "825d1205acca114825f235c6993f1e5a6a6db9fa",
+      "upstreamBaseline": "eb69d05b88142b5c4eec4869bcb23a0fec13c091",
+      "mavenVersion": "1.4.62",
+      "javaVersion": "17.0.20",
+      "nodeVersion": "24.19.0",
+      "assemblyPluginVersion": "3.7.1"
+    },
+    "publicServerUsed": false,
+    "simEnabled": false,
+    "cheatSetupUsed": false,
+    "serverTestMode": false,
+    "passed": true,
+    "aiPlayerClass": "mage.player.ai.ComputerPlayerFourthSeat"
+  },
+  "container": {
+    "passed": true,
+    "memoryLimitGiB": 4,
+    "publicServerUsed": false,
+    "imageId": "sha256:5b236035a948477fc8b663dc52e80f74594e2fbb632e48f457c68276b4278630"
+  },
+  "verificationDate": "2026-10-19",
+  "testCounts": {
+    "policy": 291,
+    "actualEngineScenarios": 331,
+    "costContracts": 27,
+    "bridge": 239,
+    "gateway": 24,
+    "artifactPairing": 10,
+    "packagedGames": 9,
+    "privateServiceLifecycle": 24,
+    "originalPlayground": 6
+  },
+  "originalPlayground": {
+    "ciRun": 39334039838,
+    "conclusion": "success"
+  },
+  "cloudGameSummary": {
+    "games": 9,
+    "allFinished": true,
+    "rejectedActions": 0,
+    "maximumCompletedTurnIntervalMs": 4819
+  },
+  "deployment": {
+    "sourceCommit": "7633cc66aed5d1bd0fc3978bd3a9a108818c0a3d",
+    "workflowRun": 39334033420,
+    "artifactId": 12226298217,
+    "artifactSha256": "bf2cccb60c1f4f708863b811304727c108b2ae081434126ca3fb2b658edbe521",
+    "imageId": "sha256:94615ce076edc4bb6ff13f684decb18ea3b76a07045f4f2ac40b62eafe7aaafe",
+    "existingConfigurationPreserved": true,
+    "existingDataVolumePreserved": true,
+    "startedAt": "2026-10-19T22:34:18.164733+00:00",
+    "status": "healthy",
+    "memoryBytes": 4294967296,
+    "cpus": 2,
+    "playerClass": "mage.player.ai.ComputerPlayerFourthSeat",
+    "rollbackTag": "fourth-seat-engine:before-commander-ai",
+    "rollbackImageId": "sha256:a17e4c7e693e217eb728fae511d162f14d0e2b445d3007cb99e93e3f40f22647",
+    "websiteDeploymentRequired": false,
+    "rulesEngineAccess": "admin-only",
+    "normalModesPreserved": true,
+    "website": "https://thefourthseat.net"
+  },
+  "liveSmoke": {
+    "passed": true,
+    "commit": "7633cc66aed5d1bd0fc3978bd3a9a108818c0a3d",
+    "checks": [
+      "Public engine endpoint is ready",
+      "Unauthenticated API is denied",
+      "Authenticated browser WebSocket works",
+      "One human and three distinct published AI decks",
+      "Server starts four seats at 40 life with three native AI",
+      "Human land play reaches authoritative battlefield",
+      "All three AI make legal battlefield plays",
+      "Opponent hands remain private",
+      "Host ends game and returns to editable lobby",
+      "Temporary test lobby is removed"
+    ],
+    "endpoint": "https://reimagined-fiesta-77wpj4j47w7p2rgj7-8080.app.github.dev",
+    "commanders": [
+      "Giada, Font of Hope",
+      "Gishath, Sun's Avatar",
+      "Torbran, Thane of Red Fell"
+    ],
+    "temporaryLobbyRemoved": true,
+    "activeGamesAfterVerification": 0,
+    "finalPublicHealth": {
+      "httpStatus": 200,
+      "ready": true
+    }
+  },
+  "knownLimitations": [
+    {
+      "kind": "performance",
+      "scope": "Additional token-heavy stress run, separate from the passing cloud gate",
+      "completedGames": 6,
+      "rejectedActions": 0,
+      "largestCompletedTurnIntervalMs": 48492,
+      "performanceGatePassed": false,
+      "evidence": "additional-token-stress-7633cc66.json",
+      "finding": "Large native token boards can cause slow priority discovery and state copies. Keep admin testing scope and record/replay these scenarios before optimizing."
+    }
+  ]
+}

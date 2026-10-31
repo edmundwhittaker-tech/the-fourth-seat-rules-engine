@@ -1,0 +1,16 @@
+{
+  "name": "fourth-seat-engine-gateway",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=24.19.0"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test ../tests/gateway.test.mjs"
+  },
+  "dependencies": {
+    "ws": "8.18.3"
+  }
+}

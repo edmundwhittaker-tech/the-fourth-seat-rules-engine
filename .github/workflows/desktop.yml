@@ -1,0 +1,63 @@
+name: Build Windows desktop preview
+on:
+  push:
+    branches: [integration/xmage]
+    paths: ['desktop/**', '.github/workflows/desktop.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: desktop-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 35
+    env:
+      GH_TOKEN: ${{ github.token }}
+      FOURTH_SEAT_TEST: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install pinned build dependencies
+        run: npm ci --prefix desktop
+      - name: Unit checks and shared UI build
+        run: |
+          npm test --prefix desktop
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          npm run build --prefix desktop
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - name: Fetch and verify the approved paired engine
+        run: python desktop/scripts/fetch-engine.py
+      - name: Build portable package with bundled runtimes
+        run: python desktop/scripts/package.py
+      - name: Native Windows game, all three AI, rematch and launcher cleanup
+        run: '& "build/The Fourth Seat/node/node.exe" desktop/test/smoke.mjs'
+      - name: Package binaries, corresponding source and checksums
+        run: python desktop/scripts/release.py
+      - name: Publish tested preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag=desktop-v0.1.1-preview
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo 'An immutable preview already exists. Increment the release version before rebuilding.'
+            exit 1
+          fi
+          gh release create "$tag" build/release/* --target "$GITHUB_SHA" --prerelease --title 'The Fourth Seat — Windows desktop preview 0.1.1' --notes-file desktop/README.md
+      - name: Preserve diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: desktop-checks-${{ github.sha }}
+          path: |
+            build/The Fourth Seat/smoke-result.json
+            ${{ runner.temp }}/Fourth Seat test */logs/*.log
+          if-no-files-found: ignore
+          retention-days: 14

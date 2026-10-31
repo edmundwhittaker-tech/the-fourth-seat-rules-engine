@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "poolSha256": "9e5625b2060db2ddd457ade4b67f623716e301f77cb72178efe052920e94748c",
+  "decks": [
+    {
+      "id": "archidekt-23045205",
+      "commander": "Giada, Font of Hope",
+      "source": "https://archidekt.com/decks/23045205",
+      "contentSha256": "3151e8efcfd2015b3368959a584e9f311f1d42bbbd170aab727ec7764178fa82"
+    },
+    {
+      "id": "archidekt-18019886",
+      "commander": "Krenko, Mob Boss",
+      "source": "https://archidekt.com/decks/18019886",
+      "contentSha256": "c9da1ceae0c8f4b60e64cb1ee77b4b70af825789058d631477697bc2686299b0"
+    },
+    {
+      "id": "archidekt-24644469",
+      "commander": "Lathril, Blade of the Elves",
+      "source": "https://archidekt.com/decks/24644469",
+      "contentSha256": "2776678d8316efc2f70e318ec105d1cff0d82db1025004df7f3b02485139e7d7"
+    },
+    {
+      "id": "archidekt-19894242",
+      "commander": "Ghalta, Primal Hunger",
+      "source": "https://archidekt.com/decks/19894242",
+      "contentSha256": "138ba174f22eb3ab2ea4c9737b6707016fc325516459542fa33748a45d188d51"
+    },
+    {
+      "id": "archidekt-22625596",
+      "commander": "Goreclaw, Terror of Qal Sisma",
+      "source": "https://archidekt.com/decks/22625596",
+      "contentSha256": "61bc2ac5e63149f87a2f54e010f04d3953013c2f4fe65b8de670f7096c252310"
+    },
+    {
+      "id": "archidekt-11353536",
+      "commander": "Torbran, Thane of Red Fell",
+      "source": "https://archidekt.com/decks/11353536",
+      "contentSha256": "6fd9eb8988eff20ede76d19b2bed98ba7ada297f7e6f3d0983b87e4f12f62d93"
+    },
+    {
+      "id": "archidekt-5319321",
+      "commander": "Talrand, Sky Summoner",
+      "source": "https://archidekt.com/decks/5319321",
+      "contentSha256": "d9b6682f7c6185f868ce7206051042513e3bf4fa505c3edb90e7bae005149c36"
+    },
+    {
+      "id": "archidekt-23009292",
+      "commander": "Aesi, Tyrant of Gyre Strait",
+      "source": "https://archidekt.com/decks/23009292",
+      "contentSha256": "e68cfa61708c89865f7a55ddc9ca657e11bb8528307a3f219f2e6a222032e2bf"
+    },
+    {
+      "id": "archidekt-25055843",
+      "commander": "Gishath, Sun's Avatar",
+      "source": "https://archidekt.com/decks/25055843",
+      "contentSha256": "0b89e9f8944fdff4d1644b8993fcc3bd32be719d0f98f11112ef4d69e6c30084"
+    },
+    {
+      "id": "archidekt-2755449",
+      "commander": "Adeline, Resplendent Cathar",
+      "source": "https://archidekt.com/decks/2755449",
+      "contentSha256": "06282d4ddfb031d476e6b6bfb9e8938af4d9cd3c19ed2bb5b2b584c7c36e726e"
+    }
+  ]
+}

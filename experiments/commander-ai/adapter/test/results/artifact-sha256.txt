@@ -1,0 +1,3 @@
+d0d6eaf271b868a58b7c5611efb8dd29495f563380ee0d9ecbcd823b11c3b774  /workspace/shared/commander-ai-recovery/build/maven-candidate3/Mage.Server.Plugins/Mage.Player.AI/target/mage-player-ai-1.4.62.jar
+dbf95f7db572f6f11d090ca860db2fcb9055bc32e5ea5dee8e0b48bd7b0e6943  /workspace/shared/commander-ai-recovery/build/core-compat-candidate3/Mage/target/mage-1.4.62.jar
+4acd772c71e4c6d4e5f20d2f8b1e35490cb1792d3c03d11d0a9de86de426bd5c  /workspace/shared/commander-ai-recovery/build/artifact-runtime-classpath5.txt

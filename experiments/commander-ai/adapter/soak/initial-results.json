@@ -1,0 +1,191 @@
+[
+  {
+    "pod": "pod-0",
+    "decks": [
+      "0 Giada, Font of Hope cards=99 commander=1",
+      "1 Krenko, Mob Boss cards=99 commander=1",
+      "2 Lathril, Blade of the Elves cards=99 commander=1",
+      "3 Ghalta, Primal Hunger cards=99 commander=1"
+    ],
+    "status": "FINISHED",
+    "completedTurns": 24,
+    "runtimeMs": 21489,
+    "lastCompletedTurn": 24,
+    "castEvents": 24,
+    "activationFailures": 0,
+    "caughtPriorityFailures": [],
+    "errorLines": [],
+    "decisionSamples": 1151,
+    "maxDecisionMs": 91.279,
+    "p95DecisionMs": 25.251,
+    "passesWithCandidates": 237,
+    "seats": [
+      {
+        "commander": "Giada, Font of Hope",
+        "landPlays": 5,
+        "spellCasts": 4,
+        "activatedAbilities": 8,
+        "commanderCasts": 1,
+        "commanderActivations": 0,
+        "attackDeclarations": 4,
+        "failures": 0
+      },
+      {
+        "commander": "Krenko, Mob Boss",
+        "landPlays": 5,
+        "spellCasts": 9,
+        "activatedAbilities": 10,
+        "commanderCasts": 2,
+        "commanderActivations": 4,
+        "attackDeclarations": 4,
+        "failures": 0
+      },
+      {
+        "commander": "Lathril, Blade of the Elves",
+        "landPlays": 5,
+        "spellCasts": 10,
+        "activatedAbilities": 8,
+        "commanderCasts": 1,
+        "commanderActivations": 0,
+        "attackDeclarations": 1,
+        "failures": 0
+      },
+      {
+        "commander": "Ghalta, Primal Hunger",
+        "landPlays": 4,
+        "spellCasts": 1,
+        "activatedAbilities": 2,
+        "commanderCasts": 0,
+        "commanderActivations": 0,
+        "attackDeclarations": 0,
+        "failures": 0
+      }
+    ]
+  },
+  {
+    "pod": "pod-1",
+    "decks": [
+      "4 Goreclaw, Terror of Qal Sisma cards=99 commander=1",
+      "5 Torbran, Thane of Red Fell cards=99 commander=1",
+      "6 Talrand, Sky Summoner cards=99 commander=1",
+      "7 Aesi, Tyrant of Gyre Strait cards=99 commander=1"
+    ],
+    "status": "FINISHED",
+    "completedTurns": 39,
+    "runtimeMs": 24135,
+    "lastCompletedTurn": 39,
+    "castEvents": 42,
+    "activationFailures": 105,
+    "caughtPriorityFailures": [],
+    "errorLines": [],
+    "decisionSamples": 1651,
+    "maxDecisionMs": 84.155,
+    "p95DecisionMs": 24.115,
+    "passesWithCandidates": 215,
+    "seats": [
+      {
+        "commander": "Goreclaw, Terror of Qal Sisma",
+        "landPlays": 8,
+        "spellCasts": 7,
+        "activatedAbilities": 16,
+        "commanderCasts": 2,
+        "commanderActivations": 0,
+        "attackDeclarations": 2,
+        "failures": 105
+      },
+      {
+        "commander": "Torbran, Thane of Red Fell",
+        "landPlays": 10,
+        "spellCasts": 9,
+        "activatedAbilities": 1,
+        "commanderCasts": 1,
+        "commanderActivations": 0,
+        "attackDeclarations": 0,
+        "failures": 0
+      },
+      {
+        "commander": "Talrand, Sky Summoner",
+        "landPlays": 6,
+        "spellCasts": 8,
+        "activatedAbilities": 0,
+        "commanderCasts": 1,
+        "commanderActivations": 0,
+        "attackDeclarations": 0,
+        "failures": 0
+      },
+      {
+        "commander": "Aesi, Tyrant of Gyre Strait",
+        "landPlays": 11,
+        "spellCasts": 6,
+        "activatedAbilities": 2,
+        "commanderCasts": 1,
+        "commanderActivations": 0,
+        "attackDeclarations": 0,
+        "failures": 0
+      }
+    ]
+  },
+  {
+    "pod": "pod-2",
+    "decks": [
+      "8 Gishath, Sun's Avatar cards=99 commander=1",
+      "9 Adeline, Resplendent Cathar cards=99 commander=1",
+      "0 Giada, Font of Hope cards=99 commander=1",
+      "6 Talrand, Sky Summoner cards=99 commander=1"
+    ],
+    "status": "FINISHED",
+    "completedTurns": 36,
+    "runtimeMs": 24498,
+    "lastCompletedTurn": 36,
+    "castEvents": 53,
+    "activationFailures": 4,
+    "caughtPriorityFailures": [],
+    "errorLines": [],
+    "decisionSamples": 1579,
+    "maxDecisionMs": 230.459,
+    "p95DecisionMs": 23.421,
+    "passesWithCandidates": 239,
+    "seats": [
+      {
+        "commander": "Gishath, Sun's Avatar",
+        "landPlays": 7,
+        "spellCasts": 6,
+        "activatedAbilities": 2,
+        "commanderCasts": 1,
+        "commanderActivations": 0,
+        "attackDeclarations": 1,
+        "failures": 0
+      },
+      {
+        "commander": "Adeline, Resplendent Cathar",
+        "landPlays": 5,
+        "spellCasts": 5,
+        "activatedAbilities": 0,
+        "commanderCasts": 2,
+        "commanderActivations": 0,
+        "attackDeclarations": 0,
+        "failures": 2
+      },
+      {
+        "commander": "Giada, Font of Hope",
+        "landPlays": 8,
+        "spellCasts": 14,
+        "activatedAbilities": 8,
+        "commanderCasts": 3,
+        "commanderActivations": 0,
+        "attackDeclarations": 5,
+        "failures": 2
+      },
+      {
+        "commander": "Talrand, Sky Summoner",
+        "landPlays": 11,
+        "spellCasts": 28,
+        "activatedAbilities": 8,
+        "commanderCasts": 1,
+        "commanderActivations": 0,
+        "attackDeclarations": 4,
+        "failures": 0
+      }
+    ]
+  }
+]

@@ -1,0 +1,162 @@
+[
+  {
+    "path": "tabletop/brass-end-turn-labeled.webp",
+    "sha256": "9cd4a03578682d9b75fa602bfe1ecc2d76c8c2317218499d26e650975b2563bb"
+  },
+  {
+    "path": "tabletop/brass-life-button.webp",
+    "sha256": "634d64d9ab09479468fa185a4e06dcb9bee9f43336fde2567180f53cad7f5773"
+  },
+  {
+    "path": "tabletop/brass-life-minus-five.webp",
+    "sha256": "f6bc82c15a830ef70c7051aa3b54022d78bd90b6c6ed7074eba2cd326a5d31c9"
+  },
+  {
+    "path": "tabletop/brass-life-minus-one.webp",
+    "sha256": "95e752b24328e47a0314fece6fda831e407775d5a92327a8209283d3b0241dc7"
+  },
+  {
+    "path": "tabletop/brass-life-plus-five.webp",
+    "sha256": "3d2ee31ac385a2d8dc2ac0278f1191ce0839c2171cd3ea0c169e34c1db445cb2"
+  },
+  {
+    "path": "tabletop/brass-life-plus-one.webp",
+    "sha256": "0c763be61fb655edf7fd42cdcc5414e6e243c3f3dc1d69ccbfbbfe69bf283cce"
+  },
+  {
+    "path": "tabletop/brass-spectate-labeled.webp",
+    "sha256": "53d7715c852016dc411f94c8eb47e6c3f077bbe98779fda95f7c0797cb03a0d1"
+  },
+  {
+    "path": "tabletop/brass-tokens-button.webp",
+    "sha256": "aeea4ae625fdf6ec112b04bb28d1c07b7787d7c310694c4f44f8acde1b49ff87"
+  },
+  {
+    "path": "tabletop/brass-tokens-labeled.webp",
+    "sha256": "3283681d65b43e926a75cca5828ca1bef69326bdba66809d470b9c876ab57173"
+  },
+  {
+    "path": "tabletop/charcoal-leather.webp",
+    "sha256": "ac46ac702a3f9ab5757ebe049d2da004933fb4869520b99372949ef4c21994b4"
+  },
+  {
+    "path": "tabletop/fourth-seat-engraved.webp",
+    "sha256": "3acbb5a2c60e7b58d51c2dcf9654a3404ac3033cf78e45aa41c6ee252020d947"
+  },
+  {
+    "path": "tabletop/left-edge-still-life.png",
+    "sha256": "09e3254044ba7efda35d14fae8ad22ae46d21043ef3ff58c7ee577b7d9dd84ca"
+  },
+  {
+    "path": "tabletop/library-stack.webp",
+    "sha256": "93793a3bc94fd6a3e9abd3ac7060d67616d08c2f28b045f4ea9ee6ad4d03e9d0"
+  },
+  {
+    "path": "tabletop/life-die-holder.svg",
+    "sha256": "6d99899b3466ef5d1d28c5dd94250da5b18d7914c3f35078fd73bde6fb32991c"
+  },
+  {
+    "path": "tabletop/life-die.webp",
+    "sha256": "7a8d344aae6e7616d4098b295fc9bc4ff1485c21dbca2bc870b3a65d3f0f49ca"
+  },
+  {
+    "path": "tabletop/smooth-charcoal-stone.png",
+    "sha256": "b1e4a9185f225bb73261cdc695a022e83bff2c11bfec8c2a86fcd977a1c77d5d"
+  },
+  {
+    "path": "tabletop/stone-surface-hd.png",
+    "sha256": "71fac16d3b4c3ec59d1bf8b2dea1f5e688a7fb193bc29232f247576d8ebe6100"
+  },
+  {
+    "path": "tabletop/stone-surface.webp",
+    "sha256": "f7bcdd3fb9c3d89cdc931d315c95792fdb6e39589af8343fa1f2c50d02a0d061"
+  },
+  {
+    "path": "tabletop/stone-tile.png",
+    "sha256": "dc54339840eb812a11f5e0da5b5fde55bc5c5cf1dcb90db2658c30b86a14f201"
+  },
+  {
+    "path": "deck-backs/astral-vault.webp",
+    "sha256": "4434a6c422ad83ef5650526c3818da4f2db662a83d1b8b91c08d91ac728bb1ee"
+  },
+  {
+    "path": "deck-backs/azorius.webp",
+    "sha256": "f7bd2c0d9d79d9bf22b371575e88c252bcd745a7769462300763b8f95cd0a183"
+  },
+  {
+    "path": "deck-backs/boros.webp",
+    "sha256": "45862d8b0ffcf386f22444cf81f0302fd8d28f69d47a4df0ae87a1f6ab4bbc7e"
+  },
+  {
+    "path": "deck-backs/dimir.webp",
+    "sha256": "7cf91554b8454b86f67f54a5428aa6ed797bab6d2c4933ea18d7f438aefa0596"
+  },
+  {
+    "path": "deck-backs/golgari.webp",
+    "sha256": "514c1845909b953276f02ebe093458554c53db33459aa36a7eacdb7375fbfdb0"
+  },
+  {
+    "path": "deck-backs/gruul.webp",
+    "sha256": "67419be420fc19c7d2caa57d1618ccc3db478a7a92367ed3d98fc48403898b88"
+  },
+  {
+    "path": "deck-backs/izzet.webp",
+    "sha256": "207564711a225edeff0c08a5af2e65cd078f55812cb256e5d65897d85d4a7db9"
+  },
+  {
+    "path": "deck-backs/obsidian-sigil.webp",
+    "sha256": "04e20811e30c53e2e1e9686227c663d55523263a05e8caeab8ca7626f0676466"
+  },
+  {
+    "path": "deck-backs/orzhov.webp",
+    "sha256": "39c78cab96d2899cca2c091554d918cc889c1a75607c5effd7b4fffdb1c65f11"
+  },
+  {
+    "path": "deck-backs/rakdos.webp",
+    "sha256": "b177c6fc4e51f4bcff3c6eb7a34743985ca855ca1e2605619a91b075e4a96cd8"
+  },
+  {
+    "path": "deck-backs/selesnya.webp",
+    "sha256": "5e3d200c36ecf71f48f688de88691dc1911c0bff70b913c54c58443d72de2082"
+  },
+  {
+    "path": "deck-backs/simic.webp",
+    "sha256": "fc4887916ef8bc538df5036b3e6ab852bf338b7b25f6bfbc9af43c66d1a5a05e"
+  },
+  {
+    "path": "deck-backs/standard.webp",
+    "sha256": "9cd31d16a70831fcd5b3af88b770b0c01b2e59555833e697a3a5df0c9d2271c0"
+  },
+  {
+    "path": "deck-backs/verdant-reliquary.webp",
+    "sha256": "c6f3e5cc7e03170afdeae6a166928dd00d97a6ee55f83fc00c770dc6f648b290"
+  },
+  {
+    "path": "mana/B.svg",
+    "sha256": "5dcca7a7b7ed92cec0f322f3d6329dc077084c9f7509a7b4b69de3702f81d13f"
+  },
+  {
+    "path": "mana/C.svg",
+    "sha256": "4f7c0344ee491357a61d1aeb24abf5ab5120f81d3cccf9b54077a67491434209"
+  },
+  {
+    "path": "mana/G.svg",
+    "sha256": "5a741e9f498fd99ba57cc408887024c7cb3ad2de021e74dd97bce5b8732af936"
+  },
+  {
+    "path": "mana/R.svg",
+    "sha256": "c3c60f00e8f402d2047a9de1c8d0de9d86e544829e7ee9a95777ad3afad3026d"
+  },
+  {
+    "path": "mana/SOURCES.txt",
+    "sha256": "c7e3ebedb0a93414713d308f4dad98978ca4a47ff191dc83e7a56e4d8c7efdde"
+  },
+  {
+    "path": "mana/U.svg",
+    "sha256": "ed6ec190796f9dba26149e690d9761d84dcf672e557a07f460557e65f072a552"
+  },
+  {
+    "path": "mana/W.svg",
+    "sha256": "b4cc36093b2df3e8a10379bbc47c43283ea7ba62b568bafef026e2e426b1f933"
+  }
+]

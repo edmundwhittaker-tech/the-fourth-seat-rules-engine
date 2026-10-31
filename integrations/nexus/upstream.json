@@ -1,0 +1,10 @@
+{
+  "repository": "Adamychen/xmage-nexus",
+  "bridgeCommit": "850411ec4db71ea7c10f4c3869a63084760057c2",
+  "serverForkCommit": "825d1205acca114825f235c6993f1e5a6a6db9fa",
+  "upstreamBaseline": "eb69d05b88142b5c4eec4869bcb23a0fec13c091",
+  "mavenVersion": "1.4.62",
+  "javaVersion": "17.0.20",
+  "nodeVersion": "24.19.0",
+  "assemblyPluginVersion": "3.7.1"
+}
