@@ -6,6 +6,11 @@ url='https://github.com/edmundwhittaker-tech/the-fourth-seat-rules-engine/releas
 try:urllib.request.urlretrieve(url,target)
 except Exception:
  req=urllib.request.Request('https://api.github.com/repos/edmundwhittaker-tech/the-fourth-seat-rules-engine/actions/artifacts/12542808118/zip',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
- with urllib.request.urlopen(req) as r:target.write_bytes(r.read())
+ class SafeRedirect(urllib.request.HTTPRedirectHandler):
+  def redirect_request(self,req,fp,code,msg,headers,newurl):
+   redirected=super().redirect_request(req,fp,code,msg,headers,newurl)
+   if redirected is not None:redirected.remove_header('Authorization')
+   return redirected
+ with urllib.request.build_opener(SafeRedirect()).open(req) as r:target.write_bytes(r.read())
 if hashlib.sha256(target.read_bytes()).hexdigest()!='44b7ede12a1dfc825023b27ad2550babfa6ad905189096efc6d21419bc09b59d':raise ValueError('Engine artifact checksum mismatch')
 with zipfile.ZipFile(target) as z:z.extractall(cache/'engine')
