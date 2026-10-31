@@ -86,7 +86,7 @@ export async function startGateway(options = {}) {
       client.socket.once('error', reject);
       client.socket.once('open', async () => {
         try {
-          await client.call('connect', { host: '127.0.0.1', port: 17171, username: user,
+          await client.call('connect', { host: '127.0.0.1', port: options.serverPort ?? 17171, username: user,
             password: createHmac('sha256', secret).update('password:' + user).digest('hex') });
           resolve();
         } catch (error) { reject(error); client.socket.close(); }
@@ -340,7 +340,7 @@ export async function startGateway(options = {}) {
     if (changed) void persist().catch(console.error);
   }, 30_000);
   cleanup.unref();
-  await new Promise(resolve => server.listen(options.port ?? Number(process.env.PORT ?? 8080), '0.0.0.0', resolve));
+  await new Promise(resolve => server.listen(options.port ?? Number(process.env.PORT ?? 8080), options.host ?? '0.0.0.0', resolve));
   return { server, port: server.address().port, close: async () => {
     clearInterval(cleanup); for (const socket of wss.clients) socket.terminate();
     for (const client of clients.values()) client.socket.terminate();

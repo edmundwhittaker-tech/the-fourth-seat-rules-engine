@@ -6,3 +6,5 @@ node_modules/
 .reused-xmage/
 build/
 __pycache__/
+desktop/dist/
+desktop/runtime/*.class

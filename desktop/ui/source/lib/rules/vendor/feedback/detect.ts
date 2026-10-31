@@ -1,0 +1,61 @@
+import type { FeedbackOption } from './types.ts'
+
+export function isMulliganAsk(message: string): boolean {
+  return /mulligan|keep your hand|keep hand/i.test(message)
+}
+
+export function isStartingPlayerMessage(message: string): boolean {
+  return /who goes first|choose.*start|starting player|who will go first|empieza primero|quién empieza|lanzamiento|primer turno/i.test(message)
+}
+
+export function isVotingAsk(message: string, question?: string): boolean {
+  return /vote|voting|voted|votar|votación|council|will of the council/i.test(message) || /vote/i.test(question ?? '')
+}
+
+export function isDiscardMessage(message: string): boolean {
+  return /descart|discard/i.test(message)
+}
+
+export function isLondonBottoming(message: string): boolean {
+  return /^select\s+(?:a|\d+)\s+cards?(?:\s*\(\d+\s+more\))?\s+to put on the bottom of (your|the) library/i.test(message.replace(/<[^>]*>/g, '').trim())
+}
+
+/**
+ * Reordenar biblioteca vía `GAME_TARGET` secuencial (Ponder/Brainstorm-like).
+ * `GAME_CHOOSE_CARDS_ORDER` no existe en el servidor real 1.4.62 (confirmado en
+ * docs/history/qa/p4-frames-log.md tanda 8 contra `ClientCallbackMethod`); Ponder manda
+ * el mensaje exacto documentado abajo con el sufijo "(last one chosen will be
+ * topmost)" -- inequívoco. El mensaje de Brainstorm (genérico "Select a card")
+ * NO se intenta detectar aquí a propósito: sin ese sufijo es indistinguible de
+ * cualquier otro GAME_TARGET de una sola carta y marcarlo daría falsos positivos.
+ */
+export function isLibraryOrderPick(message: string): boolean {
+  return /select a card order to put on the (top|bottom) of (your|the) library.*last one chosen will be topmost/i.test(message)
+}
+
+export function isTriggerOrderPick(message: string, queryType?: string): boolean {
+  if (queryType === 'PICK_ABILITY') return true
+  return /pick triggered ability|triggered ability \(goes to the stack first\)|elige.*trigger|orden.*trigger/i.test(message)
+}
+
+export function detectPlaneswalkerChoice(options: FeedbackOption[], message: string): { isPW: boolean; deltas?: (number | null)[] } {
+  const isPW = options.some((o) => /^([+-]?\d+)\s*:/.test(o.label)) || /planeswalker|lealtad|loyalty/i.test(message)
+  if (!isPW) return { isPW: false }
+  return {
+    isPW: true,
+    deltas: options.map((o) => {
+      const m = /^([+-]?\d+)\s*:/.exec(o.label)
+      return m ? parseInt(m[1], 10) : null
+    }),
+  }
+}
+
+export function booleanValueOf(label: string, index: number): string {
+  // XMage: el mulligan usa sendPlayerBoolean(true) para TOMAR mulligan y false para mantener.
+  if (/mulligan/i.test(label)) return 'true'
+  if (/keep/i.test(label)) return 'false'
+  if (/no|cancel/i.test(label)) return 'false'
+  if (/yes|confirm|ok/i.test(label)) return 'true'
+  return index === 0 ? 'true' : 'false'
+}
+
