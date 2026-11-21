@@ -1,6 +1,6 @@
-# The Fourth Seat — Windows desktop preview 0.1.1
+# The Fourth Seat — Windows desktop preview 0.1.2
 
-This update fixes blank card artwork for the ten bundled decks. Existing name-only deck entries now request images, and empty entries cannot override fetched artwork. Your imported decks are kept in the same local data folder. Close the old launcher before opening this version; an already-running old instance will otherwise be reused.
+This update fixes saving an imported Commander deck without first changing the commander dropdown. Close any previous launcher before starting this version; your saved decks remain in the same local data folder.
 
 1. Download `The-Fourth-Seat-Windows-x64.zip` and choose **Extract All**.
 2. Open the extracted folder and double-click **The Fourth Seat.exe**.

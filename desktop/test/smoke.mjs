@@ -1,3 +1,4 @@
+import {defaultCommanderName} from '../ui/source/tools/desktop/commander.ts';
 import assert from 'node:assert/strict';import {spawn} from 'node:child_process';import {mkdtemp,readFile,writeFile} from 'node:fs/promises';import path from 'node:path';import os from 'node:os';import {randomBytes} from 'node:crypto';import WebSocket from 'ws';
 import {emptyEngineState,reduceEngineFrame,records} from '../../integrations/fourth-seat/client/session.ts';
 const root=path.resolve(process.argv[2]??'build/The Fourth Seat'),base='http://127.0.0.1:17890',data=await mkdtemp(path.join(os.tmpdir(),'Fourth Seat test ')),checks=[];let processHandle,socket,cookie,state=emptyEngineState(),count=0,pending=new Map();
@@ -14,6 +15,11 @@ try{
  processHandle=launch();await wait(async()=>{const r=await fetch(base+'/desktop/status');return(await r.json()).ready;},'native packaged startup',600000);
  cookie=(await fetch(base)).headers.get('set-cookie').split(';')[0];
  check('all ten bundled decks are available offline',(await(await fetch(base+'/api/desktop/decks',{headers:{Cookie:cookie}})).json()).decks.length===10);
+ const imported=await post('/api/import',{decklist:'1 Araumi of the Dead Tide (CMR) 267\n50 Island\n49 Swamp'});
+ const commander=defaultCommanderName(imported);
+ check('Araumi defaults to the visible commander name without reselecting',commander==='Araumi of the Dead Tide'&&imported.total===100);
+ const saved=(await post('/api/desktop/decks',{cards:imported.cards,commander,name:commander+' — imported'})).deck;
+ check('100-card Araumi import saves with its selected printing',saved.cardCount===100&&saved.commander.id===imported.cards.find(c=>c.name===commander).id);
  const art=await post('/api/import',{decklist:'1 Mountain\n1 Sol Ring'});
  check('card lookup returns real artwork for opening-hand cards',art.cards?.length===2&&art.cards.every(card=>card.image?.startsWith('https://')));
  const picture=await fetch(base+'/api/card-image?url='+encodeURIComponent(art.cards[0].image),{headers:{Cookie:cookie}});
