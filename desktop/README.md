@@ -1,6 +1,6 @@
-# The Fourth Seat — Windows desktop preview 0.1.3
+# The Fourth Seat — Windows desktop preview 0.1.4
 
-This update shows what the engine is doing during startup, reports failures in the browser, and verifies that an imported Araumi deck can start a game. Close any previous launcher before starting this version; your saved decks remain in the same local data folder.
+This update clarifies blocker selection, handles creatures that cannot block any attacker, and keeps the current board open when you click a legal target. Close any previous launcher before starting this version; your saved decks remain in the same local data folder.
 
 1. Download `The-Fourth-Seat-Windows-x64.zip` and choose **Extract All**.
 2. Open the extracted folder and double-click **The Fourth Seat.exe**.

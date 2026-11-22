@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from 'react';
 import type { FeedbackPrompt } from '../../lib/rules/vendor/feedback/types';
+import { isBlockTarget } from '../../lib/rules/choices';
 import { promptAnswer } from '../../lib/rules/session';
 
 const manaNames:Record<string,string>={W:'White',U:'Blue',B:'Black',R:'Red',G:'Green',C:'Colorless',S:'Snow',P:'Phyrexian',X:'X',Y:'Y',Z:'Z'};
@@ -30,6 +31,11 @@ export default function EnginePrompt({prompt,disabled,label,send,playerTargetHin
   function answer(value:string|number|boolean){const command=promptAnswer(prompt!,value);void act(command.action,command.args);}
   const pass=()=>void act('sendPlayerBoolean',{gameId:prompt.gameId,value:false});
   const priority=prompt.method==='GAME_SELECT'&&prompt.title==='Your priority';
+  const assigningBlock=isBlockTarget(prompt);
+  const choosingBlockers=prompt.method==='GAME_SELECT'&&prompt.mode==='combat'&&prompt.title==='Declare blockers';
+  const noBlock=assigningBlock&&prompt.options.length===0;
+  const title=noBlock?'No legal blocks':assigningBlock?'Choose an attacker to block':prompt.title;
+  const message=noBlock?'This creature can’t block any of the current attackers. Choose another creature or confirm without a block.':assigningBlock?'Click a highlighted attacker on the battlefield.':choosingBlockers?'Click one of your highlighted creatures to block. If asked, choose which attacker it should block. Confirm when you’re done.':prompt.message;
   const offered=prompt.options.filter(o=>!visualValues?.has(o.value));
   const choices=offered.filter(o=>!text||label(o.label).toLowerCase().includes(text.toLowerCase()));
   const total=(prompt.items??[]).reduce((sum,i)=>sum+(amounts[i.id]??i.defaultValue??i.min),0);
@@ -42,10 +48,10 @@ export default function EnginePrompt({prompt,disabled,label,send,playerTargetHin
     {(prompt.mode==='string'||choices.length>7)&&<input aria-label="Find an engine option" value={text} onChange={e=>setText(e.target.value)} placeholder={prompt.mode==='string'?'Choose or enter a name…':'Find an option…'}/>}
     {prompt.mode==='order'?<><p>Choose cards in the requested order.</p>{prompt.options.map(o=><button key={o.id} disabled={blocked||ordered.includes(o.value)} onClick={()=>setOrdered(v=>[...v,o.value])}>{ordered.includes(o.value)?`${ordered.indexOf(o.value)+1}. `:''}{manaText(label(o.label))}</button>)}<button disabled={blocked||ordered.length!==prompt.options.length} onClick={()=>void act('sendPlayerString',{gameId:prompt.gameId,value:ordered.join(' ')})}>Confirm order</button><button onClick={()=>setOrdered([])}>Reset order</button></>:<div className="engine-choice-list">{choices.map(o=><button key={o.id} className={prompt.mode==='boolean'?'engine-brass-button':undefined} disabled={blocked} title={prompt.choiceHints?.[o.id]} onClick={()=>answer(o.value)}>{manaText(label(o.label))}</button>)}</div>}
     {prompt.mode==='string'&&<button disabled={blocked||!text.trim()} onClick={()=>answer(text.trim())}>Use “{text.trim()||'name'}”</button>}
-    {prompt.required===false&&prompt.mode!=='mana'&&<button disabled={blocked} onClick={pass}>Done / decline</button>}
+    {prompt.required===false&&prompt.mode!=='mana'&&<button disabled={blocked} onClick={pass}>{assigningBlock?'Back to blockers':'Done / decline'}</button>}
 </>;
   return <section className={`engine-prompt ${priority?'is-priority':''}`} aria-label="Engine decision" aria-live="polite">
-    <div className="engine-prompt-copy">{prompt.sourceName&&<small>{manaText(label(prompt.sourceName))}</small>}<h2>{priority?'Your move':manaText(label(prompt.title))}</h2>{!priority&&<p>{manaText(label(playerTargetHint??prompt.message))}</p>}{prompt.progress&&<small>Selected {prompt.progress.selected}{prompt.progress.max!==undefined?` of ${prompt.progress.max}`:''}</small>}</div>
-    {complex?<><div className="engine-prompt-controls">{cardChoices}<button className="primary engine-brass-button" disabled={blocked} aria-expanded={expanded} onClick={()=>setExpanded(v=>!v)}>Make choice</button></div>{expanded&&<section className="engine-decision-popover" role="dialog" aria-label={prompt.title} onKeyDown={event=>{if(event.key==='Escape'){event.stopPropagation();setExpanded(false);}}}><header><h2>{manaText(label(prompt.title))}</h2><button aria-label="Close decision panel" onClick={()=>setExpanded(false)}>×</button></header><p>{manaText(label(prompt.message))}</p><div className="engine-prompt-controls">{controls}</div></section>}</>:<div className="engine-prompt-controls">{controls}</div>}
+    <div className="engine-prompt-copy">{prompt.sourceName&&<small>{manaText(label(prompt.sourceName))}</small>}<h2>{priority?'Your move':manaText(label(title))}</h2>{!priority&&<p>{manaText(label(playerTargetHint??message))}</p>}{prompt.progress&&<small>Selected {prompt.progress.selected}{prompt.progress.max!==undefined?` of ${prompt.progress.max}`:''}</small>}</div>
+    {complex?<><div className="engine-prompt-controls">{cardChoices}<button className="primary engine-brass-button" disabled={blocked} aria-expanded={expanded} onClick={()=>setExpanded(v=>!v)}>Make choice</button></div>{expanded&&<section className="engine-decision-popover" role="dialog" aria-label={title} onKeyDown={event=>{if(event.key==='Escape'){event.stopPropagation();setExpanded(false);}}}><header><h2>{manaText(label(title))}</h2><button aria-label="Close decision panel" onClick={()=>setExpanded(false)}>×</button></header><p>{manaText(label(message))}</p><div className="engine-prompt-controls">{controls}</div></section>}</>:<div className="engine-prompt-controls">{controls}</div>}
   </section>;
 }

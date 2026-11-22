@@ -1,7 +1,11 @@
 import type {CardView} from './views';
+import type {FeedbackPrompt} from './vendor/feedback/types';
 import type {EngineState} from './session';
 import {namedCards,records} from './session';
 export type EngineCardChoice={value:string;card:CardView;zone:string};
+export function isBlockTarget(prompt:FeedbackPrompt|null|undefined){
+  return prompt?.method==='GAME_TARGET'&&/^select attacker to block[.!]?$/i.test(prompt.message.trim());
+}
 export function cardPromptChoices(state:EngineState):EngineCardChoice[]{
   const prompt=state.prompt,game=state.game;
   if(!prompt||!game||state.ended||!['uuid','string'].includes(prompt.mode)||prompt.method==='GAME_CHOOSE_ABILITY')return [];
