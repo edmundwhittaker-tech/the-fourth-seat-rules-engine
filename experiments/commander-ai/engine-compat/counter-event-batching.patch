@@ -1,0 +1,84 @@
+--- a/Mage/src/main/java/mage/cards/CardImpl.java
++++ b/Mage/src/main/java/mage/cards/CardImpl.java
+@@ -786,7 +786,20 @@
+             boolean isEffectFlag = addingAllEvent.getFlag();
+             int startAmount = getCounters(game).getCount(counter.getName());
+             int addedAmount = amount;
+-            for (int i = 0; i < amount; i++) {
++            // Individual callbacks can be omitted only after a pinned-source proof
++            // shows that every active observer ignores them for all game states.
++            // The group replacement above and COUNTERS_ADDED event below still run.
++            Counter existingCounter = getCounters(game).get(counter.getName());
++            boolean batch = amount >= 64 && counter.getClass() == mage.counters.BoostCounter.class
++                    && (getClass() == mage.game.permanent.PermanentCard.class
++                        || getClass() == mage.game.permanent.PermanentToken.class)
++                    && (existingCounter == null || existingCounter.getClass() == mage.counters.BoostCounter.class)
++                    && game.getState().canBatchIndividualCounterEvents(game);
++            if (batch) {
++                Counter batchCounter = counter.copy();
++                batchCounter.add(amount - batchCounter.getCount());
++                getCounters(game).addCounter(batchCounter);
++            } else for (int i = 0; i < amount; i++) {
+                 Counter eventCounter = counter.copy();
+                 eventCounter.remove(eventCounter.getCount() - 1); // make 1 counter
+                 GameEvent addingOneEvent = GameEvent.getEvent(GameEvent.EventType.ADD_COUNTER, objectId, source, playerAddingCounters, counter.getName(), 1);
+--- a/Mage/src/main/java/mage/game/GameState.java
++++ b/Mage/src/main/java/mage/game/GameState.java
+@@ -1048,6 +1048,21 @@
+         }
+     }
+ 
++    /** All omitted individual-counter callbacks must be proven irrelevant at build time.
++     * Unknown observers, custom dispatch, delayed work and integrity checks keep the
++     * native per-counter path. No callback is probed or executed speculatively.
++     */
++    public boolean canBatchIndividualCounterEvents(Game game) {
++        if (getClass() != GameState.class || watchers.getClass() != Watchers.class
++                || effects.getClass() != ContinuousEffects.class || !delayed.isEmpty()
++                || !mage.counters.CounterEventBatching.standardDispatch(game)
++                || !triggers.ignoresIndividualCounterEvents()
++                || !effects.ignoresIndividualCounterEvents()) return false;
++        for (Watcher watcher : watchers.values())
++            if (!mage.counters.CounterEventBatching.ignores(watcher, "watch")) return false;
++        return true;
++    }
++
+     public void handleEvent(GameEvent event, Game game) {
+         watchers.watch(event, game);
+         delayed.checkTriggers(event, game);
+--- a/Mage/src/main/java/mage/abilities/effects/ContinuousEffects.java
++++ b/Mage/src/main/java/mage/abilities/effects/ContinuousEffects.java
+@@ -102,6 +102,17 @@
+ 
+     public ContinuousEffects copy() {
+         return new ContinuousEffects(this);
++    }
++
++    public boolean ignoresIndividualCounterEvents() {
++        if (!mage.counters.CounterEventBatching.ignores(auraReplacementEffect, "checksEventType")) return false;
++        for (ContinuousRuleModifyingEffect effect : continuousRuleModifyingEffects)
++            if (!mage.counters.CounterEventBatching.ignores(effect, "checksEventType")) return false;
++        for (ReplacementEffect effect : replacementEffects)
++            if (!mage.counters.CounterEventBatching.ignores(effect, "checksEventType")) return false;
++        for (PreventionEffect effect : preventionEffects)
++            if (!mage.counters.CounterEventBatching.ignores(effect, "checksEventType")) return false;
++        return true;
+     }
+ 
+     public List<RequirementEffect> getRequirementEffects() {
+--- a/Mage/src/main/java/mage/abilities/TriggeredAbilities.java
++++ b/Mage/src/main/java/mage/abilities/TriggeredAbilities.java
+@@ -75,6 +75,13 @@
+                 throw new IllegalStateException("Triggers integrity failed: triggers order changed");
+             }
+         }
++    }
++
++    public boolean ignoresIndividualCounterEvents() {
++        if (getClass() != TriggeredAbilities.class || enableIntegrityChecks) return false;
++        for (TriggeredAbility ability : values())
++            if (!mage.counters.CounterEventBatching.ignores(ability, "checkEventType")) return false;
++        return true;
+     }
+ 
+     public void checkStateTriggers(Game game) {

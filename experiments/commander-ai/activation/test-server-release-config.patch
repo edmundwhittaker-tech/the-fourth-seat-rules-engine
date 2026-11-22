@@ -1,0 +1,5 @@
+--- a/config/config.xml
++++ b/config/config.xml
+@@ -1 +1 @@
+-        <playerType name="Computer - mad" jar="mage-player-ai-mad-1.4.62.jar" className="mage.player.ai.ComputerPlayerControllableProxy"/>
++        <playerType name="Computer - mad" jar="mage-player-ai-1.4.62.jar" className="mage.player.ai.ComputerPlayerFourthSeat"/>

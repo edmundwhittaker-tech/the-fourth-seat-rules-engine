@@ -1,0 +1,82 @@
+name: Build pinned XMage server
+
+on:
+  push:
+    branches: [integration/xmage]
+    paths:
+      - '.github/workflows/xmage-build.yml'
+      - 'integrations/xmage/**'
+      - 'scripts/build-xmage.sh'
+      - 'scripts/package-xmage.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: xmage-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build XMage 1.4.62-V1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      MAVEN_OPTS: -Xmx4g -Dfile.encoding=UTF-8
+    steps:
+      - name: Check out integration branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Read and validate upstream pin
+        id: pin
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          pin = json.loads(Path('integrations/xmage/upstream.json').read_text())
+          assert pin['repository'] == 'magefree/mage'
+          assert re.fullmatch(r'[0-9a-f]{40}', pin['commit'])
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              for key in ('repository', 'commit', 'javaVersion', 'distribution'):
+                  assert '\n' not in pin[key] and '\r' not in pin[key]
+                  print(f'{key}={pin[key]}', file=output)
+          PY
+      - name: Check out exact XMage source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: ${{ steps.pin.outputs.repository }}
+          ref: ${{ steps.pin.outputs.commit }}
+          path: .upstream/xmage
+          persist-credentials: false
+      - name: Set up pinned Java
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          java-version: ${{ steps.pin.outputs.javaVersion }}
+          distribution: ${{ steps.pin.outputs.distribution }}
+          cache: maven
+          cache-dependency-path: |
+            integrations/xmage/upstream.json
+            .upstream/xmage/**/pom.xml
+      - name: Build engine, server, AI and Commander plugins
+        shell: bash
+        run: bash scripts/build-xmage.sh
+      - name: Validate and collect server distribution
+        run: python3 scripts/package-xmage.py
+      - name: Upload server and build evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: xmage-server-${{ steps.pin.outputs.commit }}
+          path: build/xmage/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: xmage-build-logs-${{ github.run_attempt }}
+          path: build/xmage-logs/
+          if-no-files-found: ignore
+          retention-days: 7

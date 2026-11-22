@@ -1,0 +1,19 @@
+{
+  "name": "Fourth Seat + XMage cloud test",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "hostRequirements": { "cpus": 4, "memory": "8gb", "storage": "32gb" },
+  "postCreateCommand": "npm ci && python3 scripts/codespace-engine.py build",
+  "postStartCommand": "python3 scripts/codespace-engine.py start",
+  "waitFor": "postCreateCommand",
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": { "label": "Fourth Seat authenticated engine gateway", "onAutoForward": "silent", "protocol": "http" }
+  },
+  "otherPortsAttributes": { "onAutoForward": "ignore" },
+  "customizations": {
+    "vscode": { "settings": { "editor.formatOnSave": true } }
+  }
+}

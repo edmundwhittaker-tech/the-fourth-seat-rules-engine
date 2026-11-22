@@ -1,0 +1,11 @@
+**/node_modules
+**/__pycache__
+.git
+.upstream
+.reused-xmage
+integrations/fourth-seat/site
+build/nexus/runtime
+build/nexus/proxy-runtime
+build/nexus/fourth-seat
+
+.codespace-engine

@@ -1,0 +1,207 @@
+[
+  {
+    "pod": "pod-0",
+    "decks": [
+      "0 Giada, Font of Hope cards=99 commander=1",
+      "1 Krenko, Mob Boss cards=99 commander=1",
+      "2 Lathril, Blade of the Elves cards=99 commander=1",
+      "3 Ghalta, Primal Hunger cards=99 commander=1"
+    ],
+    "status": "FINISHED",
+    "completedTurns": 24,
+    "runtimeMs": 23071,
+    "lastCompletedTurn": 24,
+    "castEvents": 26,
+    "activationFailures": 5,
+    "caughtPriorityFailures": [],
+    "errorLines": [],
+    "decisionSamples": 1142,
+    "maxDecisionMs": 144.741,
+    "p95DecisionMs": 32.184,
+    "passesWithCandidates": 543,
+    "seats": [
+      {
+        "commander": "Giada, Font of Hope",
+        "landPlays": 4,
+        "spellCasts": 4,
+        "activatedAbilities": 0,
+        "commanderCasts": 1,
+        "commanderActivations": 0,
+        "attackDeclarations": 3,
+        "failures": 2
+      },
+      {
+        "commander": "Krenko, Mob Boss",
+        "landPlays": 5,
+        "spellCasts": 8,
+        "activatedAbilities": 7,
+        "commanderCasts": 1,
+        "commanderActivations": 5,
+        "attackDeclarations": 4,
+        "failures": 3
+      },
+      {
+        "commander": "Lathril, Blade of the Elves",
+        "landPlays": 4,
+        "spellCasts": 11,
+        "activatedAbilities": 6,
+        "commanderCasts": 2,
+        "commanderActivations": 0,
+        "attackDeclarations": 0,
+        "failures": 0
+      },
+      {
+        "commander": "Ghalta, Primal Hunger",
+        "landPlays": 4,
+        "spellCasts": 3,
+        "activatedAbilities": 0,
+        "commanderCasts": 0,
+        "commanderActivations": 0,
+        "attackDeclarations": 2,
+        "failures": 0
+      }
+    ],
+    "failedActionSources": {
+      "Flare of Fortitude": 2,
+      "Castle Embereth": 3
+    },
+    "guardReasons": {}
+  },
+  {
+    "pod": "pod-1",
+    "decks": [
+      "4 Goreclaw, Terror of Qal Sisma cards=99 commander=1",
+      "5 Torbran, Thane of Red Fell cards=99 commander=1",
+      "6 Talrand, Sky Summoner cards=99 commander=1",
+      "7 Aesi, Tyrant of Gyre Strait cards=99 commander=1"
+    ],
+    "status": "FINISHED",
+    "completedTurns": 38,
+    "runtimeMs": 35090,
+    "lastCompletedTurn": 38,
+    "castEvents": 78,
+    "activationFailures": 2,
+    "caughtPriorityFailures": [],
+    "errorLines": [],
+    "decisionSamples": 1847,
+    "maxDecisionMs": 170.287,
+    "p95DecisionMs": 28.286,
+    "passesWithCandidates": 372,
+    "seats": [
+      {
+        "commander": "Goreclaw, Terror of Qal Sisma",
+        "landPlays": 7,
+        "spellCasts": 14,
+        "activatedAbilities": 0,
+        "commanderCasts": 3,
+        "commanderActivations": 0,
+        "attackDeclarations": 0,
+        "failures": 0
+      },
+      {
+        "commander": "Torbran, Thane of Red Fell",
+        "landPlays": 7,
+        "spellCasts": 10,
+        "activatedAbilities": 0,
+        "commanderCasts": 1,
+        "commanderActivations": 0,
+        "attackDeclarations": 2,
+        "failures": 2
+      },
+      {
+        "commander": "Talrand, Sky Summoner",
+        "landPlays": 9,
+        "spellCasts": 17,
+        "activatedAbilities": 3,
+        "commanderCasts": 2,
+        "commanderActivations": 0,
+        "attackDeclarations": 0,
+        "failures": 0
+      },
+      {
+        "commander": "Aesi, Tyrant of Gyre Strait",
+        "landPlays": 14,
+        "spellCasts": 12,
+        "activatedAbilities": 2,
+        "commanderCasts": 1,
+        "commanderActivations": 0,
+        "attackDeclarations": 0,
+        "failures": 0
+      }
+    ],
+    "failedActionSources": {
+      "By Force": 2
+    },
+    "guardReasons": {}
+  },
+  {
+    "pod": "pod-2",
+    "decks": [
+      "8 Gishath, Sun's Avatar cards=99 commander=1",
+      "9 Adeline, Resplendent Cathar cards=99 commander=1",
+      "0 Giada, Font of Hope cards=99 commander=1",
+      "6 Talrand, Sky Summoner cards=99 commander=1"
+    ],
+    "status": "FINISHED",
+    "completedTurns": 87,
+    "runtimeMs": 110328,
+    "lastCompletedTurn": 87,
+    "castEvents": 175,
+    "activationFailures": 8,
+    "caughtPriorityFailures": [],
+    "errorLines": [],
+    "decisionSamples": 5299,
+    "maxDecisionMs": 235.322,
+    "p95DecisionMs": 30.092,
+    "passesWithCandidates": 1314,
+    "seats": [
+      {
+        "commander": "Gishath, Sun's Avatar",
+        "landPlays": 7,
+        "spellCasts": 7,
+        "activatedAbilities": 0,
+        "commanderCasts": 1,
+        "commanderActivations": 0,
+        "attackDeclarations": 0,
+        "failures": 0
+      },
+      {
+        "commander": "Adeline, Resplendent Cathar",
+        "landPlays": 20,
+        "spellCasts": 42,
+        "activatedAbilities": 42,
+        "commanderCasts": 8,
+        "commanderActivations": 0,
+        "attackDeclarations": 13,
+        "failures": 0
+      },
+      {
+        "commander": "Giada, Font of Hope",
+        "landPlays": 20,
+        "spellCasts": 42,
+        "activatedAbilities": 56,
+        "commanderCasts": 2,
+        "commanderActivations": 0,
+        "attackDeclarations": 10,
+        "failures": 8
+      },
+      {
+        "commander": "Talrand, Sky Summoner",
+        "landPlays": 22,
+        "spellCasts": 53,
+        "activatedAbilities": 8,
+        "commanderCasts": 2,
+        "commanderActivations": 0,
+        "attackDeclarations": 2,
+        "failures": 0
+      }
+    ],
+    "failedActionSources": {
+      "Myriad Landscape": 2,
+      "Entreat the Angels": 6
+    },
+    "guardReasons": {
+      "ACTIVATION_REPEAT_LIMIT": 49
+    }
+  }
+]

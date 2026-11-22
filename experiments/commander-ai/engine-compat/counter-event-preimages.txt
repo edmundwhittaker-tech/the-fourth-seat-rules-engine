@@ -1,0 +1,11 @@
+7901ebec3da385c68e1ccf207feb95d1a19e14febb3419fccf1a13098c082d54  Mage/src/main/java/mage/cards/CardImpl.java
+0f77abce923089ce00bc650706c9863be5a63bfd72979fed1681958f61f4b044  Mage/src/main/java/mage/game/GameState.java
+413580efde82ea125689259aee90eb21a0bec8106229a985376a96904a60fd2a  Mage/src/main/java/mage/abilities/effects/ContinuousEffects.java
+2ab88371eb3382d01344fbf28d80e651ed1479bfa801ce39057c09f14b431f71  Mage/src/main/java/mage/abilities/TriggeredAbilities.java
+3df463d33eff295607e700578e547cef896cf183e1dba3c41131a353f53cb7dc  Mage/src/main/java/mage/game/events/GameEvent.java
+9f13c8d5e69444bab89de1c7fd22feb9370606b56bb89fd6816f98439415868f  Mage/src/main/java/mage/watchers/Watcher.java
+cb4e47d165156138e5cb5ca218ef5d0efb01c7b3f65978bd8665c59087ecd107  Mage/src/main/java/mage/watchers/Watchers.java
+b9e042f9af94a36bcfa431de6c94188a5854266a919f5d2ea26d805cecd0e42b  Mage/src/main/java/mage/counters/Counters.java
+f98863ba5032b79579e49a809d8a59871d2242fc909d5eeea2a4b0fe35111043  Mage/src/main/java/mage/counters/BoostCounter.java
+907634ca66feddbbb62a142078d2931e89362ead9635d50ec0f21d77a0997768  Mage/src/main/java/mage/abilities/DelayedTriggeredAbilities.java
+0658bf3c40fd46407a6ff04b92fc801aaa08cfa2735432777931fc3536819dda  Mage/src/main/java/mage/game/GameImpl.java

@@ -1,0 +1,310 @@
+:root {
+  --lobby-stone-size: 820px;
+  --lobby-stone-edge: #75623e;
+  --lobby-stone-rule: #66563888;
+}
+
+/* The outer shell now feels like the same carved table as the battlefield. */
+.app-shell {
+  position: relative;
+  color: #e9e2d3;
+  background-color: #11110f;
+  background-image:
+    radial-gradient(ellipse at 50% 5%, #8a70450a, transparent 46%),
+    linear-gradient(180deg, #08080877, #05050599),
+    url("/tabletop/smooth-charcoal-stone.png");
+  background-position: center, center, 0 0;
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: auto, auto, var(--lobby-stone-size);
+}
+
+.topbar {
+  height: 76px;
+  padding: 0 clamp(20px, 3vw, 48px);
+  padding-left: max(128px, 14vh);
+  border-bottom: 1px solid #79674466;
+  background-color: #15130f;
+  background-image:
+    linear-gradient(90deg, #070706d6, #1816129e 42%, #0a0a08e0),
+    url("/tabletop/smooth-charcoal-stone.png");
+  background-position: center, 0 0;
+  background-repeat: no-repeat, repeat;
+  background-size: auto, var(--lobby-stone-size);
+  box-shadow: inset 0 -1px #050504, 0 3px 10px #0005;
+  backdrop-filter: none;
+}
+
+.brand,
+.lobby-screen .table-brand {
+  width: auto;
+  height: auto;
+  padding: 0;
+  flex: 0 0 auto;
+  gap: .3em;
+  color: #c9b68c;
+  font: 400 clamp(17px, 1.4vw, 22px)/1 Georgia, serif;
+  letter-spacing: .12em;
+  white-space: nowrap;
+  text-shadow: 0 1px #000, 0 0 18px #b9954c1f;
+}
+.brand b,
+.lobby-screen .table-brand b { font-weight: 400; color: inherit; }
+.topbar nav { margin-left: clamp(20px, 3vw, 48px); }
+.topbar nav button { color: #a9a08d; text-shadow: 0 1px 1px #000; }
+.topbar nav button:hover,
+.topbar nav button.active { color: #f2e8d1; }
+.topbar nav button.active::after { background: linear-gradient(90deg, transparent, #c5a660, transparent); }
+.nav-count { border: 1px solid #51462f; background: #0c0b09aa; color: #b9ab8c; }
+.profile-chip {
+  min-width: 150px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  box-shadow: none;
+}
+.profile-chip > span { background: #14110c; box-shadow: inset 0 0 9px #000; }
+
+.play-foundation {
+  width: min(1540px, calc(100% - clamp(20px, 3vw, 58px)));
+  max-width: none;
+  min-height: calc(100vh - 156px);
+  margin: 0 auto 26px;
+  padding: clamp(34px, 4.2vw, 64px) clamp(24px, 4.5vw, 70px) clamp(42px, 5vw, 76px);
+  border: 1px solid #6f5d3b;
+  border-top: 0;
+  border-radius: 0 0 18px 18px;
+  background-color: #1b1a17;
+  background-image:
+    radial-gradient(ellipse at 44% 0%, #b28d4b13, transparent 48%),
+    linear-gradient(180deg, #ffffff05, #00000025),
+    url("/tabletop/smooth-charcoal-stone.png");
+  background-position: center, center, 0 0;
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: auto, auto, var(--lobby-stone-size);
+  box-shadow: inset 0 1px #a58d5520, 0 12px 28px #0006;
+}
+
+.play-foundation .section-heading {
+  position: relative;
+  margin-bottom: clamp(28px, 3.5vw, 46px);
+  padding: 0 0 22px;
+  border-bottom: 1px solid #76644170;
+}
+.play-foundation .section-heading h1 {
+  margin: 10px 0 6px;
+  color: #d8d0bd;
+  font-size: clamp(2.3rem, 3.6vw, 3.8rem);
+  line-height: 1.1;
+  text-shadow: 0 2px 3px #0007;
+}
+.play-foundation .section-heading p { color: #aaa18d; font-size: 1rem; }
+
+.play-setup { grid-template-columns: minmax(300px, .78fr) minmax(520px, 1.22fr); gap: clamp(20px, 2.2vw, 34px); align-items: stretch; }
+.play-identity,
+.room-options,
+.play-entry-empty {
+  position: relative;
+  border: 1px solid #79674488;
+  border-radius: 13px;
+  background-color: #1b1a17;
+  background-image:
+    linear-gradient(145deg, #ffffff0c 0, transparent 30%, #00000035 100%),
+    url("/tabletop/smooth-charcoal-stone.png");
+  background-position: center, 0 0;
+  background-repeat: no-repeat, repeat;
+  background-size: auto, var(--lobby-stone-size);
+  box-shadow: inset 0 1px #b89b6030, inset 0 -2px 5px #05050499, 0 8px 18px #0006;
+}
+.play-identity > *,
+.room-options > *,
+.play-entry-empty > * { position: relative; z-index: 1; }
+.play-identity { padding: clamp(25px, 2.4vw, 38px); }
+.play-identity > strong { color: #eee7d6; font-size: clamp(2.1rem, 3vw, 3.2rem); text-shadow: 0 2px 3px #000; }
+.eyebrow,
+.room-option small,
+.join-option small { color: #c3a466; }
+
+.selected-deck-row {
+  border-color: #635538;
+  border-radius: 6px;
+  background: linear-gradient(145deg,#00000014,#00000030), url("/tabletop/smooth-charcoal-stone.png") 0 0 / var(--lobby-stone-size);
+  box-shadow: inset 0 1px #cbb27b20, 0 3px 8px #0006;
+}
+.selected-deck-row img { border-radius: 3px; box-shadow: 0 3px 9px #000; }
+.reconnect-note {
+  border: 1px solid #443b29;
+  border-left: 3px solid #8d7546;
+  border-radius: 4px;
+  background: #0c0b09a8;
+  box-shadow: inset 0 8px 18px #0005;
+  color: #a29a88;
+}
+
+.room-options { padding: 10px; overflow: hidden; }
+.room-option {
+  min-height: 146px;
+  border-bottom: 1px solid #5d4f3570;
+  border-radius: 7px 7px 0 0;
+  background: linear-gradient(110deg, #0d0c0966, transparent 60%);
+}
+.room-option:hover { background: linear-gradient(110deg, #272218aa, #15130f66); }
+.room-option h2,
+.join-option h2 { color: #eee6d4; font-size: clamp(1.45rem, 2vw, 2rem); text-shadow: 0 2px 3px #000; }
+.room-option p,
+.solo-option p { color: #aaa18e; font-size: .9rem; }
+.option-icon,
+.solo-icon {
+  border-radius: 5px;
+  background: #0b0a08aa;
+  box-shadow: inset 0 5px 13px #0008, 0 1px #aa8b4f33;
+}
+.solo-option {
+  width: calc(100% - 40px);
+  margin: 18px 20px 28px;
+  border-color: #74613d;
+  border-radius: 7px;
+  background: linear-gradient(145deg,#00000014,#00000030), url("/tabletop/smooth-charcoal-stone.png") 0 0 / var(--lobby-stone-size);
+  box-shadow: inset 0 1px #b5965632, 0 5px 12px #0005;
+}
+.or-divider { background: linear-gradient(90deg, transparent, #75644088, transparent); }
+.or-divider span { background: #17140f; color: #9a8e77; }
+.join-option { padding: 28px 22px 30px; }
+.join-row { flex-wrap: wrap; }
+.join-row input { min-width: 150px; flex: 1 1 150px; border-color: #5a4d34; background: #090907cc; box-shadow: inset 0 7px 13px #0008; }
+.join-row .primary,
+.join-row .spectate-button { flex: 0 0 auto; }
+.join-row .spectate-button { width: 216px; min-height: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; border-radius: 6px; background: transparent; box-shadow: none; filter: drop-shadow(1px 3px 2px #000b); cursor: pointer; }
+.join-row .spectate-button > img { display: block; width: 100%; max-width: 216px; height: 100%; object-fit: contain; pointer-events: none; user-select: none; }
+.join-row .spectate-button:disabled { opacity: .38; cursor: default; }
+.join-row .spectate-button:hover:not(:disabled) { filter: brightness(1.06) drop-shadow(1px 3px 2px #000b); }
+.join-row .spectate-button:active:not(:disabled) { transform: translateY(1px); filter: brightness(.92) drop-shadow(0 1px 1px #000b); }
+
+.play-entry-empty { padding: clamp(24px, 3vw, 42px); }
+.play-entry-empty form { border-color: #74613d; }
+
+/* The waiting room shares the same carved stone rather than becoming a second dashboard. */
+.room-overlay { background: #0b0a08; }
+.room-overlay > header {
+  height: 74px;
+  border-bottom-color: #79674466;
+  background-color: #15130f;
+  background-image: linear-gradient(90deg, #070706d6, #1816129e 42%, #0a0a08e0), url("/tabletop/smooth-charcoal-stone.png");
+  background-repeat: no-repeat, repeat;
+  background-size: auto, var(--lobby-stone-size);
+  box-shadow: inset 0 -1px #050504, 0 3px 10px #0005;
+}
+.lobby-screen > header { padding-left: max(128px, 14vh); }
+.table-brand { width: clamp(270px, 26vw, 390px); height: 66px; padding: 0; }
+.lobby-screen {
+  background-color: #11110f;
+  background-image: linear-gradient(180deg, #05050466, #05050499), url("/tabletop/smooth-charcoal-stone.png");
+  background-repeat: no-repeat, repeat;
+  background-size: auto, var(--lobby-stone-size);
+}
+.lobby-content {
+  width: min(1280px, calc(100% - 48px));
+  max-width: none;
+  margin: 30px auto 52px;
+  padding: clamp(38px, 4vw, 62px);
+  border: 1px solid #7d6841;
+  border-radius: 15px;
+  background-color: #1b1a17;
+  background-image: radial-gradient(ellipse at 50% 0, #a3824813, transparent 44%), linear-gradient(180deg, #ffffff05, #00000028), url("/tabletop/smooth-charcoal-stone.png");
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: auto, auto, var(--lobby-stone-size);
+  box-shadow: inset 0 1px #a58d5530, 0 12px 28px #0008;
+}
+.lobby-content > h1 { color: #e3dccb; font-size: clamp(2.5rem, 4vw, 4.4rem); text-shadow: 0 2px 3px #0007; }
+.lobby-content > p { color: #aaa18e; font-size: .95rem; }
+.room-code-card {
+  border-color: #77633d;
+  border-radius: 7px;
+  background: #090806b8;
+  box-shadow: inset 0 7px 18px #0009, 0 1px #a98b5130;
+  overflow: hidden;
+}
+.seat-grid { gap: clamp(12px, 1.5vw, 20px); }
+.seat-card {
+  border-color: #6f5d3c;
+  border-radius: 9px;
+  background-color: #1b1a17;
+  background-image: linear-gradient(150deg, #ffffff09, #00000038), url("/tabletop/smooth-charcoal-stone.png");
+  background-repeat: no-repeat, repeat;
+  background-size: auto, var(--lobby-stone-size);
+  box-shadow: inset 0 1px #b8995730, 0 9px 18px #0007;
+  overflow: hidden;
+}
+.seat-card.ready { border-color: #a58952; box-shadow: inset 0 0 0 2px #c5a66133, 0 9px 18px #0007; }
+.seat-art { background: #0c0b09; }
+.empty-seat { border-style: solid; background-image: linear-gradient(145deg, #17140f99, #080806bb), url("/tabletop/smooth-charcoal-stone.png"); }
+.waiting-ring { border-color: #75623d; background: #0a0907aa; box-shadow: inset 0 5px 13px #0008; }
+.leave-button,
+.ready-button { border-color: #6d5c3c; border-radius: 4px; background: #14110dcc; }
+
+footer { border-top-color: #695839; background: #090806d9; }
+
+/* Reuse the table's physical edge art, with room reserved for all controls. */
+.app-shell::before,
+.lobby-screen::before {
+  content: "";
+  position: fixed;
+  left: -8px;
+  top: 0;
+  bottom: 0;
+  width: 50vh;
+  z-index: 31;
+  background: url("/tabletop/left-edge-still-life.png") left center / auto 100% no-repeat;
+  transform: scaleX(.78);
+  transform-origin: left center;
+  filter: drop-shadow(4px 6px 6px #0008);
+  pointer-events: none;
+}
+.app-shell > .content-view,
+.lobby-content { padding-left: max(112px, 16vh); }
+.app-shell .eyebrow,
+.lobby-screen .eyebrow,
+.room-option small,
+.join-option small { font: 400 11px/1.4 Georgia, serif; letter-spacing: .16em; color: #a89570; }
+.app-shell :is(.secondary, .ghost-button),
+.lobby-screen .secondary { border-color: #79674488; background: #151510; color: #d1b579; }
+.app-shell .deck-tile { background: #1b1a17; border-color: #79674488; }
+.app-shell .deck-info h2,
+.lobby-screen .seat-info h2 { font-family: Georgia, serif; font-weight: 400; color: #e9e2d3; }
+.app-shell .deck-tile.selected { border-color: #b99a5b; }
+
+@media (max-width: 1050px) {
+  .topbar nav { margin-left: 18px; }
+  .profile-chip { min-width: 0; }
+  .play-setup { grid-template-columns: 1fr; }
+  .play-identity { min-height: 0; }
+  .seat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .topbar, .lobby-screen > header { padding-left: 20px; }
+  .topbar { height: auto; min-height: 70px; flex-wrap: wrap; gap: 6px 14px; padding-block: 8px; }
+  .brand, .lobby-screen .table-brand { font-size: 17px; letter-spacing: .09em; }
+  .topbar nav { order: 3; width: 100%; height: 42px; margin-left: 0; justify-content: center; }
+  .profile-chip { margin-left: auto; }
+  .app-shell::before, .lobby-screen::before { display: none; }
+  .app-shell > .content-view { padding-inline: 18px; }
+  .play-foundation { width: calc(100% - 18px); padding-inline: 16px; }
+  .join-option { grid-template-columns: 1fr; }
+  .lobby-content { width: calc(100% - 20px); padding-inline: 18px; }
+  .room-code-card { width: 100%; flex-wrap: wrap; }
+  .room-code-card > div { flex: 1 1 100%; border-right: 0; border-bottom: 1px solid #4c4431; }
+  .room-code-card button { flex: 1; justify-content: center; min-height: 44px; }
+}
+
+@media (max-width: 560px) {
+  .profile-chip div { display: none; }
+  .profile-chip { padding: 4px; border: 0; background: none; box-shadow: none; }
+  .play-foundation .section-heading p { font-size: .92rem; }
+  .room-option { grid-template-columns: 48px 1fr auto; padding: 22px 16px; }
+  .solo-option { width: calc(100% - 24px); margin-inline: 12px; grid-template-columns: 44px 1fr auto; padding: 15px 12px; }
+  .join-row .primary,
+  .join-row .spectate-button { flex: 1 1 100%; min-height: 42px; }
+  .seat-grid { grid-template-columns: 1fr; }
+  .lobby-actions { flex-wrap: wrap; }
+}

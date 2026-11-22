@@ -1,0 +1,24 @@
+--- a/Mage/src/main/java/mage/abilities/mana/ManaOptions.java
++++ b/Mage/src/main/java/mage/abilities/mana/ManaOptions.java
+@@ -98,11 +98,16 @@
+         List<Mana> copy = new ArrayList<>(this);
+         this.clear();
+         for (Mana netMana : netManas) {
+-            for (Mana mana : copy) {
+-                if (!ability.hasTapCost() || checkManaReplacementAndTriggeredMana(ability, game, netMana)) {
+-                    newMana = mana.copy();
+-                    newMana.add(netMana);
+-                    this.add(newMana);
++            if (!ability.hasTapCost() || checkManaReplacementAndTriggeredMana(ability, game, netMana)) {
++                // Each color is an alternative activation, not another tap of
++                // this source. Consume its triggers before the next alternative
++                // and do not mutate the producer's cached net-mana template.
++                for (Mana triggeredMana : getTriggeredManaVariations(game, ability, netMana.copy())) {
++                    for (Mana mana : copy) {
++                        newMana = mana.copy();
++                        newMana.add(triggeredMana);
++                        this.add(newMana);
++                    }
+                 }
+             }
+         }
