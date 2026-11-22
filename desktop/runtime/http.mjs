@@ -32,8 +32,9 @@ export async function startDesktopHttp({port=17890,dist,dataDir,gatewayPort=1878
           saved.push(deck);saving=saving.then(async()=>{await writeFile(file+'.tmp',JSON.stringify(saved));await rename(file+'.tmp',file);});await saving;return json({deck});
         }
         if(url.pathname==='/api/engine'){
-          if(req.method==='GET')return json({available:status().ready,message:status().message});
-          if(!status().ready)return json({error:status().message},503);
+          const engine=status();
+          if(req.method==='GET')return json({available:engine.ready,phase:engine.phase,message:engine.message});
+          if(!engine.ready)return json({error:engine.message},503);
           if(['create','join','changeDeck'].includes(body.operation)){const deck=[...builtins,...saved].find(d=>d.id===body.deckId);if(!deck)return json({error:'Choose a saved deck.'},400);body.deck=cardApi.deckForEngine(deck);}
           if(body.operation==='create')body.humanSeats=1;
           if(body.operation==='configure'&&body.kind==='human')return json({error:'The desktop preview supports one human and three AI opponents.'},400);

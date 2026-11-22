@@ -1,5 +1,5 @@
 import {defaultCommanderName} from '../ui/source/tools/desktop/commander.ts';
-import assert from 'node:assert/strict';import {spawn} from 'node:child_process';import {mkdtemp,readFile,writeFile} from 'node:fs/promises';import path from 'node:path';import os from 'node:os';import {randomBytes} from 'node:crypto';import WebSocket from 'ws';
+import assert from 'node:assert/strict';import {spawn} from 'node:child_process';import {mkdtemp,readFile,writeFile} from 'node:fs/promises';import path from 'node:path';import os from 'node:os';import net from 'node:net';import {randomBytes} from 'node:crypto';import WebSocket from 'ws';
 import {emptyEngineState,reduceEngineFrame,records} from '../../integrations/fourth-seat/client/session.ts';
 const root=path.resolve(process.argv[2]??'build/The Fourth Seat'),base='http://127.0.0.1:17890',data=await mkdtemp(path.join(os.tmpdir(),'Fourth Seat test ')),checks=[];let processHandle,socket,cookie,state=emptyEngineState(),count=0,pending=new Map();
 const env={...process.env,FOURTH_SEAT_DATA_DIR:data,FOURTH_SEAT_NO_BROWSER:'1',FOURTH_SEAT_TEST:'1'};
@@ -12,6 +12,17 @@ async function post(url,body){const response=await fetch(base+url,{method:'POST'
 const api=(operation,args={})=>post('/api/engine',{operation,browserKey,displayName:'Desktop smoke',...args});
 function send(action,args){return new Promise((resolve,reject)=>{const requestId='test-'+ ++count;const timer=setTimeout(()=>{pending.delete(requestId);reject(Error('Action timeout'));},30000);pending.set(requestId,frame=>{clearTimeout(timer);frame.ok?resolve():reject(Error(frame.error));});socket.send(JSON.stringify({action,args,requestId}));});}
 try{
+ const blocker=net.createServer();
+ await new Promise((resolve,reject)=>{blocker.once('error',reject);blocker.listen(17771,'127.0.0.1',resolve);});
+ try{
+  processHandle=launch();
+  await wait(async()=>{const r=await fetch(base+'/desktop/status');return(await r.json()).phase==='failed';},'startup failure reported',30_000);
+  cookie=(await fetch(base)).headers.get('set-cookie').split(';')[0];
+  const failed=await(await fetch(base+'/api/engine',{headers:{Cookie:cookie}})).json();
+  check('browser sees the blocked engine port instead of waiting indefinitely',failed.phase==='failed'&&failed.available===false&&failed.message.includes('17771'));
+  await post('/api/desktop/shutdown',{});
+  await wait(()=>processHandle.exitCode!==null,'close failed launcher',30_000);
+ }finally{await new Promise(resolve=>blocker.close(resolve));}
  processHandle=launch();await wait(async()=>{const r=await fetch(base+'/desktop/status');return(await r.json()).ready;},'native packaged startup',600000);
  cookie=(await fetch(base)).headers.get('set-cookie').split(';')[0];
  check('all ten bundled decks are available offline',(await(await fetch(base+'/api/desktop/decks',{headers:{Cookie:cookie}})).json()).decks.length===10);
@@ -26,19 +37,20 @@ try{
  check('local image proxy serves actual image bytes',picture.ok&&picture.headers.get('content-type')?.startsWith('image/')&&(await picture.arrayBuffer()).byteLength>1000);
  check('foreign browser cannot use local API',(await fetch(base+'/api/engine',{headers:{Origin:'https://evil.invalid',Cookie:cookie}})).status===403);
  await new Promise((resolve,reject)=>{const ws=new WebSocket('ws://127.0.0.1:18787',{origin:base});const timer=setTimeout(()=>{ws.terminate();reject(Error('Bridge did not reject browser origin'));},5000);ws.once('message',()=>{clearTimeout(timer);ws.terminate();reject(Error('Raw bridge exposed protocol to browser'));});ws.once('close',code=>{clearTimeout(timer);try{check('raw bridge refuses browser origin before serving commands',code===1008);resolve();}catch(e){reject(e);}});ws.once('unexpected-response',(_req,r)=>{clearTimeout(timer);r.resume();ws.terminate();reject(Error('Unexpected handshake response '+r.statusCode));});ws.on('error',()=>{});});
- const card=(name,quantity)=>({id:name,name,quantity,typeLine:'Creature',oracleText:'',manaCost:'',image:'',colors:[],colorIdentity:[]});
- const deck=(await post('/api/desktop/decks',{name:'Desktop smoke fixture',commander:'Krenko, Mob Boss',cards:[card('Krenko, Mob Boss',1),card('Mountain',99)]})).deck;
+ const deck=saved;
  const session=await api('session');socket=new WebSocket(session.websocketUrl,{origin:base});let connected=false;
  socket.on('open',()=>socket.send(JSON.stringify({ticket:session.ticket})));socket.on('message',raw=>{const frame=JSON.parse(String(raw));if(frame.type==='ready')connected=true;if(frame.type==='roomReset'){state=emptyEngineState();return;}if(frame.type==='result'&&pending.has(frame.requestId)){pending.get(frame.requestId)(frame);pending.delete(frame.requestId);}state=reduceEngineFrame(state,frame);});await wait(()=>connected,'gateway connection');
  const room=(await api('create',{deckId:deck.id,humanSeats:1})).room;check('one human and three distinct AI seats',room.players.filter(p=>p.kind==='ai').length===3&&new Set(room.players.map(p=>p.commander)).size===4);
  await api('start',{code:room.code});await wait(()=>state.game?.players?.length===4,'four native players');check('all four seats start at 40 life',state.game.players.every(p=>p.life===40));
+ await wait(()=>records(state.game?.myHand).length===7,'Araumi opening hand');
+ check('imported Araumi deck starts a game and draws seven cards',room.players.some(p=>p.kind==='human'&&p.commander===commander)&&records(state.game.myHand).length===7);
  let last,mulligan=0,played=false;const developed=()=>state.game?.players?.filter(p=>!p.isHuman).every(p=>records(p.battlefield).length>0);const deadline=Date.now()+240000;
  while(Date.now()<deadline&&(!developed()||!played)){
   if(state.prompt&&state.promptKey!==last){last=state.promptKey;const prompt=state.prompt,gameId=state.gameId;
    if(prompt.isStartingPlayer)await send('sendPlayerUUID',{gameId,value:prompt.options[0].value});
    else if(prompt.isMulligan){if(mulligan===1)check('free mulligan redraws seven',records(state.game.myHand).length===7);await send('sendPlayerBoolean',{gameId,value:mulligan++===0});}
    else if(prompt.isMulliganLondon)await send('sendPlayerUUID',{gameId,value:prompt.options[0].value});
-   else if(prompt.method==='GAME_SELECT'){const land=records(state.game.myHand).find(c=>c.name==='Mountain'&&state.selectable.includes(c.id));if(land){await send('sendPlayerUUID',{gameId,value:land.id});played=true;}else await send('sendPlayerBoolean',{gameId,value:false});}
+   else if(prompt.method==='GAME_SELECT'){const land=records(state.game.myHand).find(c=>['Island','Swamp'].includes(c.name)&&state.selectable.includes(c.id));if(land){await send('sendPlayerUUID',{gameId,value:land.id});played=true;}else await send('sendPlayerBoolean',{gameId,value:false});}
    else if(prompt.method==='GAME_TARGET'&&/discard/i.test(prompt.message))await send('sendPlayerUUID',{gameId,value:prompt.options[0].value});
    else throw Error('Unexpected prompt '+prompt.method+' '+prompt.message);
   }await delay(80);

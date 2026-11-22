@@ -21,7 +21,7 @@ export function browserKey() {
   }
   return key;
 }
-export function useEngineSession(profileId: string, displayName: string, initialRoom: EngineRoom | null = null) {
+export function useEngineSession(profileId: string, displayName: string, initialRoom: EngineRoom | null = null, localMode = false) {
   const [room,setRoom] = useState<EngineRoom | null>(initialRoom);
   const [state,setState] = useState(emptyEngineState);
   // Update transport state synchronously so a queued pass cannot answer a newer prompt.
@@ -31,6 +31,7 @@ export function useEngineSession(profileId: string, displayName: string, initial
   },[]);
   const [available,setAvailable] = useState(false);
   const [availabilityMessage,setAvailabilityMessage] = useState('Checking Rules Engine availability…');
+  const [startupFailed,setStartupFailed] = useState(false);
   const [connection,setConnection] = useState('connecting');
   const [error,setError] = useState('');
   const [busy,setBusy] = useState(false);
@@ -84,16 +85,28 @@ export function useEngineSession(profileId: string, displayName: string, initial
     return data;
   },[profileId,displayName]);
   useEffect(() => {
-    let cancelled = false;
+    let cancelled = false, timer: number | undefined;
     const check = async () => {
+      let ready=false;
       try {
-        const data = await (await fetch('/api/engine',{cache:'no-store'})).json() as {available?:boolean;message?:string};
-        if (!cancelled) { setAvailable(data.available === true); setAvailabilityMessage(data.message ?? ''); }
-      } catch { if (!cancelled) { setAvailable(false); setAvailabilityMessage('The rules service could not be reached. Regular play remains available.'); } }
+        const response=await fetch('/api/engine',{cache:'no-store',signal:AbortSignal.timeout(5_000)});
+        if(localMode && response.status===403){if(!cancelled){setAvailable(false);setStartupFailed(true);setAvailabilityMessage('The launcher session changed. Refresh this tab to reconnect.');}return;}
+        if(!response.ok)throw Error('Could not check engine');
+        const data=await response.json() as {available?:boolean;phase?:string;message?:string};
+        ready=data.available===true;
+        if(!cancelled){setAvailable(ready);setStartupFailed(data.phase==='failed');setAvailabilityMessage(data.message??'');}
+      } catch {
+        if(!cancelled){
+          setAvailable(false);setStartupFailed(localMode);
+          setAvailabilityMessage(localMode?'The launcher is no longer responding. Check its window, or open The Fourth Seat.exe again.':'The rules service could not be reached. Regular play remains available.');
+        }
+      } finally {
+        if(!cancelled)timer=window.setTimeout(check,localMode&&!ready?1000:20_000);
+      }
     };
-    void check(); const timer = window.setInterval(check,20_000);
-    return () => { cancelled=true; clearInterval(timer); };
-  },[]);
+    void check();
+    return () => { cancelled=true; clearTimeout(timer); };
+  },[localMode]);
   useEffect(() => {
     if (!available) return;
     let cancelled = false, retry = 0, reconnectTimer: number | undefined;
@@ -278,5 +291,5 @@ export function useEngineSession(profileId: string, displayName: string, initial
     },150);
     return()=>clearTimeout(timer);
   },[autoPass,autoPassPaused,priorityStops,connection,actionPending,busy,error,state,sendRequest,turnPass,cancelPassTurn,holdPriority]);
-  return {passTurn,passPriority,passingTurn:smartPassing,autoPassing:idlePassing||smartPassing,cancelPassTurn:takeControl,autoPass,toggleAutoPass,priorityStops,updatePriorityStops,atPriorityStop,actionPending,room,state,available,availabilityMessage,connection,error,setError,busy,user,call,send};
+  return {passTurn,passPriority,passingTurn:smartPassing,autoPassing:idlePassing||smartPassing,cancelPassTurn:takeControl,autoPass,toggleAutoPass,priorityStops,updatePriorityStops,atPriorityStop,actionPending,room,state,available,availabilityMessage,startupFailed,connection,error,setError,busy,user,call,send};
 }
